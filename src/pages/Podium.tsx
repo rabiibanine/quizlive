@@ -107,6 +107,7 @@ export default function Podium() {
         <div className="flex gap-4 justify-center mt-12 mb-16">
           <Button variant="black" className=" animate_fadeInDown text-white px-8 py-3 rounded-full">
             <CsvDownloader
+              className="cursor-pointer"
               filename="quiz_result"
               extension=".csv"
               separator=","
