@@ -1,12 +1,10 @@
-import { Text } from "@jamsr-ui/react";
-
 export const Logo = () => {
   return (
-    <div className="flex items-center gap-2">
+    <a href="/" className="flex items-center gap-2 hover:opacity-90 transition-all duration-300">
       <img src="/logo.jpg" alt="logo" className="size-8 rounded-full" />
-      <Text variant="h5" className="font-normal">
+      <span className="text-lg font-normal text-white">
         QGL
-      </Text>
-    </div>
+      </span>
+    </a>
   );
 };
