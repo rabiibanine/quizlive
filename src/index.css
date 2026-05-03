@@ -17,3 +17,48 @@
 [data-theme="dark"] {
   --ui-background: #ffffff;
 }
+
+
+@keyframes growHeight {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--target-height);
+  }
+}
+
+.animate-grow {
+  animation: growHeight 0.7s ease-out forwards;
+}
+
+
+@keyframes FadeIn {
+  from {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+.animate_fadeInDown {
+  opacity: 0;
+  animation: FadeIn 0.7s ease-out forwards .7s;
+}
+
+@keyframes FadeOut {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+.animate_fadeInUp {
+  opacity: 0;
+  animation: FadeOut 0.8s ease-out forwards .5s;
+}
