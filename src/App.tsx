@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import SharingPage from "./pages/SharingPage";
 import Podium from "./pages/Podium";
+import { QuizEditorPage } from "./pages/QuizEditorPage/QuizEditorPage";
 import NotFound from "./pages/NotFound";
 import QuizForm from "./pages/QuizForm";
 import JoinQuiz from "./pages/JoinQuiz";
@@ -16,7 +17,8 @@ function App() {
       <Route path="/start" element={<QuizForm />} />
       <Route path="/join" element={<JoinQuiz />} />
       <Route path="/sharing/:code" element={<SharingPage />} />
-      <Route path="quiz/:code/podium" element={<Podium />} />
+      <Route path="/quiz/:code/podium" element={<Podium />} />
+      <Route path="/create-edit-quiz" element={<QuizEditorPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   )
