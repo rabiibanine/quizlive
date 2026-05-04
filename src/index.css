@@ -1,6 +1,5 @@
 @import "tailwindcss";
-
-
+@config "../tailwind.config.js";
 
 @utility container {
   @apply mx-auto w-full max-w-(--breakpoint-lg) px-4 lg:px-6;
@@ -18,7 +17,6 @@
   --ui-background: #ffffff;
 }
 
-
 @keyframes growHeight {
   from {
     height: 0;
@@ -32,7 +30,6 @@
   animation: growHeight 0.7s ease-out forwards;
 }
 
-
 @keyframes FadeIn {
   from {
     transform: translateY(-40px);
@@ -45,7 +42,7 @@
 }
 .animate_fadeInDown {
   opacity: 0;
-  animation: FadeIn 0.7s ease-out forwards .7s;
+  animation: FadeIn 0.7s ease-out forwards 0.7s;
 }
 
 @keyframes FadeOut {
@@ -60,5 +57,5 @@
 }
 .animate_fadeInUp {
   opacity: 0;
-  animation: FadeOut 0.8s ease-out forwards .5s;
+  animation: FadeOut 0.8s ease-out forwards 0.5s;
 }
