@@ -16,7 +16,7 @@ function NavBar() {
         </Link>
 
         <Link
-          to="/start"
+          to="/quiz-form"
           className="text-white border-b-2 border-transparent hover:border-[#ffffffa3] hover:text-[#ffffffa3] transition-all duration-300"
         >
           Start Quiz
