@@ -31,12 +31,28 @@ const fields: Field[] = [
   },
 ];
 
+type QuizInfo = {
+  title: string;
+  className: string;
+  subject: string;
+  joinedCount: number;
+};
+
 const JoinQuiz = () => {
   const [formValues, setFormValues] = useState<Record<StepKey, string>>({
     roomCode: "",
     studentName: "",
   });
   const [errors, setErrors] = useState<Partial<Record<StepKey, string>>>({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCodeValid, setIsCodeValid] = useState(false);
+
+  const quizInfo: QuizInfo = {
+    title: "Web Development Quiz",
+    className: "GI-S6",
+    subject: "React Fundamentals",
+    joinedCount: 18,
+  };
 
   const validateForm = () => {
     const nextErrors: Partial<Record<StepKey, string>> = {};
@@ -59,7 +75,11 @@ const JoinQuiz = () => {
 
   const handleSubmit = () => {
     if (!validateForm()) return;
-    alert("You are ready to join the quiz.");
+    const normalizedCode = formValues.roomCode.trim();
+    //Arbitrary value for testing😊
+    const valid = normalizedCode === "676767";
+    setIsCodeValid(valid);
+    setIsModalOpen(true);
   };
 
   return (
@@ -118,6 +138,75 @@ const JoinQuiz = () => {
           </div>
         </div>
       </main>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-lg rounded-3xl bg-white p-8 shadow-2xl">
+            {isCodeValid ? (
+              <div className="space-y-4">
+                <div>
+                  <p className="text-xs font-semibold tracking-[0.4em] text-purple-600">
+                    QUIZ INFO
+                  </p>
+                  <h2 className="mt-2 text-2xl font-bold text-black">
+                    {quizInfo.title}
+                  </h2>
+                  <p className="text-gray-600 mt-1">
+                    Review the details before joining.
+                  </p>
+                </div>
+                <div className="grid gap-3 rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">Class Name</span>
+                    <span className="font-semibold text-gray-900">
+                      {quizInfo.className}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">Subject</span>
+                    <span className="font-semibold text-gray-900">
+                      {quizInfo.subject}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">Students Joined</span>
+                    <span className="font-semibold text-gray-900">
+                      {quizInfo.joinedCount}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4 text-center">
+                <p className="text-xs font-semibold tracking-[0.4em] text-red-500">
+                  INVALID CODE
+                </p>
+                <h2 className="text-2xl font-bold text-black">
+                  Incorrect room code
+                </h2>
+                <p className="text-gray-600">
+                  Double-check the code with your professor and try again.
+                </p>
+              </div>
+            )}
+
+            <div className="mt-8 flex flex-col sm:flex-row gap-3">
+              {isCodeValid && (
+                <Button variant="black" className="w-full px-8 py-3">
+                  Confirm & Join
+                </Button>
+              )}
+              <Button
+                variant="white"
+                className="w-full px-8 py-3"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
