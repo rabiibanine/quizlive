@@ -145,3 +145,8 @@ vite.config.ts.timestamp-*
 # Nix
 .direnv/
 /.idea/
+
+# AI 
+AGENTS.md
+BEHAVIOR.md
+BRANCH.md
