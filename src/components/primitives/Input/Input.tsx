@@ -64,7 +64,9 @@ export const Input = ({
       />
 
       {(error || helperText) && (
-        <span className={`text-xs ${error ? 'text-brand-danger' : 'text-content-secondary'}`}>
+        <span
+          className={`text-xs ${error ? 'text-red-500' : 'text-content-secondary'}`}
+        >
           {error ?? helperText}
         </span>
       )}

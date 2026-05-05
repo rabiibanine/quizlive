@@ -2,8 +2,11 @@ import Orb from "../components/Orb";
 import Advantages from "../components/Advantages";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
+import { useNavigate } from "react-router-dom";
 
 function Home(){
+    const navigate = useNavigate();
+
     return (
     <div className="w-full h-[700px] z-0 relative">
       <NavBar/>
@@ -31,7 +34,11 @@ function Home(){
         </p>
         <div className="flex items-center gap-4 md:mt-2 mt-2">
           <div className="flex items-center gap-4 md:mt-8 mt-2">
-            <Button variant="black" className="md:w-40 w-32">
+            <Button
+              variant="black"
+              className="md:w-40 w-32"
+              onClick={() => navigate("/quiz-form")}
+            >
               professor
             </Button>
 
