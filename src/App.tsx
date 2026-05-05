@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import SharingPage from "./pages/SharingPage";
 import Podium from "./pages/Podium";
-import QuizEditorPage from "./pages/QuizEditorPage";
 import NotFound from "./pages/NotFound";
 import QuizForm from "./pages/QuizForm";
 import JoinQuiz from "./pages/JoinQuiz";
