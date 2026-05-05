@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import NavBar from "../components/NavBar";
 import { Card } from "../components/primitives";
-import { AnswerStatCard } from "../components/quiz";
+import { AnswerStatCard, LeaderboardCard } from "../components/quiz";
 import quizMock from "../data/quizMock.json";
 
 type QuizChoice = {
@@ -36,7 +36,18 @@ const formatTime = (totalSeconds: number) => {
 const HostQuiz = () => {
   const quiz = quizMock as QuizSession;
   const [activeIndex, setActiveIndex] = useState(0);
+  const [showFullLeaderboard, setShowFullLeaderboard] = useState(false);
   const activeQuestion = quiz.questions[activeIndex];
+  const leaderboardEntries = [
+    { id: 1, rank: 1, name: "James D.", points: 1150 },
+    { id: 2, rank: 2, name: "Sarah R.", points: 1080 },
+    { id: 3, rank: 3, name: "Mark T.", points: 1020 },
+    { id: 4, rank: 4, name: "Anna L.", points: 985 },
+    { id: 5, rank: 5, name: "Kevin C.", points: 950 },
+    { id: 6, rank: 6, name: "Julia W.", points: 920 },
+    { id: 7, rank: 7, name: "Paul H.", points: 890 },
+    { id: 8, rank: 8, name: "Nora B.", points: 860 },
+  ];
 
   const [secondsLeft, setSecondsLeft] = useState(
     quiz.questions[0]?.timeSeconds ?? 0
@@ -108,7 +119,7 @@ const HostQuiz = () => {
             Track incoming answers and monitor your class in real time.
           </p>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-[1.4fr_0.6fr]">
+          <div className="mt-10 grid gap-6 lg:grid-cols-[1.6fr_0.6fr]">
             <Card
               variant="outline"
               className="rounded-3xl border-white/80 bg-white/80 backdrop-blur-xl"
@@ -161,6 +172,14 @@ const HostQuiz = () => {
               <div className="mt-10 text-5xl font-semibold tracking-tight">
                 {formatTime(secondsLeft)}
               </div>
+            </div>
+
+            <div className="lg:col-span-2">
+              <LeaderboardCard
+                entries={leaderboardEntries}
+                showAll={showFullLeaderboard}
+                onToggleView={() => setShowFullLeaderboard((prev) => !prev)}
+              />
             </div>
           </div>
         </div>
