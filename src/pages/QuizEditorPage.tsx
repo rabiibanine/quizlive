@@ -1,6 +1,10 @@
+import { useState } from "react";
+
 import Card from "@/components/Card";
 import Button from "@/components/Button";
-import { useState } from "react";
+
+// Icons
+import { XIcon, PencilSimpleIcon, CaretDownIcon } from "@phosphor-icons/react";
 
 const initialQuizInformationMock = {
   title: "Biology Quiz",
@@ -92,9 +96,29 @@ export default function QuizEditorPage() {
                   {(qIdx + 1).toString().padStart(2, "0")}
                 </span>
                 <span className="ml-2 text-zinc-900">{q.question}</span>
-                <Button variant="delete" className="" onClick={() => handleDeleteQuestion(qIdx)}>
-                  Delete
-                </Button>
+                <div className="ml-auto flex gap-2">
+                  <div className="flex gap-2 h-full">
+                    <button
+                      className="p-2 rounded-full text-zinc-600 border border-zinc-400 transition-all hover:cursor-pointer hover:text-zinc-50 hover:bg-zinc-400 hover:border-transparent"
+                      onClick={() => {}} // TODO Add function for edit
+                    >
+                      <PencilSimpleIcon></PencilSimpleIcon>
+                    </button>
+                    <button
+                      className="p-2 rounded-full text-zinc-600 border border-zinc-400 transition-all hover:cursor-pointer hover:text-red-400 hover:bg-red-100 hover:border-red-300"
+                      onClick={() => handleDeleteQuestion(qIdx)}
+                    >
+                      <XIcon></XIcon>
+                    </button>
+                  </div>
+                  <div className="w-px rounded-full self-center h-8 bg-zinc-400 mx-2"></div>
+                  <button
+                    className="p-2 rounded-full text-zinc-600 border border-zinc-400 transition-all hover:cursor-pointer hover:text-zinc-50 hover:bg-zinc-400 hover:border-transparent"
+                    onClick={() => {}} // TODO Add function for expansion
+                  >
+                    <CaretDownIcon></CaretDownIcon>
+                  </button>
+                </div>
               </div>
               <hr className="my-2 border-zinc-200" />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
