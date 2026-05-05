@@ -15,7 +15,7 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 
 const variantClasses: Record<CardVariant, string> = {
   none: "",
-  outline: "bg-white border border-gray-200",
+  outline: "bg-white border border-zinc-200 transition-all hover:border-zinc-300",
 };
 
 const paddingClasses: Record<CardPadding, string> = {
@@ -37,9 +37,9 @@ const roundedClasses: Record<CardRounded, string> = {
 };
 
 const shadowClasses: Record<CardShadow, string> = {
-  none: '',
-  light: 'shadow-[0_2px_10px_0_rgba(0,0,0,0.08)]',
-  heavy: 'shadow-[0_6px_36px_-6px_rgba(0,0,0,0.39)]',
+  none: "",
+  light: "shadow-[0_2px_10px_0_rgba(0,0,0,0.08)]",
+  heavy: "shadow-[0_6px_36px_-6px_rgba(0,0,0,0.39)]",
 };
 
 function Card({
