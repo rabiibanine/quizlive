@@ -68,7 +68,7 @@ export const QuestionForm = ({ onSave, onCancel }: QuestionFormProps) => {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-6 rounded-lg border border-surface-border bg-surface-raised">
+    <div className="flex flex-col gap-6 p-6 rounded-lg border border-gray-200 bg-white/80">
 
       {/* Question text */}
       <Input
@@ -82,7 +82,7 @@ export const QuestionForm = ({ onSave, onCancel }: QuestionFormProps) => {
 
       {/* Choices */}
       <div className="flex flex-col gap-3">
-        <span className="text-sm font-medium text-content-primary">
+        <span className="text-sm font-medium text-gray-900">
           Choices
         </span>
 
@@ -107,7 +107,7 @@ export const QuestionForm = ({ onSave, onCancel }: QuestionFormProps) => {
               value={choice.id}
               checked={correctChoiceId === choice.id}
               onChange={() => setCorrectChoiceId(choice.id)}
-              className="accent-brand-primary shrink-0"
+              className="accent-purple-600 shrink-0"
               aria-label={`Mark choice ${index + 1} as correct`}
             />
 
@@ -128,7 +128,7 @@ export const QuestionForm = ({ onSave, onCancel }: QuestionFormProps) => {
           </span>
         )}
 
-        <span className="text-xs text-content-secondary">
+        <span className="text-xs text-gray-500">
           Select the radio button next to the correct answer
         </span>
       </div>

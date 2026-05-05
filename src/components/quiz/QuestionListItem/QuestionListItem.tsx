@@ -13,19 +13,19 @@ export const QuestionListItem = ({
   onRemove,
 }: QuestionListItemProps) => {
   return (
-    <div className="flex items-center gap-4 p-4 rounded-lg border border-surface-border bg-surface-raised">
+    <div className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 bg-surface-raised">
 
       {/* Question number */}
-      <span className="text-content-secondary text-sm font-medium w-6 shrink-0">
+      <span className="text-gray-500 text-sm font-medium w-6 shrink-0">
         {index + 1}
       </span>
 
       {/* Question content */}
       <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-        <p className="text-content-primary text-sm font-medium truncate">
+        <p className="text-gray-900 text-sm font-medium truncate">
           {question.text}
         </p>
-        <span className="text-xs text-content-secondary">
+        <span className="text-xs text-gray-500">
           Time: {question.time != null ? `${question.time} sec` : '60 sec'}
         </span>
       </div>

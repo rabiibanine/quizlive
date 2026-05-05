@@ -10,9 +10,9 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const variantClasses: Record<CardVariant, string> = {
-  base: "bg-surface-raised shadow-card",
-  raised: "bg-surface-raised shadow-raised",
-  outline: "bg-surface-base border border-surface-border",
+  base: "bg-white/80 shadow-[0_0_40px_-10px_rgba(132,85,239,0.3)]",
+  raised: "bg-white/80 shadow-raised",
+  outline: "bg-white border border-gray-200",
 };
 
 const paddingClasses: Record<CardPadding, string> = {
