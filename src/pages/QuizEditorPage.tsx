@@ -1,9 +1,9 @@
 import { useState } from "react";
-import Button from "../components/Button";
-import Input from "../components/Input";
-import Card from "../components/Card";
-import { QuestionForm } from "@/components/quiz/QuestionForm/QuestionForm";
-import { QuestionListItem } from "@/components/quiz/QuestionListItem/QuestionListItem";
+import Button from "@/components/Button";
+import Input from "@/components/Input";
+import Card from "@/components/Card";
+import { QuestionForm } from "@/components/QuestionForm";
+import { QuestionListItem } from "@/components/QuestionListItem";
 import type { Quiz, Question } from "@/types/quiz";
 
 export const QuizEditorPage = () => {
