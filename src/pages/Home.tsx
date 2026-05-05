@@ -42,7 +42,7 @@ function Home(){
               professor
             </Button>
 
-            <Button variant="white" className="md:w-40 w-32">
+            <Button variant="white" className="md:w-40 w-32" onClick={() => navigate("/join")}>
               Student
             </Button>
           </div>
