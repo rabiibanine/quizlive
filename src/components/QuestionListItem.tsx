@@ -7,7 +7,7 @@ interface QuestionListItemProps {
   onRemove: (id: string) => void;
 }
 
-export const QuestionListItem = ({ question, index, onRemove }: QuestionListItemProps) => {
+export default function QuestionListItem({ question, index, onRemove }: QuestionListItemProps) {
   return (
     <div className="flex items-center gap-4 p-4 rounded-lg border border-surface-border bg-surface-raised">
       {/* Question number */}
@@ -32,4 +32,4 @@ export const QuestionListItem = ({ question, index, onRemove }: QuestionListItem
       </Button>
     </div>
   );
-};
+}

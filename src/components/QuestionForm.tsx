@@ -15,7 +15,7 @@ const initialChoices = (): Choice[] => [
   { id: "4", text: "", isCorrect: false },
 ];
 
-export const QuestionForm = ({ onSave, onCancel }: QuestionFormProps) => {
+export default function QuestionForm({ onSave, onCancel }: QuestionFormProps) {
   const [questionText, setQuestionText] = useState("");
   const [choices, setChoices] = useState<Choice[]>(initialChoices());
   const [correctChoiceId, setCorrectChoiceId] = useState<string | null>(null);
@@ -125,4 +125,4 @@ export const QuestionForm = ({ onSave, onCancel }: QuestionFormProps) => {
       </div>
     </div>
   );
-};
+}

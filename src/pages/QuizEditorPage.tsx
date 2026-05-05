@@ -2,11 +2,11 @@ import { useState } from "react";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Card from "@/components/Card";
-import { QuestionForm } from "@/components/QuestionForm";
-import { QuestionListItem } from "@/components/QuestionListItem";
+import QuestionForm from "@/components/QuestionForm";
+import QuestionListItem from "@/components/QuestionListItem";
 import type { Quiz, Question } from "@/types/quiz";
 
-export const QuizEditorPage = () => {
+export default function QuizEditorPage() {
   const [quizName, setQuizName] = useState("");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [isAddingQuestion, setIsAddingQuestion] = useState(false);
@@ -124,4 +124,4 @@ export const QuizEditorPage = () => {
       </div>
     </div>
   );
-};
+}
