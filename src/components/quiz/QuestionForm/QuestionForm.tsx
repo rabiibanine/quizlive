@@ -19,6 +19,7 @@ export const QuestionForm = ({ onSave, onCancel }: QuestionFormProps) => {
   const [questionText, setQuestionText] = useState('')
   const [choices, setChoices] = useState<Choice[]>(initialChoices())
   const [correctChoiceId, setCorrectChoiceId] = useState<string | null>(null)
+  const [time, setTime] = useState<number>(60) // seconds, default 1 min
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const updateChoiceText = (id: string, text: string) => {
@@ -43,6 +44,9 @@ export const QuestionForm = ({ onSave, onCancel }: QuestionFormProps) => {
     if (!correctChoiceId)
       newErrors.correctChoice = 'Please select a correct answer'
 
+    if (!Number.isFinite(time) || time < 1)
+      newErrors.time = 'Time must be at least 1 second'
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -56,7 +60,8 @@ export const QuestionForm = ({ onSave, onCancel }: QuestionFormProps) => {
       choices: choices.map(choice => ({
         ...choice,
         isCorrect: choice.id === correctChoiceId,
-      }))
+      })),
+      time,
     }
 
     onSave(question)
@@ -80,6 +85,17 @@ export const QuestionForm = ({ onSave, onCancel }: QuestionFormProps) => {
         <span className="text-sm font-medium text-content-primary">
           Choices
         </span>
+
+        {/* Time Input */}
+        <Input
+          label="Time allowed (seconds)"
+          type="number"
+          min={1}
+          value={time}
+          onChange={e => setTime(Number(e.target.value))}
+          error={errors.time}
+          fullWidth
+        />
 
         {choices.map((choice, index) => (
           <div key={choice.id} className="flex items-center gap-3">

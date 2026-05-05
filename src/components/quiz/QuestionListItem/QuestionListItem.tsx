@@ -25,6 +25,9 @@ export const QuestionListItem = ({
         <p className="text-content-primary text-sm font-medium truncate">
           {question.text}
         </p>
+        <span className="text-xs text-content-secondary">
+          Time: {question.time != null ? `${question.time} sec` : '60 sec'}
+        </span>
       </div>
 
       {/* Remove button */}

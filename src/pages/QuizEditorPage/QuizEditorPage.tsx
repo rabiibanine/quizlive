@@ -10,6 +10,9 @@ export const QuizEditorPage = () => {
   const [isAddingQuestion, setIsAddingQuestion] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
+  // Sum total quiz time in seconds
+  const totalTime = questions.reduce((sum, q) => sum + (q.time || 60), 0)
+
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {}
 
@@ -39,6 +42,7 @@ export const QuizEditorPage = () => {
       id: crypto.randomUUID(),
       name: quizName.trim(),
       questions,
+      totalTime,
     }
 
     // load existing quizzes, append new one, save back
@@ -85,6 +89,9 @@ export const QuizEditorPage = () => {
               Questions
               <span className="ml-2 text-content-secondary text-sm font-normal">
                 ({questions.length})
+              </span>
+              <span className="ml-4 text-content-secondary text-xs font-normal">
+                Total time: {Math.floor(totalTime / 60)}:{('0' + (totalTime % 60)).slice(-2)} min
               </span>
             </h2>
           </div>
