@@ -7,6 +7,8 @@ import NotFound from "./pages/NotFound";
 import QuizForm from "./pages/QuizForm";
 import QuizEditorPage from "./pages/QuizEditorPage";
 import JoinQuiz from "./pages/JoinQuiz";
+import HostQuiz from "./pages/HostQuiz";
+
 
 function App() {
   return (
@@ -17,10 +19,11 @@ function App() {
       <Route path="/start" element={<QuizForm />} />
       <Route path="/join" element={<JoinQuiz />} />
       <Route path="/sharing/:code" element={<SharingPage />} />
-      <Route path="/quiz/:code/podium" element={<Podium />} />
+      <Route path="quiz/:code/podium" element={<Podium />} />
+      <Route path="/quiz/:code/host" element={<HostQuiz />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
-  );
+  )
 }
 
-export default App;
+export default App
