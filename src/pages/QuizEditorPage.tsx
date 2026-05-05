@@ -1,10 +1,7 @@
 import { useState } from "react";
+import QuestionCard from "./QuestionCard";
 
 import Card from "@/components/Card";
-import Button from "@/components/Button";
-
-// Icons
-import { XIcon, PencilSimpleIcon, CaretDownIcon } from "@phosphor-icons/react";
 
 const initialQuizInformationMock = {
   title: "Biology Quiz",
@@ -37,16 +34,6 @@ const initialQuizInformationMock = {
 export default function QuizEditorPage() {
   // App state for quiz information & selections
   const [quizInfo, setQuizInfo] = useState(initialQuizInformationMock);
-  const [selectedChoices, setSelectedChoices] = useState<{ [questionIdx: number]: number | null }>(
-    {}
-  );
-
-  function handleChoiceToggle(qIdx: number, cIdx: number) {
-    setSelectedChoices((prev) => ({
-      ...prev,
-      [qIdx]: cIdx === prev[qIdx] ? null : cIdx,
-    }));
-  }
 
   // Delete question at a given index
   function handleDeleteQuestion(qIdx: number) {
@@ -54,12 +41,6 @@ export default function QuizEditorPage() {
       ...prev,
       questions: prev.questions.filter((_, i) => i !== qIdx),
     }));
-    // Optionally, also cleanup selectedChoices for del index
-    setSelectedChoices((prev) => {
-      const updated = { ...prev };
-      delete updated[qIdx];
-      return updated;
-    });
   }
 
   return (
@@ -80,7 +61,7 @@ export default function QuizEditorPage() {
                   <p className="text-zinc-400">
                     <strong>{key.toUpperCase()}</strong>
                   </p>
-                  <Card className="bg-zinc-100 self-stretch min-w-30">
+                  <Card className="bg-zinc-100 self-stretch min-w-30 transition-all hover:bg-zinc-200">
                     <p className="text-center text-zinc-900">{value}</p>
                   </Card>
                 </div>
@@ -90,60 +71,13 @@ export default function QuizEditorPage() {
         <h1 className="mt-8 mb-4 text-xl font-semibold text-zinc-700">Questions</h1>
         <div className="flex flex-col gap-6">
           {quizInfo.questions.map((q, qIdx) => (
-            <Card key={qIdx} variant="outline" padding="lg" className="w-full flex flex-col">
-              <div className="mb-2 flex flex-row items-center gap-2">
-                <span className="font-mono font-bold text-zinc-600 text-lg">
-                  {(qIdx + 1).toString().padStart(2, "0")}
-                </span>
-                <span className="ml-2 text-zinc-900">{q.question}</span>
-                <div className="ml-auto flex gap-2">
-                  <div className="flex gap-2 h-full">
-                    <button
-                      className="p-2 rounded-full text-zinc-600 border border-zinc-400 transition-all hover:cursor-pointer hover:text-zinc-50 hover:bg-zinc-400 hover:border-transparent"
-                      onClick={() => {}} // TODO Add function for edit
-                    >
-                      <PencilSimpleIcon></PencilSimpleIcon>
-                    </button>
-                    <button
-                      className="p-2 rounded-full text-zinc-600 border border-zinc-400 transition-all hover:cursor-pointer hover:text-red-400 hover:bg-red-100 hover:border-red-300"
-                      onClick={() => handleDeleteQuestion(qIdx)}
-                    >
-                      <XIcon></XIcon>
-                    </button>
-                  </div>
-                  <div className="w-px rounded-full self-center h-8 bg-zinc-400 mx-2"></div>
-                  <button
-                    className="p-2 rounded-full text-zinc-600 border border-zinc-400 transition-all hover:cursor-pointer hover:text-zinc-50 hover:bg-zinc-400 hover:border-transparent"
-                    onClick={() => {}} // TODO Add function for expansion
-                  >
-                    <CaretDownIcon></CaretDownIcon>
-                  </button>
-                </div>
-              </div>
-              <hr className="my-2 border-zinc-200" />
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
-                {q.choices.map((choice, cIdx) => {
-                  const isSelected = selectedChoices[qIdx] === cIdx;
-                  return (
-                    <Card
-                      key={cIdx}
-                      variant="none"
-                      rounded={isSelected ? "2xl" : "lg"}
-                      className={
-                        `transition-all duration-200 cursor-pointer text-center select-none ` +
-                        (isSelected
-                          ? "bg-zinc-700 text-white shadow-lg"
-                          : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200")
-                      }
-                      padding="md"
-                      onClick={() => handleChoiceToggle(qIdx, cIdx)}
-                    >
-                      {choice}
-                    </Card>
-                  );
-                })}
-              </div>
-            </Card>
+            <QuestionCard
+              key={qIdx}
+              question={q}
+              index={qIdx}
+              onDelete={handleDeleteQuestion}
+              onEdit={(idx) => {}} // TODO
+            />
           ))}
         </div>
       </div>
