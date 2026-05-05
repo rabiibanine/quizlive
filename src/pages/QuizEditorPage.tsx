@@ -1,82 +1,76 @@
-import { useState } from 'react'
-import { Button, Card, Input } from '@/components/primitives'
-import { QuestionForm } from '@/components/quiz/QuestionForm/QuestionForm'
-import { QuestionListItem } from '@/components/quiz/QuestionListItem/QuestionListItem'
-import type { Quiz, Question } from '@/types/quiz'
+import { useState } from "react";
+import Button from "../components/Button";
+import Input from "../components/Input";
+import Card from "../components/Card";
+import { QuestionForm } from "@/components/quiz/QuestionForm/QuestionForm";
+import { QuestionListItem } from "@/components/quiz/QuestionListItem/QuestionListItem";
+import type { Quiz, Question } from "@/types/quiz";
 
 export const QuizEditorPage = () => {
-  const [quizName, setQuizName] = useState('')
-  const [questions, setQuestions] = useState<Question[]>([])
-  const [isAddingQuestion, setIsAddingQuestion] = useState(false)
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [quizName, setQuizName] = useState("");
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [isAddingQuestion, setIsAddingQuestion] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Sum total quiz time in seconds
-  const totalTime = questions.reduce((sum, q) => sum + (q.time || 60), 0)
+  const totalTime = questions.reduce((sum, q) => sum + (q.time || 60), 0);
 
   const validate = (): boolean => {
-    const newErrors: Record<string, string> = {}
+    const newErrors: Record<string, string> = {};
 
-    if (!quizName.trim())
-      newErrors.quizName = 'Quiz name is required'
+    if (!quizName.trim()) newErrors.quizName = "Quiz name is required";
 
-    if (questions.length === 0)
-      newErrors.questions = 'Add at least one question'
+    if (questions.length === 0) newErrors.questions = "Add at least one question";
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleAddQuestion = (question: Question) => {
-    setQuestions(prev => [...prev, question])
-    setIsAddingQuestion(false)
-  }
+    setQuestions((prev) => [...prev, question]);
+    setIsAddingQuestion(false);
+  };
 
   const handleRemoveQuestion = (id: string) => {
-    setQuestions(prev => prev.filter(q => q.id !== id))
-  }
+    setQuestions((prev) => prev.filter((q) => q.id !== id));
+  };
 
   const handleSave = () => {
-    if (!validate()) return
+    if (!validate()) return;
 
     const quiz: Quiz = {
       id: crypto.randomUUID(),
       name: quizName.trim(),
       questions,
       totalTime,
-    }
+    };
 
     // load existing quizzes, append new one, save back
-    const existing = localStorage.getItem('quizzes')
-    const quizzes: Quiz[] = existing ? JSON.parse(existing) : []
-    localStorage.setItem('quizzes', JSON.stringify([...quizzes, quiz]))
+    const existing = localStorage.getItem("quizzes");
+    const quizzes: Quiz[] = existing ? JSON.parse(existing) : [];
+    localStorage.setItem("quizzes", JSON.stringify([...quizzes, quiz]));
 
     // TODO: navigate to quiz list page after saving
-    alert(`Quiz "${quiz.name}" saved!`)
-  }
+    alert(`Quiz "${quiz.name}" saved!`);
+  };
 
   return (
     <div className="min-h-screen bg-surface-base">
-
       {/* Top bar */}
       <div className="border-b border-surface-border px-6 py-4 flex items-center justify-between">
-        <h1 className="text-content-primary text-xl font-semibold">
-          Quiz Editor
-        </h1>
-        <Button variant="primary" onClick={handleSave}>
-          Save Quiz
-        </Button>
+        <h1 className="text-content-primary text-xl font-semibold">Quiz Editor</h1>
+        <Button onClick={handleSave}>Save Quiz</Button>
       </div>
 
       {/* Main content */}
       <div className="max-w-2xl mx-auto px-6 py-8 flex flex-col gap-6">
-
         {/* Quiz name */}
         <Card>
           <Input
             label="Quiz Name"
             placeholder="e.g. JavaScript Basics"
             value={quizName}
-            onChange={e => setQuizName(e.target.value)}
+            onChange={(e) => setQuizName(e.target.value)}
             error={errors.quizName}
             fullWidth
           />
@@ -91,7 +85,7 @@ export const QuizEditorPage = () => {
                 ({questions.length})
               </span>
               <span className="ml-4 text-content-secondary text-xs font-normal">
-                Total time: {Math.floor(totalTime / 60)}:{('0' + (totalTime % 60)).slice(-2)} min
+                Total time: {Math.floor(totalTime / 60)}:{("0" + (totalTime % 60)).slice(-2)} min
               </span>
             </h2>
           </div>
@@ -117,29 +111,17 @@ export const QuizEditorPage = () => {
 
           {/* Error if no questions on save attempt */}
           {errors.questions && (
-            <span className="text-xs text-brand-danger">
-              {errors.questions}
-            </span>
+            <span className="text-xs text-brand-danger">{errors.questions}</span>
           )}
         </div>
 
         {/* Question form or add button */}
         {isAddingQuestion ? (
-          <QuestionForm
-            onSave={handleAddQuestion}
-            onCancel={() => setIsAddingQuestion(false)}
-          />
+          <QuestionForm onSave={handleAddQuestion} onCancel={() => setIsAddingQuestion(false)} />
         ) : (
-          <Button
-            variant="secondary"
-            onClick={() => setIsAddingQuestion(true)}
-            fullWidth
-          >
-            + Add Question
-          </Button>
+          <Button onClick={() => setIsAddingQuestion(true)}>+ Add Question</Button>
         )}
-
       </div>
     </div>
-  )
-}
+  );
+};
