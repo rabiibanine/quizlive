@@ -16,7 +16,6 @@ function App() {
       <Route path="/join" element={<JoinQuiz />} />
       <Route path="/sharing/:code" element={<SharingPage />} />
       <Route path="/quiz/:code/podium" element={<Podium />} />
-      <Route path="/create-edit-quiz" element={<QuizEditorPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
