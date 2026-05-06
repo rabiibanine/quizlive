@@ -1,5 +1,6 @@
 import Card from "@/components/Card";
 import QuestionCardList from "@/components/QuestionCardList";
+import QuizEditorToolBar from "@/components/QuizEditorToolBar";
 import type { Question } from "@/types/quiz";
 
 import { BookOpenIcon, ClockIcon, ChalkboardTeacherIcon, FlaskIcon } from "@phosphor-icons/react";
@@ -134,6 +135,18 @@ export default function QuizEditorPage() {
           quizQuestions={quizQuestions}
           setQuizQuestions={setQuizQuestions}
         ></QuestionCardList>
+
+        <QuizEditorToolBar
+          onLaunch={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+          onExport={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+          onImport={function (file: File): void {
+            throw new Error("Function not implemented.");
+          }}
+        ></QuizEditorToolBar>
       </div>
     </div>
   );

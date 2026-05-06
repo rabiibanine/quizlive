@@ -77,7 +77,7 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
               </button>
             ) : (
               <button
-                className="p-2 rounded-full text-zinc-600 border border-zinc-400 transition-all hover:cursor-pointer hover:text-zinc-50 hover:bg-zinc-400 hover:border-transparent"
+                className="p-2 rounded-full text-zinc-600 border border-zinc-400 transition-all hover:cursor-pointer hover:text-zinc-50 hover:bg-zinc-600 hover:border-transparent"
                 onClick={() => {
                   setIsEditing(true);
                 }}
@@ -96,7 +96,7 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
           <div className="w-px rounded-full self-center h-8 bg-zinc-400 mx-2" />
 
           <button
-            className="p-2 rounded-full text-zinc-600 border border-zinc-400 transition-all hover:cursor-pointer hover:text-zinc-50 hover:bg-zinc-400 hover:border-transparent"
+            className="p-2 rounded-full text-zinc-600 border border-zinc-400 transition-all hover:cursor-pointer hover:text-zinc-50 hover:bg-zinc-600 hover:border-transparent"
             onClick={() => setIsExpanded((prev) => !prev)}
           >
             <CaretDownIcon
@@ -128,7 +128,7 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
                     className={
                       `transition-all duration-200 text-center select-none flex ` +
                       (isCorrectChoice
-                        ? "bg-zinc-700 text-white shadow-lg hover:bg-zinc-600 "
+                        ? "bg-zinc-800 text-white shadow-lg hover:bg-zinc-600 "
                         : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 ") +
                       (isEditing ? "cursor-pointer " : " ")
                     }
