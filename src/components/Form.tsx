@@ -1,3 +1,5 @@
+import type { FormHTMLAttributes } from "react";
+
 const divBaseStyles =
   "fixed inset-0 backdrop-brightness-75 backdrop-blur-sm flex justify-center items-center z-50";
 const formBaseStyles =
@@ -7,7 +9,9 @@ function onClose() {
   return null;
 }
 
-export default function Form({ children }) {
+interface FormProps extends FormHTMLAttributes<HTMLFormElement> {}
+
+export default function Form({ children }: FormProps) {
   return (
     <>
       <div className={`${divBaseStyles}`} onClick={onClose}>

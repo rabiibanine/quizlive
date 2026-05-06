@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import Card from "@/components/Card";
 
+import type { QuestionCardProps } from "@/types/quiz";
+
 import {
   XIcon,
   PencilSimpleIcon,
@@ -11,25 +13,7 @@ import {
 } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 
-interface Choice {
-  text: string;
-  isCorrect: boolean;
-}
-
-interface Question {
-  question: string;
-  choices: string[];
-  correctChoice: number;
-}
-
-interface QuestionCardProps {
-  question: Question;
-  index: number;
-  onDelete: (index: number) => void;
-  onEdit: (index: number) => void;
-}
-
-export default function QuestionCard({ question, index, onDelete, onEdit }: QuestionCardProps) {
+export default function QuestionCard({ question, index, onDelete }: QuestionCardProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editedQuestion, setEditedQuestion] = useState(question.question);
@@ -133,30 +117,30 @@ export default function QuestionCard({ question, index, onDelete, onEdit }: Ques
                       if (isEditing) setCorrectChoice(cIndex);
                     }}
                   >
-                    {isEditing ? (
-                      <input
-                        placeholder={`Choice #${cIndex}`}
-                        className={
-                          "w-full bg-transparent border-b transition-all focus:outline-none " +
-                          (isCorrectChoice
+                    <input
+                      placeholder={`Choice #${cIndex}`}
+                      className={
+                        "w-full bg-transparent border-b transition-all focus:outline-none " +
+                        (isEditing
+                          ? isCorrectChoice
                             ? "border-zinc-500 hover:border-zinc-200 focus:border-zinc-200"
-                            : "border-zinc-300 hover:border-zinc-400 focus:border-zinc-400")
-                        }
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                        value={choices[cIndex]}
-                        onChange={(e) => {
-                          setChoices(
-                            choices.map((choice, index) =>
-                              index === cIndex ? e.target.value : choice
-                            )
-                          );
-                        }}
-                      ></input>
-                    ) : (
-                      <span className="border-b border-transparent">{choices[cIndex]}</span>
-                    )}
+                            : "border-zinc-300 hover:border-zinc-400 focus:border-zinc-400"
+                          : "border-transparent")
+                      }
+                      onClick={(e) => {
+                        if (isEditing) e.stopPropagation();
+                      }}
+                      value={choices[cIndex]}
+                      disabled={!isEditing}
+                      onChange={(e) => {
+                        setChoices(
+                          choices.map((choice, index) =>
+                            index === cIndex ? e.target.value : choice
+                          )
+                        );
+                      }}
+                    ></input>
+
                     <CheckCircleIcon
                       className={`min-w-6 h-6 + ${isCorrectChoice ? "text-zinc-50 " : "text-transparent "} + ${isEditing ? "ml-2" : "ml-auto"}`}
                     ></CheckCircleIcon>
