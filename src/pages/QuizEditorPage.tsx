@@ -2,6 +2,7 @@ import { useState } from "react";
 import QuestionCard from "./QuestionCard";
 
 import Card from "@/components/Card";
+import { AnimatePresence, motion } from "motion/react";
 
 const initialQuizInformationMock = {
   title: "Biology Quiz",
@@ -45,7 +46,7 @@ export default function QuizEditorPage() {
 
   return (
     <div className="min-h-screen bg-zinc-100 flex justify-center py-12 px-12 md:px-36">
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-4xl">
         {/* Quiz Information */}
         <Card
           variant="outline"
@@ -70,15 +71,23 @@ export default function QuizEditorPage() {
         </Card>
         <h1 className="mt-8 mb-4 text-xl font-semibold text-zinc-700">Questions</h1>
         <div className="flex flex-col gap-6">
-          {quizInfo.questions.map((q, qIdx) => (
-            <QuestionCard
-              key={qIdx}
-              question={q}
-              index={qIdx}
-              onDelete={handleDeleteQuestion}
-              onEdit={(idx) => {}} // TODO
-            />
-          ))}
+          <AnimatePresence mode="popLayout">
+            {quizInfo.questions.map((q, qIdx) => (
+              <motion.div
+                key={q.question}
+                layout
+                exit={{ opacity: 0, x: -60 }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+              >
+                <QuestionCard
+                  question={q}
+                  index={qIdx}
+                  onDelete={handleDeleteQuestion}
+                  onEdit={(idx) => {}}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </div>
