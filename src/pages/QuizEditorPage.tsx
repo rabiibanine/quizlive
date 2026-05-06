@@ -5,6 +5,7 @@ const quiz = {
   quizInfo: { title: "Biology Quiz", class: "Biology", subject: "Immunology" },
   quizQuestions: [
     {
+      id: crypto.randomUUID(),
       question: "What is the main function of antibodies?",
       choices: [
         "To attack viruses directly",
@@ -12,16 +13,21 @@ const quiz = {
         "To neutralize foreign pathogens",
         "To create red blood cells",
       ],
+      time: 60,
       correctChoice: 3, // (1-based, 1-4)
     },
     {
+      id: crypto.randomUUID(),
       question: "Which cell type produces antibodies?",
       choices: ["B cells", "T cells", "Macrophages", "Dendritic cells"],
+      time: 60,
       correctChoice: 1,
     },
     {
+      id: crypto.randomUUID(),
       question: "Where does hematopoiesis primarily take place in adults?",
       choices: ["Spleen", "Liver", "Bone marrow", "Thymus"],
+      time: 60,
       correctChoice: 3,
     },
   ],

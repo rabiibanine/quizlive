@@ -1,5 +1,7 @@
 import QuestionCard from "@/components/QuestionCard";
+
 import type { Question } from "@/types/quiz";
+
 import { PlusCircleIcon } from "@phosphor-icons/react";
 
 import { AnimatePresence, motion } from "motion/react";
@@ -14,8 +16,10 @@ export default function QuestionCardList({ quizQuestions }: QuestionCardListProp
 
   function handleAddQuestion() {
     const newQuestion: Question = {
+      id: crypto.randomUUID(),
       question: "",
       choices: ["", "", "", ""],
+      time: 60,
       correctChoice: 1,
     };
     setCurrentQuizQuestions((prevQuestions) => [newQuestion, ...prevQuestions]);
@@ -38,7 +42,7 @@ export default function QuestionCardList({ quizQuestions }: QuestionCardListProp
         <AnimatePresence mode="popLayout">
           {currentQuizQuestions.map((q, qIndex) => (
             <motion.div
-              key={q.question}
+              key={q.id}
               layout
               exit={{ opacity: 0, x: -60 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}

@@ -1,6 +1,8 @@
 export interface Question {
+  id: string;
   question: string;
   choices: string[];
+  time: number;
   correctChoice: number;
 }
 
