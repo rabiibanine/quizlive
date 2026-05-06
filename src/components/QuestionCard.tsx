@@ -29,18 +29,20 @@ export default function QuestionCard({ question, index, onDelete }: QuestionCard
           <span className="font-mono font-bold text-zinc-600 text-lg">
             {(index + 1).toString().padStart(2, "0")}
           </span>
-          {isEditing ? (
-            <input
-              className="ml-2 w-full bg-transparent border-b border-zinc-300 transition-all focus:outline-none focus:border-zinc-600"
-              placeholder="Enter your question here"
-              value={editedQuestion}
-              onChange={(e) => {
-                setEditedQuestion(e.target.value);
-              }}
-            />
-          ) : (
-            <span className="ml-2 text-zinc-900">{editedQuestion}</span>
-          )}
+          <input
+            className={
+              "ml-2 w-full bg-transparent border-b " +
+              (isEditing
+                ? "border-zinc-300 transition-all focus:outline-none focus:border-zinc-600"
+                : "border-transparent")
+            }
+            placeholder="Enter your question here"
+            value={editedQuestion}
+            disabled={!isEditing}
+            onChange={(e) => {
+              if (isEditing) setEditedQuestion(e.target.value);
+            }}
+          />
         </div>
 
         {/* Buttons */}
