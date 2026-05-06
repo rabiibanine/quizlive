@@ -1,9 +1,10 @@
 import Card from "@/components/Card";
 import QuestionCardList from "@/components/QuestionCardList";
+import type { Question } from "@/types/quiz";
 
 import { BookOpenIcon, ClockIcon, ChalkboardTeacherIcon, FlaskIcon } from "@phosphor-icons/react";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 const quiz = {
   quizInfo: { title: "Biology Quiz", class: "Biology", subject: "Immunology" },
@@ -31,17 +32,21 @@ const quiz = {
       id: crypto.randomUUID(),
       question: "Where does hematopoiesis primarily take place in adults?",
       choices: ["Spleen", "Liver", "Bone marrow", "Thymus"],
-      time: 60,
+      time: 45,
       correctChoice: 3,
     },
   ],
 };
 
 export default function QuizEditorPage() {
-  const { quizInfo } = quiz;
+  const pillStyles =
+    "flex items-center gap-1.5 text-sm text-zinc-500 border border-zinc-200 rounded-full px-3 py-1 transition-all hover:border-zinc-400";
+  const [quizState, setQuizState] = useState(quiz);
+  const { quizInfo, quizQuestions } = quizState;
+
   const totalSeconds = useMemo(() => {
-    return quiz.quizQuestions.reduce((acc, q) => acc + q.time, 0);
-  }, [quiz.quizQuestions]);
+    return quizQuestions.reduce((acc, q) => acc + q.time, 0);
+  }, [quizQuestions]);
 
   const totalTime = useMemo(() => {
     const minutes = Math.floor(totalSeconds / 60);
@@ -50,34 +55,37 @@ export default function QuizEditorPage() {
   }, [totalSeconds]);
 
   const questionCount = useMemo(() => {
-    return quiz.quizQuestions.length;
-  }, [quiz.quizQuestions]);
+    return quizQuestions.length;
+  }, [quizQuestions]);
+
+  const setQuizQuestions = (updatedQuestions: Question[]) => {
+    setQuizState((prev) => {
+      return {
+        ...prev,
+        quizQuestions: updatedQuestions,
+      };
+    });
+  };
+  const setQuizClass = (newClass: string) => {
+    setQuizState((prev) => {
+      return {
+        ...prev,
+        quizInfo: { ...prev.quizInfo, class: newClass },
+      };
+    });
+  };
+  const setQuizSubject = (newSubject: string) => {
+    setQuizState((prev) => {
+      return {
+        ...prev,
+        quizInfo: { ...prev.quizInfo, subject: newSubject },
+      };
+    });
+  };
 
   return (
     <div className="min-h-screen bg-zinc-100 flex justify-center py-12 px-12 md:px-36">
       <div className="w-full max-w-4xl">
-        {/* Quiz Information */}
-        {/* <Card */}
-        {/*   variant="outline" */}
-        {/*   fullWidth */}
-        {/*   padding="md" */}
-        {/*   className="flex self-start justify-center gap-8 flex-col sm:flex-row" */}
-        {/* > */}
-        {/*   {Object.entries(quiz.quizInfo) */}
-        {/*     .filter(([key]) => key !== "questions") */}
-        {/*     .map(([key, value]) => { */}
-        {/*       return ( */}
-        {/*         <div key={key} className="flex items-center flex-col gap-2"> */}
-        {/*           <p className="text-zinc-400"> */}
-        {/*             <strong>{key.toUpperCase()}</strong> */}
-        {/*           </p> */}
-        {/*           <Card className="bg-zinc-100 self-stretch min-w-30 transition-all hover:bg-zinc-200"> */}
-        {/*             <p className="text-center text-zinc-900">{value}</p> */}
-        {/*           </Card> */}
-        {/*         </div> */}
-        {/*       ); */}
-        {/*     })} */}
-        {/* </Card> */}
         <Card variant="outline" fullWidth padding="md" className="flex flex-col gap-4">
           {/* Title and description */}
           <div className="flex flex-col gap-2">
@@ -91,28 +99,28 @@ export default function QuizEditorPage() {
 
           {/* Metadata row */}
           <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-1.5 text-sm text-zinc-500 border border-zinc-200 rounded-full px-3 py-1">
+            <div className={pillStyles}>
               <BookOpenIcon size={16} />
               <span>
                 Questions: <strong className="text-zinc-700">{questionCount}</strong>
               </span>
             </div>
 
-            <div className="flex items-center gap-1.5 text-sm text-zinc-500 border border-zinc-200 rounded-full px-3 py-1">
+            <div className={pillStyles}>
               <ClockIcon size={16} />
               <span>
                 Time: <strong className="text-zinc-700">{totalTime}</strong>
               </span>
             </div>
 
-            <div className="flex items-center gap-1.5 text-sm text-zinc-500 border border-zinc-200 rounded-full px-3 py-1">
+            <div className={pillStyles}>
               <ChalkboardTeacherIcon size={16} />
               <span>
                 Class: <strong className="text-zinc-700">{quizInfo.class}</strong>
               </span>
             </div>
 
-            <div className="flex items-center gap-1.5 text-sm text-zinc-500 border border-zinc-200 rounded-full px-3 py-1">
+            <div className={pillStyles}>
               <FlaskIcon size={16} />
               <span>
                 Subject: <strong className="text-zinc-700">{quizInfo.subject}</strong>
@@ -122,7 +130,10 @@ export default function QuizEditorPage() {
         </Card>
 
         {/* Question List */}
-        <QuestionCardList quizQuestions={quiz.quizQuestions}></QuestionCardList>
+        <QuestionCardList
+          quizQuestions={quizQuestions}
+          setQuizQuestions={setQuizQuestions}
+        ></QuestionCardList>
       </div>
     </div>
   );

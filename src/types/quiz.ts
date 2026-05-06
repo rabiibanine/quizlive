@@ -10,4 +10,5 @@ export interface QuestionCardProps {
   question: Question;
   index: number;
   onDelete: (index: number) => void;
+  onUpdate: (index: number, changes: Partial<Question>) => void;
 }

@@ -14,13 +14,9 @@ import {
 } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 
-export default function QuestionCard({ question, index, onDelete }: QuestionCardProps) {
+export default function QuestionCard({ question, index, onDelete, onUpdate }: QuestionCardProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedQuestion, setEditedQuestion] = useState(question.question);
-  const [questionTime, setQuestionTime] = useState(question.time);
-  const [correctChoice, setCorrectChoice] = useState(question.correctChoice);
-  const [choices, setChoices] = useState(question.choices);
 
   return (
     <Card variant="outline" padding="lg" className="w-full flex flex-col">
@@ -39,10 +35,10 @@ export default function QuestionCard({ question, index, onDelete }: QuestionCard
                 : "border-transparent")
             }
             placeholder="Enter your question here"
-            value={editedQuestion}
+            value={question.question}
             disabled={!isEditing}
             onChange={(e) => {
-              if (isEditing) setEditedQuestion(e.target.value);
+              if (isEditing) onUpdate(index, { question: e.target.value });
             }}
           />
         </div>
@@ -51,13 +47,13 @@ export default function QuestionCard({ question, index, onDelete }: QuestionCard
           <ClockIcon className="text-zinc-400 shrink-0" />
           <input
             type="number"
-            value={questionTime}
+            value={question.time}
             disabled={!isEditing}
             min={1}
             max={999}
             onChange={(e) => {
               if (e.target.value.length > 3) return;
-              if (isEditing) setQuestionTime(Number(e.target.value));
+              if (isEditing) onUpdate(index, { time: Number(e.target.value) });
             }}
             className={
               `bg-transparent w-12 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ` +
@@ -123,7 +119,7 @@ export default function QuestionCard({ question, index, onDelete }: QuestionCard
             <hr className="my-2 border-zinc-200" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
               {question.choices.map((choice, cIndex) => {
-                const isCorrectChoice = correctChoice === cIndex + 1;
+                const isCorrectChoice = question.correctChoice === cIndex + 1;
                 return (
                   <Card
                     key={cIndex}
@@ -138,7 +134,7 @@ export default function QuestionCard({ question, index, onDelete }: QuestionCard
                     }
                     padding="md"
                     onClick={() => {
-                      if (isEditing) setCorrectChoice(cIndex + 1);
+                      if (isEditing) onUpdate(index, { correctChoice: cIndex + 1 });
                     }}
                   >
                     <input
@@ -154,14 +150,14 @@ export default function QuestionCard({ question, index, onDelete }: QuestionCard
                       onClick={(e) => {
                         if (isEditing) e.stopPropagation();
                       }}
-                      value={choices[cIndex]}
+                      value={choice}
                       disabled={!isEditing}
                       onChange={(e) => {
-                        setChoices(
-                          choices.map((choice, index) =>
+                        onUpdate(index, {
+                          choices: question.choices.map((choice, index) =>
                             index === cIndex ? e.target.value : choice
-                          )
-                        );
+                          ),
+                        });
                       }}
                     ></input>
 
