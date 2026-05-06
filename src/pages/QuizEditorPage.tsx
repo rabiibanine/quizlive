@@ -1,9 +1,9 @@
 import { useState } from "react";
-import QuestionCard from "./QuestionCard";
 
 import Card from "@/components/Card";
+import QuestionCard from "@/components/QuestionCard";
+
 import { AnimatePresence, motion } from "motion/react";
-import Form from "@/components/Form";
 
 const initialQuizInformationMock = {
   title: "Biology Quiz",
@@ -36,7 +36,6 @@ const initialQuizInformationMock = {
 export default function QuizEditorPage() {
   // App state for quiz information & selections
   const [quizInfo, setQuizInfo] = useState(initialQuizInformationMock);
-
   // Delete question at a given index
   function handleDeleteQuestion(qIndex: number) {
     setQuizInfo((prev) => ({
@@ -47,7 +46,6 @@ export default function QuizEditorPage() {
 
   return (
     <div className="min-h-screen bg-zinc-100 flex justify-center py-12 px-12 md:px-36">
-      <Form></Form>
       <div className="w-full max-w-4xl">
         {/* Quiz Information */}
         <Card
