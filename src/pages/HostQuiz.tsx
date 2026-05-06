@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import NavBar from "../components/NavBar";
 import { Card } from "../components/primitives";
 import { AnswerStatCard, LeaderboardCard } from "../components/quiz";
+import StepProgress from "../components/StepProgress";
 import quizMock from "../data/quizMock.json";
 
 type QuizChoice = {
@@ -84,8 +85,6 @@ const HostQuiz = () => {
     return Math.max(...activeQuestion.choices.map((choice) => choice.selectedCount));
   }, [activeQuestion]);
 
-  const progress = Math.round(((activeIndex + 1) / quiz.questions.length) * 100);
-
   return (
     <div
       className="min-h-screen w-full text-gray-900 selection:bg-purple-200 selection:text-white"
@@ -124,20 +123,18 @@ const HostQuiz = () => {
               variant="outline"
               className="rounded-3xl border-white/80 bg-white/80 backdrop-blur-xl"
             >
-              <div className="flex flex-wrap items-center justify-between gap-4 text-xs font-semibold text-gray-500">
-                <div className="flex items-center gap-3">
-                  <span className="uppercase tracking-[0.3em] text-purple-600">
-                    Step {activeIndex + 1} of {quiz.questions.length}
-                  </span>
-                  <span>{progress}%</span>
-                </div>
-                <span>{quiz.studentsJoined} students connected</span>
-              </div>
-              <div className="mt-3 h-2 w-full rounded-full bg-gray-200">
-                <div
-                  className="h-full rounded-full bg-purple-500"
-                  style={{ width: `${progress}%` }}
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <StepProgress
+                  label="question"
+                  currentStep={activeIndex}
+                  totalSteps={quiz.questions.length}
+                  className="flex-1"
+                  labelClassName="text-xs font-semibold uppercase tracking-[0.3em] text-purple-600"
+                  percentClassName="hidden"
                 />
+                <span className="text-xs font-semibold text-gray-500 absolute right-0 mx-5">
+                  {quiz.studentsJoined} students connected
+                </span>
               </div>
 
               <h2 className="mt-6 text-2xl font-semibold text-black">
