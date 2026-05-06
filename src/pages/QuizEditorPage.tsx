@@ -37,10 +37,10 @@ export default function QuizEditorPage() {
   const [quizInfo, setQuizInfo] = useState(initialQuizInformationMock);
 
   // Delete question at a given index
-  function handleDeleteQuestion(qIdx: number) {
+  function handleDeleteQuestion(qIndex: number) {
     setQuizInfo((prev) => ({
       ...prev,
-      questions: prev.questions.filter((_, i) => i !== qIdx),
+      questions: prev.questions.filter((_, i) => i !== qIndex),
     }));
   }
 
@@ -72,7 +72,7 @@ export default function QuizEditorPage() {
         <h1 className="mt-8 mb-4 text-xl font-semibold text-zinc-700">Questions</h1>
         <div className="flex flex-col gap-6">
           <AnimatePresence mode="popLayout">
-            {quizInfo.questions.map((q, qIdx) => (
+            {quizInfo.questions.map((q, qIndex) => (
               <motion.div
                 key={q.question}
                 layout
@@ -81,9 +81,9 @@ export default function QuizEditorPage() {
               >
                 <QuestionCard
                   question={q}
-                  index={qIdx}
+                  index={qIndex}
                   onDelete={handleDeleteQuestion}
-                  onEdit={(idx) => {}}
+                  onEdit={() => {}}
                 />
               </motion.div>
             ))}

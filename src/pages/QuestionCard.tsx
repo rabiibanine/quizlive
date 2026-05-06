@@ -27,19 +27,23 @@ export default function QuestionCard({ question, index, onDelete, onEdit }: Ques
   const [isExpanded, setIsExpanded] = useState(true);
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
 
-  const handleChoiceToggle = (cIdx: number) => {
-    setSelectedChoice((prev) => (cIdx === prev ? null : cIdx));
+  const handleChoiceToggle = (cIndex: number) => {
+    setSelectedChoice((prev) => (cIndex === prev ? null : cIndex));
   };
 
   return (
     <Card variant="outline" padding="lg" className="w-full flex flex-col">
       {/* Header */}
-      <div className="mb-2 flex flex-row items-center gap-2">
-        <span className="font-mono font-bold text-zinc-600 text-lg">
-          {(index + 1).toString().padStart(2, "0")}
-        </span>
-        <span className="ml-2 text-zinc-900">{question.question}</span>
+      <div className="mb-2 items-center gap-2 flex flex-col sm:flex-row">
+        {/* Number & Question */}
+        <div className="flex items-center order-last mt-4 sm:order-first sm:mt-0">
+          <span className="font-mono font-bold text-zinc-600 text-lg">
+            {(index + 1).toString().padStart(2, "0")}
+          </span>
+          <span className="ml-2 text-zinc-900">{question.question}</span>
+        </div>
 
+        {/* Buttons */}
         <div className="ml-auto flex gap-2">
           <div className="flex gap-2 h-full">
             <button
@@ -81,11 +85,11 @@ export default function QuestionCard({ question, index, onDelete, onEdit }: Ques
           >
             <hr className="my-2 border-zinc-200" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
-              {question.choices.map((choice, cIdx) => {
-                const isSelected = selectedChoice === cIdx;
+              {question.choices.map((choice, cIndex) => {
+                const isSelected = selectedChoice === cIndex;
                 return (
                   <Card
-                    key={cIdx}
+                    key={cIndex}
                     variant="none"
                     rounded={isSelected ? "2xl" : "lg"}
                     className={
@@ -95,7 +99,7 @@ export default function QuestionCard({ question, index, onDelete, onEdit }: Ques
                         : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200")
                     }
                     padding="md"
-                    onClick={() => handleChoiceToggle(cIdx)}
+                    onClick={() => handleChoiceToggle(cIndex)}
                   >
                     {choice}
                   </Card>
