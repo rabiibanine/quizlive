@@ -1,15 +1,9 @@
-import { useState } from "react";
-
 import Card from "@/components/Card";
-import QuestionCard from "@/components/QuestionCard";
+import QuestionCardList from "@/components/QuestionCardList";
 
-import { AnimatePresence, motion } from "motion/react";
-
-const initialQuizInformationMock = {
-  title: "Biology Quiz",
-  class: "Biology",
-  subject: "Immunology",
-  questions: [
+const quiz = {
+  quizInfo: { title: "Biology Quiz", class: "Biology", subject: "Immunology" },
+  quizQuestions: [
     {
       question: "What is the main function of antibodies?",
       choices: [
@@ -34,16 +28,6 @@ const initialQuizInformationMock = {
 };
 
 export default function QuizEditorPage() {
-  // App state for quiz information & selections
-  const [quizInfo, setQuizInfo] = useState(initialQuizInformationMock);
-  // Delete question at a given index
-  function handleDeleteQuestion(qIndex: number) {
-    setQuizInfo((prev) => ({
-      ...prev,
-      questions: prev.questions.filter((_, i) => i !== qIndex),
-    }));
-  }
-
   return (
     <div className="min-h-screen bg-zinc-100 flex justify-center py-12 px-12 md:px-36">
       <div className="w-full max-w-4xl">
@@ -54,7 +38,7 @@ export default function QuizEditorPage() {
           padding="md"
           className="flex self-start justify-center gap-8 flex-col sm:flex-row"
         >
-          {Object.entries(quizInfo)
+          {Object.entries(quiz.quizInfo)
             .filter(([key]) => key !== "questions")
             .map(([key, value]) => {
               return (
@@ -69,26 +53,8 @@ export default function QuizEditorPage() {
               );
             })}
         </Card>
-        <h1 className="mt-8 mb-4 text-xl font-semibold text-zinc-700">Questions</h1>
-        <div className="flex flex-col gap-6">
-          <AnimatePresence mode="popLayout">
-            {quizInfo.questions.map((q, qIndex) => (
-              <motion.div
-                key={q.question}
-                layout
-                exit={{ opacity: 0, x: -60 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-              >
-                <QuestionCard
-                  question={q}
-                  index={qIndex}
-                  onDelete={handleDeleteQuestion}
-                  onEdit={() => {}}
-                />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+
+        <QuestionCardList quizQuestions={quiz.quizQuestions}></QuestionCardList>
       </div>
     </div>
   );
