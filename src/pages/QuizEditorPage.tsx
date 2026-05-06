@@ -84,6 +84,19 @@ export default function QuizEditorPage() {
     });
   };
 
+  const handleExport = () => {
+    const json = JSON.stringify(quizState, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `${quizInfo.title}.json`;
+    anchor.click();
+
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="min-h-screen bg-zinc-100 flex justify-center py-12 px-12 md:px-36">
       <div className="w-full max-w-4xl">
@@ -140,9 +153,7 @@ export default function QuizEditorPage() {
           onLaunch={function (): void {
             throw new Error("Function not implemented.");
           }}
-          onExport={function (): void {
-            throw new Error("Function not implemented.");
-          }}
+          onExport={handleExport}
           onImport={function (file: File): void {
             throw new Error("Function not implemented.");
           }}
