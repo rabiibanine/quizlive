@@ -59,7 +59,10 @@ export default function QuestionCard({ question, index, onDelete }: QuestionCard
               if (e.target.value.length > 3) return;
               if (isEditing) setQuestionTime(Number(e.target.value));
             }}
-            className="bg-transparent w-12 focus:outline-none text-zinc-700 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className={
+              `bg-transparent w-12 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ` +
+              (isEditing ? `text-zinc-700` : `text-zinc-500`)
+            }
           />
           <span className="text-zinc-400 text-sm">sec</span>
         </div>
