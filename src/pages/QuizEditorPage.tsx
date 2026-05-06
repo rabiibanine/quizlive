@@ -40,7 +40,7 @@ const quiz = {
 
 export default function QuizEditorPage() {
   const pillStyles =
-    "flex items-center gap-1.5 text-sm text-zinc-500 border border-zinc-200 rounded-full px-3 py-1 transition-all hover:border-zinc-400";
+    "min-w-38 flex justify-center items-center gap-1.5 text-sm text-zinc-500 border border-zinc-200 rounded-full px-3 py-1 transition-all hover:border-zinc-400";
   const [quizState, setQuizState] = useState(quiz);
   const { quizInfo, quizQuestions } = quizState;
 
@@ -98,7 +98,7 @@ export default function QuizEditorPage() {
           <hr className="border-zinc-200" />
 
           {/* Metadata row */}
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-wrap justify-between items-center gap-4">
             <div className={pillStyles}>
               <BookOpenIcon size={16} />
               <span>
