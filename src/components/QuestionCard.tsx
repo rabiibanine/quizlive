@@ -2,7 +2,13 @@ import { useState } from "react";
 
 import Card from "@/components/Card";
 
-import { XIcon, PencilSimpleIcon, CaretDownIcon, CheckIcon } from "@phosphor-icons/react";
+import {
+  XIcon,
+  PencilSimpleIcon,
+  CaretDownIcon,
+  CheckIcon,
+  CheckCircleIcon,
+} from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 
 interface Choice {
@@ -151,6 +157,9 @@ export default function QuestionCard({ question, index, onDelete, onEdit }: Ques
                     ) : (
                       <span className="border-b border-transparent">{choices[cIndex]}</span>
                     )}
+                    <CheckCircleIcon
+                      className={`min-w-6 h-6 + ${isCorrectChoice ? "text-zinc-50 " : "text-transparent "} + ${isEditing ? "ml-2" : "ml-auto"}`}
+                    ></CheckCircleIcon>
                   </Card>
                 );
               })}
