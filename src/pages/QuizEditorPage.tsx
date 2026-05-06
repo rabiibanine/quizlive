@@ -97,6 +97,21 @@ export default function QuizEditorPage() {
     URL.revokeObjectURL(url);
   };
 
+  const handleImport = (file: File) => {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      try {
+        const parsed = JSON.parse(e.target?.result as string);
+        setQuizState(parsed);
+      } catch {
+        alert("Invalid JSON file");
+      }
+    };
+
+    reader.readAsText(file);
+  };
+
   return (
     <div className="min-h-screen bg-zinc-100 flex justify-center py-12 px-12 md:px-36">
       <div className="w-full max-w-4xl">
@@ -154,9 +169,7 @@ export default function QuizEditorPage() {
             throw new Error("Function not implemented.");
           }}
           onExport={handleExport}
-          onImport={function (file: File): void {
-            throw new Error("Function not implemented.");
-          }}
+          onImport={handleImport}
         ></QuizEditorToolBar>
       </div>
     </div>
