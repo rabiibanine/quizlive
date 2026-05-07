@@ -3,8 +3,8 @@ import { Logo } from "../components/Logo";
 
 function NavBar() {
   return (
-    <div className="relative top-10 left-1/2 -translate-x-1/2 flex h-[60px] w-[90%] lg:max-w-(--breakpoint-lg) backdrop-blur-[10px] rounded-full border border-black bg-black text-white justify-between items-center px-6 z-50">
-      
+    <div className="relative top-10 left-1/2 -translate-x-1/2 flex h-[60px] w-[90%] lg:max-w-screen-lg backdrop-blur-[10px] rounded-full border border-black bg-black text-white justify-between items-center px-6 z-50">
+
       <Logo />
 
       <div className="flex items-center gap-4">
