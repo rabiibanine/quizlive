@@ -23,8 +23,8 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
       {/* Header */}
       <div className="items-center gap-2 flex flex-col sm:flex-row">
         {/* Number & Question */}
-        <div className="flex items-center w-full order-last mt-4 sm:order-first sm:mt-0">
-          <span className="font-mono font-bold text-zinc-600 text-lg">
+        <div className="flex justify-center items-center w-full order-last mt-4 sm:order-first sm:mt-0">
+          <span className="font-bold text-zinc-600 text-lg">
             {(index + 1).toString().padStart(2, "0")}
           </span>
           <input
