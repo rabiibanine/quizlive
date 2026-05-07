@@ -121,27 +121,28 @@ const HostQuiz = () => {
           <div className="mt-10 grid gap-6 lg:grid-cols-[1.6fr_0.6fr]">
             <Card
               variant="outline"
-              className="rounded-3xl border-white/80 bg-white/80 backdrop-blur-xl"
+              padding="lg"
+              className="rounded-3xl border-white/70 bg-white/80 backdrop-blur-xl shadow-[0_25px_60px_-40px_rgba(15,23,42,0.45)]"
             >
-              <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="flex flex-wrap items-center justify-between gap-4">
                 <StepProgress
-                  label="question"
+                  label="Question"
                   currentStep={activeIndex}
                   totalSteps={quiz.questions.length}
                   className="flex-1"
                   labelClassName="text-xs font-semibold uppercase tracking-[0.3em] text-purple-600"
                   percentClassName="hidden"
                 />
-                <span className="text-xs font-semibold text-gray-500 absolute right-0 mx-5">
+                <span className="text-xs font-semibold text-gray-500">
                   {quiz.studentsJoined} students connected
                 </span>
               </div>
 
-              <h2 className="mt-6 text-2xl font-semibold text-black">
+              <h2 className="mt-6 text-2xl font-semibold text-black md:text-3xl">
                 Question {activeIndex + 1} of {quiz.questions.length}: {activeQuestion.text}
               </h2>
 
-              <div className="mt-6 grid gap-4 md:grid-cols-2">
+              <div className="mt-8 grid gap-5 md:grid-cols-2">
                 {activeQuestion.choices.map((choice) => {
                   const percent = totalResponses
                     ? Math.round((choice.selectedCount / totalResponses) * 100)

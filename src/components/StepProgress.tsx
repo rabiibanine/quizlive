@@ -40,4 +40,3 @@ const StepProgress = ({
 };
 
 export default StepProgress;
-

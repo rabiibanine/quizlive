@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
-import NavBar from "../components/NavBar";
-import Button from "../components/Button";
-import { Card } from "../components/primitives";
-import StepProgress from "../components/StepProgress";
+import NavBar from "@/components/NavBar";
+import Button from "@/components/Button";
+import  Card  from "@/components/Card";
+import StepProgress from "@/components/StepProgress";
 import quizMock from "../data/quizMock.json";
 
 type QuizChoice = {
@@ -119,10 +119,11 @@ const StudentQuiz = () => {
           <div className="mt-10 grid gap-6 lg:grid-cols-[1.6fr_0.6fr]">
             <Card
               variant="outline"
-              className="rounded-3xl border-white/80 bg-white/80 backdrop-blur-xl"
+              padding="lg"
+              className="rounded-3xl border-white/70 bg-white/80 backdrop-blur-xl shadow-[0_25px_60px_-40px_rgba(15,23,42,0.45)]"
             >
               <StepProgress
-                label="question"
+                label="Question"
                 currentStep={activeIndex}
                 totalSteps={quiz.questions.length}
                 className="flex-1"
@@ -130,36 +131,36 @@ const StudentQuiz = () => {
                 percentClassName="hidden"
               />
 
-              <h2 className="mt-6 text-2xl font-semibold text-black">
+              <h2 className="mt-6 text-2xl font-semibold text-black md:text-3xl">
                 Question {activeIndex + 1} of {quiz.questions.length}: {activeQuestion.text}
               </h2>
 
-              <div className="mt-6 grid gap-6 md:grid-cols-2">
+              <div className="mt-8 grid gap-5 md:grid-cols-2">
                 {activeQuestion.choices.map((choice, index) => {
                   const isSelected = selectedChoiceId === choice.id;
                   return (
                     <button
                       key={choice.id}
                       type="button"
-                      className={`group relative flex min-h-[112px] w-full items-start gap-5 rounded-2xl border-2 px-6 py-6 text-left transition-all md:min-h-[128px] ${
+                      className={`group relative flex min-h-[120px] w-full items-start gap-5 rounded-2xl border bg-white/90 px-6 py-6 text-left transition-all duration-200 md:min-h-[132px] ${
                         isSelected
-                          ? "border-purple-500 bg-purple-50 shadow-[0_18px_40px_-24px_rgba(88,28,135,0.7)]"
-                          : "border-gray-200 bg-white shadow-[0_16px_35px_-24px_rgba(15,23,42,0.45)] hover:border-purple-300"
+                          ? "border-purple-500 bg-purple-50/80 shadow-[0_18px_45px_-30px_rgba(88,28,135,0.6)] ring-1 ring-purple-200"
+                          : "border-gray-200/80 shadow-[0_12px_30px_-28px_rgba(15,23,42,0.35)] hover:border-purple-300 hover:shadow-[0_18px_35px_-30px_rgba(88,28,135,0.4)]"
                       } ${isSubmitted && !isSelected ? "opacity-70" : ""}`}
                       onClick={() => handleChoiceSelect(choice.id)}
                       disabled={isSubmitted}
                       aria-pressed={isSelected}
                     >
                       <span
-                        className={`flex h-12 w-12 items-center justify-center rounded-full text-base font-semibold ${
+                        className={`flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold ${
                           isSelected
                             ? "bg-purple-600 text-white"
-                            : "bg-gray-100 text-gray-700 group-hover:bg-purple-100 group-hover:text-purple-700"
+                            : "bg-white text-gray-700 ring-1 ring-gray-200/70 group-hover:bg-purple-50 group-hover:text-purple-700"
                         }`}
                       >
                         {optionLabels[index] ?? ""}
                       </span>
-                      <span className="text-base font-semibold text-gray-900">
+                      <span className="text-base font-semibold leading-snug text-gray-900">
                         {choice.text}
                       </span>
                     </button>
