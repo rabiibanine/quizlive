@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 
-import NavBar from "../components/NavBar";
-import { Card } from "../components/primitives";
-import { AnswerStatCard, LeaderboardCard } from "../components/quiz";
-import StepProgress from "../components/StepProgress";
-import quizMock from "../data/quizMock.json";
+import NavBar from "@/components/NavBar";
+import  Card from "@/components/Card";
+import { AnswerStatCard, LeaderboardCard } from "@/components/quiz";
+import StepProgress from "@/components/StepProgress";
+import quizMock from "@/data/quizMock.json";
 
 type QuizChoice = {
   id: number;

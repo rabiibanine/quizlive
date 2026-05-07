@@ -1,4 +1,4 @@
-import { Card } from "../primitives";
+import  Card  from "@/components/Card";
 
 type AnswerStatCardProps = {
   label: string;

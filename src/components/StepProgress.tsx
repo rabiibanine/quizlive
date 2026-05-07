@@ -1,5 +1,5 @@
 type StepProgressProps = {
-  label: string;
+  label?: string;
   currentStep: number;
   totalSteps: number;
   className?: string;

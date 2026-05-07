@@ -1,4 +1,4 @@
-import { Card } from "../primitives";
+import  Card  from "@/components/Card";
 
 type TimerCardProps = {
   label?: string;
@@ -8,7 +8,7 @@ type TimerCardProps = {
 const TimerCard = ({ label = "TIME REMAINING", time }: TimerCardProps) => {
   return (
     <Card
-      variant="base"
+      variant="outline"
       className="rounded-3xl bg-black text-white shadow-[0_20px_40px_-20px_rgba(0,0,0,0.6)]"
     >
       <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-white/60">

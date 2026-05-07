@@ -5,6 +5,7 @@ import NavBar from "@/components/NavBar";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Input from "@/components/Input";
+import StepProgress from "@/components/StepProgress";
 
 type StepKey = "quizTitle" | "className" | "subject" | "maxStudents";
 
@@ -197,18 +198,15 @@ const QuizForm = () => {
                 </p>
               </div>
 
-              <div className="flex items-center justify-between text-sm text-gray-500">
-                <span>
-                  Step {currentStep + 1} of {steps.length}
-                </span>
-                <span>{progress}%</span>
-              </div>
-              <div className="mt-3 h-2 w-full rounded-full bg-gray-200">
-                <div
-                  className="h-full rounded-full bg-purple-500 transition-all duration-300"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
+              <StepProgress
+                currentStep={currentStep}
+                totalSteps={steps.length}
+                className="mt-2"
+                labelClassName="text-sm text-gray-500"
+                percentClassName="text-sm text-gray-500"
+                trackClassName="bg-gray-200"
+                barClassName="bg-purple-500"
+              />
 
               <div className="mt-8">
                 <Input

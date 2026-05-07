@@ -1,5 +1,5 @@
-import AnimatedItem from "../AnimatedList";
-import { Card } from "../primitives";
+import AnimatedItem from "@/components/AnimatedList.tsx";
+import  Card  from "@/components/Card.tsx";
 
 type LeaderboardEntry = {
   id: number;
