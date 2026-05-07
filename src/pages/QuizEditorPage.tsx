@@ -6,6 +6,7 @@ import type { Question } from "@/types/quiz";
 import { BookOpenIcon, ClockIcon, ChalkboardTeacherIcon, FlaskIcon } from "@phosphor-icons/react";
 
 import { useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const quiz = {
   quizInfo: { title: "Biology Quiz", class: "Biology", subject: "Immunology" },
@@ -40,9 +41,38 @@ const quiz = {
 };
 
 export default function QuizEditorPage() {
+  const location = useLocation();
+  const stateQuizInfo = location.state as
+    | { title: string; className: string; subject: string; numberOfStudents: number }
+    | undefined;
+  const resolvedQuizInfo = {
+    title: stateQuizInfo?.title ?? quiz.quizInfo.title,
+    class: stateQuizInfo?.className ?? quiz.quizInfo.class,
+    subject: stateQuizInfo?.subject ?? quiz.quizInfo.subject,
+  };
+  const hasRouterState = Boolean(stateQuizInfo);
+
   const pillStyles =
     "min-w-38 flex justify-center items-center gap-1.5 text-sm text-zinc-500 border border-zinc-200 rounded-full px-3 py-1 transition-all hover:border-zinc-400";
-  const [quizState, setQuizState] = useState(quiz);
+  const [quizState, setQuizState] = useState({
+    ...(hasRouterState
+      ? {
+          quizInfo: resolvedQuizInfo,
+          quizQuestions: [
+            {
+              id: crypto.randomUUID(),
+              question: "",
+              choices: ["", "", "", ""],
+              time: 30,
+              correctChoice: 1,
+            },
+          ],
+        }
+      : {
+          ...quiz,
+          quizInfo: resolvedQuizInfo,
+        }),
+  });
   const { quizInfo, quizQuestions } = quizState;
 
   const totalSeconds = useMemo(() => {

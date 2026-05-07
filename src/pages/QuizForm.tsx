@@ -6,6 +6,9 @@ import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Input from "@/components/Input";
 import StepProgress from "@/components/StepProgress";
+import { useNavigate } from "react-router-dom";
+
+
 
 type StepKey = "quizTitle" | "className" | "subject" | "maxStudents";
 
@@ -18,6 +21,13 @@ type Step = {
   min?: number;
   max?: number;
 };
+
+type QuizInfo = {
+  title: string;
+  className: string;
+  subject: string;
+  numberOfStudents: number;
+}
 
 const steps: Step[] = [
   {
@@ -52,6 +62,7 @@ const steps: Step[] = [
   },
 ];
 
+
 const instructionCards = [
   {
     title: "Write a clear quiz title",
@@ -68,6 +79,7 @@ const instructionCards = [
 ];
 
 const QuizForm = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [formValues, setFormValues] = useState<Record<StepKey, string>>({
     quizTitle: "",
@@ -137,7 +149,14 @@ const QuizForm = () => {
       return;
     }
 
-    alert("Quiz session configured.");
+    const quizInfo: QuizInfo = {
+      title: formValues.quizTitle.trim(),
+      className: formValues.className.trim(),
+      subject: formValues.subject.trim(),
+      numberOfStudents: Number(formValues.maxStudents),
+    };
+
+    navigate("/quiz-editor", { state: quizInfo });
   };
 
   const handleBack = () => {
