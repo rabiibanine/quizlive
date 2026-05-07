@@ -1,17 +1,14 @@
-export interface Choice {
-  id: string;
-  text: string;
-  isCorrect: boolean;
-}
-
 export interface Question {
   id: string;
-  text: string;
-  choices: Choice[]; // always 4
+  question: string;
+  choices: string[];
+  time: number;
+  correctChoice: number;
 }
 
-export interface Quiz {
-  id: string;
-  name: string;
-  questions: Question[];
+export interface QuestionCardProps {
+  question: Question;
+  index: number;
+  onDelete: (index: number) => void;
+  onUpdate: (index: number, changes: Partial<Question>) => void;
 }
