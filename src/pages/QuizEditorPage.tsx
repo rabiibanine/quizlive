@@ -3,6 +3,7 @@ import QuestionCardList from "@/components/QuestionCardList";
 import QuizEditorToolBar from "@/components/QuizEditorToolBar";
 import { launchSession } from "@/services/sessionServices";
 import type { Question } from "@/types/quiz";
+import { getOrCreateId } from "@/utils/helpers";
 
 import { BookOpenIcon, ClockIcon, ChalkboardTeacherIcon, FlaskIcon } from "@phosphor-icons/react";
 
@@ -154,7 +155,8 @@ export default function QuizEditorPage() {
 
   async function handleLaunch(): Promise<void> {
     try {
-      const { sessionId, quizCode } = await launchSession(quizInfo.id, "professorid-123");
+      const professorId = getOrCreateId("professorId");
+      const { sessionId, quizCode } = await launchSession(quizInfo.id, professorId);
       navigate(`/sharing/${quizCode}`, { state: sessionId });
     } catch (error) {
       console.error("Failed to launch session: " + error);
