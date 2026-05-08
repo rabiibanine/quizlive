@@ -12,3 +12,11 @@ export interface QuestionCardProps {
   onDelete: (index: number) => void;
   onUpdate: (index: number, changes: Partial<Question>) => void;
 }
+
+export interface Student {
+  id: number;
+  name: string;
+  points: number;
+  rank: number;
+  accuracy: number;
+}
