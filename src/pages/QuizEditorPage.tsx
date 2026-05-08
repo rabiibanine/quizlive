@@ -149,9 +149,12 @@ export default function QuizEditorPage() {
   };
 
   async function handleLaunch(): Promise<void> {
-    const code = Math.random().toString(36).slice(2, 8).toUpperCase();
-    const ref = await launchSession(code, quizInfo.id, "professorid-123");
-    navigate(`/sharing/${code}`);
+    try {
+      const { quizCode } = await launchSession(quizInfo.id, "professorid-123");
+      navigate(`/sharing/${quizCode}`);
+    } catch (error) {
+      console.error("Failed to launch session: " + error);
+    }
   }
 
   return (
