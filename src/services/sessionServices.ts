@@ -1,6 +1,6 @@
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
-import type { Question } from "@/types/quiz";
+import type { Question } from "@/types/index";
 
 export async function launchSession(
   quizId: string,

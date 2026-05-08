@@ -2,7 +2,7 @@ import Card from "@/components/Card";
 import QuestionCardList from "@/components/QuestionCardList";
 import QuizEditorToolBar from "@/components/QuizEditorToolBar";
 import { launchSession } from "@/services/sessionServices";
-import type { Question } from "@/types/quiz";
+import type { Question } from "@/types/index";
 import { getOrCreateId } from "@/utils/helpers";
 
 import { BookOpenIcon, ClockIcon, ChalkboardTeacherIcon, FlaskIcon } from "@phosphor-icons/react";

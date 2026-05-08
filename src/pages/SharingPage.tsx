@@ -14,31 +14,28 @@ import AnimatedItem from "../components/AnimatedList";
 import { db } from "@/firebase/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 
-import type { Student } from "@/types/quiz";
+import type { Student } from "@/types/index";
 
 const studentsData: Student[] = [
   {
-    id: 1,
+    id: crypto.randomUUID(),
     name: "Marouane Talbi",
     points: 14250,
-    rank: 2,
-    accuracy: 92,
+    answers: [],
   },
 
   {
-    id: 2,
+    id: crypto.randomUUID(),
     name: "Rayan Morabit",
     points: 15800,
-    rank: 1,
-    accuracy: 92,
+    answers: [],
   },
 
   {
-    id: 3,
+    id: crypto.randomUUID(),
     name: "Imane Amrani",
     points: 12900,
-    rank: 3,
-    accuracy: 92,
+    answers: [],
   },
 ];
 
@@ -72,6 +69,7 @@ const SharingPage = () => {
       const students = session?.students as Student[];
       setStudents(students ?? []);
     });
+    return unsub;
   }, [sessionId]);
 
   return (
@@ -159,9 +157,9 @@ const SharingPage = () => {
 
           <div className="animate_fadeInDown bg-white/70 backdrop-blur-xl rounded-xl overflow-hidden">
             {students.map((s, index) => (
-              <AnimatedItem key={s.rank} index={index} delay={0.05 * index}>
+              <AnimatedItem key={s.id} index={index} delay={0.05 * index}>
                 <div
-                  key={s.rank}
+                  key={s.id}
                   className="flex items-center justify-between px-6 py-4 border-b hover:bg-violet-50"
                 >
                   <div className="flex items-center gap-4">

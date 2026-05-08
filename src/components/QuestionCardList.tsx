@@ -1,6 +1,6 @@
 import QuestionCard from "@/components/QuestionCard";
 
-import type { Question } from "@/types/quiz";
+import type { Question } from "@/types/index";
 
 import { PlusCircleIcon } from "@phosphor-icons/react";
 

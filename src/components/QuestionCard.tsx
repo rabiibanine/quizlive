@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import Card from "@/components/Card";
 
-import type { QuestionCardProps } from "@/types/quiz";
+import type { Question } from "@/types/index";
 
 import {
   XIcon,
@@ -13,6 +13,13 @@ import {
   ClockIcon,
 } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
+
+interface QuestionCardProps {
+  question: Question;
+  index: number;
+  onDelete: (index: number) => void;
+  onUpdate: (index: number, changes: Partial<Question>) => void;
+}
 
 export default function QuestionCard({ question, index, onDelete, onUpdate }: QuestionCardProps) {
   const [isExpanded, setIsExpanded] = useState(true);
