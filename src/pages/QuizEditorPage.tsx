@@ -1,15 +1,17 @@
 import Card from "@/components/Card";
 import QuestionCardList from "@/components/QuestionCardList";
 import QuizEditorToolBar from "@/components/QuizEditorToolBar";
+import { launchSession } from "@/services/sessionServices";
 import type { Question } from "@/types/quiz";
 
 import { BookOpenIcon, ClockIcon, ChalkboardTeacherIcon, FlaskIcon } from "@phosphor-icons/react";
 
 import { useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const quiz = {
-  quizInfo: { title: "Biology Quiz", class: "Biology", subject: "Immunology" },
+  // TODO Implement correct id generation;
+  quizInfo: { id: "temp-quiz-id", title: "Biology Quiz", class: "Biology", subject: "Immunology" },
   quizQuestions: [
     {
       id: crypto.randomUUID(),
@@ -41,11 +43,13 @@ const quiz = {
 };
 
 export default function QuizEditorPage() {
+  const navigate = useNavigate();
   const location = useLocation();
   const stateQuizInfo = location.state as
-    | { title: string; className: string; subject: string; numberOfStudents: number }
+    | { id: string; title: string; className: string; subject: string; numberOfStudents: number }
     | undefined;
   const resolvedQuizInfo = {
+    id: stateQuizInfo?.id ?? quiz.quizInfo.id,
     title: stateQuizInfo?.title ?? quiz.quizInfo.title,
     class: stateQuizInfo?.className ?? quiz.quizInfo.class,
     subject: stateQuizInfo?.subject ?? quiz.quizInfo.subject,
@@ -54,6 +58,7 @@ export default function QuizEditorPage() {
 
   const pillStyles =
     "min-w-38 flex justify-center items-center gap-1.5 text-sm text-zinc-500 border border-zinc-200 rounded-full px-3 py-1 transition-all hover:border-zinc-400";
+
   const [quizState, setQuizState] = useState({
     ...(hasRouterState
       ? {
@@ -73,6 +78,7 @@ export default function QuizEditorPage() {
           quizInfo: resolvedQuizInfo,
         }),
   });
+
   const { quizInfo, quizQuestions } = quizState;
 
   const totalSeconds = useMemo(() => {
@@ -142,6 +148,12 @@ export default function QuizEditorPage() {
     reader.readAsText(file);
   };
 
+  async function handleLaunch(): Promise<void> {
+    const code = Math.random().toString(36).slice(2, 8).toUpperCase();
+    const ref = await launchSession(code, quizInfo.id, "professorid-123");
+    navigate(`/sharing/${code}`);
+  }
+
   return (
     <div className="min-h-screen bg-zinc-100 flex justify-center py-12 px-12 md:px-36">
       <div className="w-full max-w-4xl">
@@ -195,9 +207,7 @@ export default function QuizEditorPage() {
         ></QuestionCardList>
 
         <QuizEditorToolBar
-          onLaunch={function (): void {
-            throw new Error("Function not implemented.");
-          }}
+          onLaunch={handleLaunch}
           onExport={handleExport}
           onImport={handleImport}
         ></QuizEditorToolBar>
