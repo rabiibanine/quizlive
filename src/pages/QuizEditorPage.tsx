@@ -110,22 +110,23 @@ export default function QuizEditorPage() {
       };
     });
   };
-  const setQuizClass = (newClass: string) => {
-    setQuizState((prev) => {
-      return {
-        ...prev,
-        class: newClass,
-      };
-    });
-  };
-  const setQuizSubject = (newSubject: string) => {
-    setQuizState((prev) => {
-      return {
-        ...prev,
-        subject: newSubject,
-      };
-    });
-  };
+  // TODO Quiz editor head card editing option
+  // const setQuizClass = (newClass: string) => {
+  //   setQuizState((prev) => {
+  //     return {
+  //       ...prev,
+  //       class: newClass,
+  //     };
+  //   });
+  // };
+  // const setQuizSubject = (newSubject: string) => {
+  //   setQuizState((prev) => {
+  //     return {
+  //       ...prev,
+  //       subject: newSubject,
+  //     };
+  //   });
+  // };
 
   const handleExport = () => {
     const json = JSON.stringify(quizState, null, 2);
@@ -158,7 +159,7 @@ export default function QuizEditorPage() {
   async function handleLaunch(): Promise<void> {
     try {
       const professorId = getOrCreateId("professorId");
-      const { sessionId, quizCode } = await launchSession(id, professorId, questions);
+      const { sessionId, quizCode } = await launchSession(id, professorId, quiz);
       navigate(`/sharing/${quizCode}`, { state: sessionId });
     } catch (error) {
       console.error("Failed to launch session: " + error);
