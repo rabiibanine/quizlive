@@ -18,7 +18,7 @@ export default function QuestionCardList({
   function handleAddQuestion() {
     const newQuestion: Question = {
       id: crypto.randomUUID(),
-      question: "",
+      text: "",
       choices: ["", "", "", ""],
       time: 60,
       correctChoice: 1,

@@ -42,10 +42,10 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
                 : "border-transparent")
             }
             placeholder="Enter your question here"
-            value={question.question}
+            value={question.text}
             disabled={!isEditing}
             onChange={(e) => {
-              if (isEditing) onUpdate(index, { question: e.target.value });
+              if (isEditing) onUpdate(index, { text: e.target.value });
             }}
           />
         </div>
