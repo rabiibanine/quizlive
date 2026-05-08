@@ -9,6 +9,7 @@ export async function launchSession(quizId: string, professorId: string) {
     professorId,
     status: "waiting",
     currentQuestion: 0,
+    students: [],
     createdAt: serverTimestamp(),
   });
   return { sessionId: ref.id, quizCode };
