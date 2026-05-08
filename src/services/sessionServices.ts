@@ -10,6 +10,7 @@ export async function launchSession(quizId: string, professorId: string, quiz: Q
     professorId,
     status: "waiting",
     quiz: quiz,
+    currentStudents: 0,
     currentQuestion: 0,
     students: [],
     createdAt: serverTimestamp(),
