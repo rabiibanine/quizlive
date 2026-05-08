@@ -150,8 +150,8 @@ export default function QuizEditorPage() {
 
   async function handleLaunch(): Promise<void> {
     try {
-      const { quizCode } = await launchSession(quizInfo.id, "professorid-123");
-      navigate(`/sharing/${quizCode}`);
+      const { sessionId, quizCode } = await launchSession(quizInfo.id, "professorid-123");
+      navigate(`/sharing/${quizCode}`, { state: sessionId });
     } catch (error) {
       console.error("Failed to launch session: " + error);
     }
