@@ -121,7 +121,6 @@ const SharingPage = () => {
                   {copied ? <FiCheck className="w-4 h-4" /> : <FiCopy className="w-4 h-4" />}
                   Copy room code
                 </button>
-                {/* // TEST */}
               </div>
             </div>
 
@@ -185,4 +184,3 @@ const SharingPage = () => {
 };
 
 export default SharingPage;
-
