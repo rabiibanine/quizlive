@@ -1,8 +1,11 @@
 import Card from "@/components/Card";
 import QuestionCardList from "@/components/QuestionCardList";
 import QuizEditorToolBar from "@/components/QuizEditorToolBar";
+
 import { launchSession } from "@/services/sessionServices";
-import type { Question } from "@/types/index";
+
+import type { Question, Quiz } from "@/types/index";
+
 import { getOrCreateId } from "@/utils/helpers";
 
 import { BookOpenIcon, ClockIcon, ChalkboardTeacherIcon, FlaskIcon } from "@phosphor-icons/react";
@@ -10,14 +13,13 @@ import { BookOpenIcon, ClockIcon, ChalkboardTeacherIcon, FlaskIcon } from "@phos
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const quiz = {
-  quizInfo: {
-    id: crypto.randomUUID(),
-    title: "Biology Quiz",
-    class: "Biology",
-    subject: "Immunology",
-  },
-  quizQuestions: [
+const quiz: Quiz = {
+  id: crypto.randomUUID(),
+  title: "Biology Quiz",
+  course: "Biology",
+  subject: "Immunology",
+  maxStudents: 40,
+  questions: [
     {
       id: crypto.randomUUID(),
       text: "What is the main function of antibodies?",
@@ -57,18 +59,18 @@ export default function QuizEditorPage() {
     | { id: string; title: string; className: string; subject: string; numberOfStudents: number }
     | undefined;
   const resolvedQuizInfo = {
-    id: stateQuizInfo?.id ?? quiz.quizInfo.id,
-    title: stateQuizInfo?.title ?? quiz.quizInfo.title,
-    class: stateQuizInfo?.className ?? quiz.quizInfo.class,
-    subject: stateQuizInfo?.subject ?? quiz.quizInfo.subject,
+    id: stateQuizInfo?.id ?? quiz.id,
+    title: stateQuizInfo?.title ?? quiz.title,
+    course: stateQuizInfo?.className ?? quiz.course,
+    subject: stateQuizInfo?.subject ?? quiz.subject,
   };
   const hasRouterState = Boolean(stateQuizInfo);
 
   const [quizState, setQuizState] = useState({
     ...(hasRouterState
       ? {
-          quizInfo: resolvedQuizInfo,
-          quizQuestions: [
+          ...resolvedQuizInfo,
+          questions: [
             {
               id: crypto.randomUUID(),
               text: "",
@@ -80,15 +82,15 @@ export default function QuizEditorPage() {
         }
       : {
           ...quiz,
-          quizInfo: resolvedQuizInfo,
+          ...resolvedQuizInfo,
         }),
   });
 
-  const { quizInfo, quizQuestions } = quizState;
+  const { id, title, subject, course, questions } = quizState;
 
   const totalSeconds = useMemo(() => {
-    return quizQuestions.reduce((acc, q) => acc + q.time, 0);
-  }, [quizQuestions]);
+    return questions.reduce((acc, q) => acc + q.time, 0);
+  }, [questions]);
 
   const totalTime = useMemo(() => {
     const minutes = Math.floor(totalSeconds / 60);
@@ -97,14 +99,14 @@ export default function QuizEditorPage() {
   }, [totalSeconds]);
 
   const questionCount = useMemo(() => {
-    return quizQuestions.length;
-  }, [quizQuestions]);
+    return questions.length;
+  }, [questions]);
 
   const setQuizQuestions = (updatedQuestions: Question[]) => {
     setQuizState((prev) => {
       return {
         ...prev,
-        quizQuestions: updatedQuestions,
+        questions: updatedQuestions,
       };
     });
   };
@@ -112,7 +114,7 @@ export default function QuizEditorPage() {
     setQuizState((prev) => {
       return {
         ...prev,
-        quizInfo: { ...prev.quizInfo, class: newClass },
+        class: newClass,
       };
     });
   };
@@ -120,7 +122,7 @@ export default function QuizEditorPage() {
     setQuizState((prev) => {
       return {
         ...prev,
-        quizInfo: { ...prev.quizInfo, subject: newSubject },
+        subject: newSubject,
       };
     });
   };
@@ -132,7 +134,7 @@ export default function QuizEditorPage() {
 
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `${quizInfo.title}.json`;
+    anchor.download = `${title}.json`;
     anchor.click();
 
     URL.revokeObjectURL(url);
@@ -156,7 +158,7 @@ export default function QuizEditorPage() {
   async function handleLaunch(): Promise<void> {
     try {
       const professorId = getOrCreateId("professorId");
-      const { sessionId, quizCode } = await launchSession(quizInfo.id, professorId, quizQuestions);
+      const { sessionId, quizCode } = await launchSession(id, professorId, questions);
       navigate(`/sharing/${quizCode}`, { state: sessionId });
     } catch (error) {
       console.error("Failed to launch session: " + error);
@@ -169,7 +171,7 @@ export default function QuizEditorPage() {
         <Card variant="outline" fullWidth padding="md" className="flex flex-col gap-4">
           {/* Title and description */}
           <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-bold text-zinc-900">{quizInfo.title}</h1>
+            <h1 className="text-3xl font-bold text-zinc-900">{title}</h1>
             <p className="text-zinc-400 text-sm">
               Enter an optional description or instructions for the students...
             </p>
@@ -196,14 +198,14 @@ export default function QuizEditorPage() {
             <div className={pillStyles}>
               <ChalkboardTeacherIcon size={16} />
               <span>
-                Class: <strong className="text-zinc-700">{quizInfo.class}</strong>
+                Class: <strong className="text-zinc-700">{course}</strong>
               </span>
             </div>
 
             <div className={pillStyles}>
               <FlaskIcon size={16} />
               <span>
-                Subject: <strong className="text-zinc-700">{quizInfo.subject}</strong>
+                Subject: <strong className="text-zinc-700">{subject}</strong>
               </span>
             </div>
           </div>
@@ -211,7 +213,7 @@ export default function QuizEditorPage() {
 
         {/* Question List */}
         <QuestionCardList
-          quizQuestions={quizQuestions}
+          quizQuestions={questions}
           setQuizQuestions={setQuizQuestions}
         ></QuestionCardList>
 

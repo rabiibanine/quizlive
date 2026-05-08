@@ -29,7 +29,7 @@ export interface Session {
 export interface Quiz {
   id: UUID;
   title: string;
-  class: string;
+  course: string;
   subject: string;
   maxStudents: number;
   questions: Question[];
