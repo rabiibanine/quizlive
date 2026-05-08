@@ -1,14 +1,11 @@
 import { useState } from "react";
 
-
 import NavBar from "@/components/NavBar";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Input from "@/components/Input";
 import StepProgress from "@/components/StepProgress";
 import { useNavigate } from "react-router-dom";
-
-
 
 type StepKey = "quizTitle" | "className" | "subject" | "maxStudents";
 
@@ -23,11 +20,12 @@ type Step = {
 };
 
 type QuizInfo = {
+  id: string;
   title: string;
   className: string;
   subject: string;
   numberOfStudents: number;
-}
+};
 
 const steps: Step[] = [
   {
@@ -61,7 +59,6 @@ const steps: Step[] = [
     max: 500,
   },
 ];
-
 
 const instructionCards = [
   {
@@ -150,6 +147,7 @@ const QuizForm = () => {
     }
 
     const quizInfo: QuizInfo = {
+      id: crypto.randomUUID(),
       title: formValues.quizTitle.trim(),
       className: formValues.className.trim(),
       subject: formValues.subject.trim(),
@@ -187,17 +185,13 @@ const QuizForm = () => {
                   Configure your quiz details
                 </h1>
                 <p className="text-gray-600 mt-3">
-                  Set up the quiz before students join. You can adjust these settings any
-                  time before you go live.
+                  Set up the quiz before students join. You can adjust these settings any time
+                  before you go live.
                 </p>
               </div>
 
               {instructionCards.map((card) => (
-                <Card
-                  key={card.title}
-                  variant="outline"
-                  className="bg-white/70 backdrop-blur-xl"
-                >
+                <Card key={card.title} variant="outline" className="bg-white/70 backdrop-blur-xl">
                   <h3 className="text-lg font-semibold text-black">{card.title}</h3>
                   <p className="text-sm text-gray-600 mt-2">{card.body}</p>
                 </Card>
@@ -209,12 +203,8 @@ const QuizForm = () => {
                 <p className="text-sm font-semibold tracking-widest text-purple-600 mb-2">
                   START SESSION
                 </p>
-                <h1 className="text-2xl font-bold text-black">
-                  Configure your quiz details
-                </h1>
-                <p className="text-gray-600 mt-2">
-                  Set up the quiz before students join.
-                </p>
+                <h1 className="text-2xl font-bold text-black">Configure your quiz details</h1>
+                <p className="text-gray-600 mt-2">Set up the quiz before students join.</p>
               </div>
 
               <StepProgress
@@ -252,11 +242,7 @@ const QuizForm = () => {
                 >
                   Back
                 </Button>
-                <Button
-                  variant="black"
-                  className="w-full sm:flex-1 px-8 py-3"
-                  onClick={handleNext}
-                >
+                <Button variant="black" className="w-full sm:flex-1 px-8 py-3" onClick={handleNext}>
                   {currentStep === steps.length - 1 ? "Create Session" : "Next"}
                 </Button>
               </div>

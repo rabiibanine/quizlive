@@ -10,8 +10,12 @@ import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const quiz = {
-  // TODO Implement correct id generation;
-  quizInfo: { id: "temp-quiz-id", title: "Biology Quiz", class: "Biology", subject: "Immunology" },
+  quizInfo: {
+    id: crypto.randomUUID(),
+    title: "Biology Quiz",
+    class: "Biology",
+    subject: "Immunology",
+  },
   quizQuestions: [
     {
       id: crypto.randomUUID(),
@@ -43,6 +47,9 @@ const quiz = {
 };
 
 export default function QuizEditorPage() {
+  const pillStyles =
+    "min-w-38 flex justify-center items-center gap-1.5 text-sm text-zinc-500 border border-zinc-200 rounded-full px-3 py-1 transition-all hover:border-zinc-400";
+
   const navigate = useNavigate();
   const location = useLocation();
   const stateQuizInfo = location.state as
@@ -55,9 +62,6 @@ export default function QuizEditorPage() {
     subject: stateQuizInfo?.subject ?? quiz.quizInfo.subject,
   };
   const hasRouterState = Boolean(stateQuizInfo);
-
-  const pillStyles =
-    "min-w-38 flex justify-center items-center gap-1.5 text-sm text-zinc-500 border border-zinc-200 rounded-full px-3 py-1 transition-all hover:border-zinc-400";
 
   const [quizState, setQuizState] = useState({
     ...(hasRouterState
