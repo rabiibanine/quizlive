@@ -3,7 +3,9 @@ import { useState } from "react";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import Input from "../components/Input";
-import { findSessionByCode } from "@/services/sessionServices";
+import { findSessionByCode, joinSession } from "@/services/sessionServices";
+import { getOrCreateId } from "@/utils/helpers";
+import type { Student } from "@/types";
 
 type StepKey = "roomCode" | "studentName";
 
@@ -78,9 +80,9 @@ const JoinQuiz = () => {
 
     if (!validateForm()) return;
 
-    const normalizedCode = formValues.roomCode.trim();
+    const enteredCode = formValues.roomCode.trim();
     try {
-      const data = await findSessionByCode(normalizedCode);
+      const data = await findSessionByCode(enteredCode);
       if (!data) return;
       const { title, course, subject } = data.quiz;
       const { currentStudents } = data;
@@ -92,10 +94,31 @@ const JoinQuiz = () => {
     }
   };
 
-  function handleJoin(event: MouseEvent<HTMLButtonElement, MouseEvent>): void {
-    await updateDoc(sessionRef, {
-      participants: arrayUnion({ uid, name, score: 0 }),
-    });
+  async function handleJoin(): Promise<void> {
+    const enteredCode = formValues.roomCode.trim();
+    const enteredName = formValues.studentName.trim();
+    try {
+      const session = await findSessionByCode(enteredCode);
+
+      if (!session) {
+        // show error
+        return;
+      }
+
+      const student: Student = {
+        id: getOrCreateId("studentId"),
+        name: enteredName,
+        points: 0,
+        answers: [],
+      };
+
+      await joinSession(session.id, student);
+      // TODO Make sure the student page changes
+      // navigate(`/lobby/${enteredCode}`, { state: { sessionId: session.id, student } });
+    } catch (error) {
+      console.error("Failed to join session:", error);
+      // show error to student
+    }
   }
 
   return (
