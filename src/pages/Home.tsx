@@ -2,6 +2,7 @@ import Orb from "../components/Orb";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import FeaturesSection from "../components/FeaturesSection";
+import HowItWorksSection from "../components/HowItWorksSection";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
@@ -38,9 +39,9 @@ function Home() {
       </div>
 
       <FeaturesSection />
+      <HowItWorksSection />
     </div>
   );
 }
 
 export default Home;
-
