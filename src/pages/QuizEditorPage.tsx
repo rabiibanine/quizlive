@@ -1,19 +1,28 @@
 import Card from "@/components/Card";
 import QuestionCardList from "@/components/QuestionCardList";
 import QuizEditorToolBar from "@/components/QuizEditorToolBar";
-import type { Question } from "@/types/quiz";
+
+import { launchSession } from "@/services/sessionServices";
+
+import type { Question, Quiz } from "@/types/index";
+
+import { getOrCreateId } from "@/utils/helpers";
 
 import { BookOpenIcon, ClockIcon, ChalkboardTeacherIcon, FlaskIcon } from "@phosphor-icons/react";
 
 import { useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const quiz = {
-  quizInfo: { title: "Biology Quiz", class: "Biology", subject: "Immunology" },
-  quizQuestions: [
+const quiz: Quiz = {
+  id: crypto.randomUUID(),
+  title: "Biology Quiz",
+  course: "Biology",
+  subject: "Immunology",
+  maxStudents: 40,
+  questions: [
     {
       id: crypto.randomUUID(),
-      question: "What is the main function of antibodies?",
+      text: "What is the main function of antibodies?",
       choices: [
         "To attack viruses directly",
         "To signal immune cells",
@@ -25,14 +34,14 @@ const quiz = {
     },
     {
       id: crypto.randomUUID(),
-      question: "Which cell type produces antibodies?",
+      text: "Which cell type produces antibodies?",
       choices: ["B cells", "T cells", "Macrophages", "Dendritic cells"],
       time: 60,
       correctChoice: 1,
     },
     {
       id: crypto.randomUUID(),
-      question: "Where does hematopoiesis primarily take place in adults?",
+      text: "Where does hematopoiesis primarily take place in adults?",
       choices: ["Spleen", "Liver", "Bone marrow", "Thymus"],
       time: 45,
       correctChoice: 3,
@@ -41,27 +50,30 @@ const quiz = {
 };
 
 export default function QuizEditorPage() {
+  const pillStyles =
+    "min-w-38 flex justify-center items-center gap-1.5 text-sm text-zinc-500 border border-zinc-200 rounded-full px-3 py-1 transition-all hover:border-zinc-400";
+
+  const navigate = useNavigate();
   const location = useLocation();
   const stateQuizInfo = location.state as
-    | { title: string; className: string; subject: string; numberOfStudents: number }
+    | { id: string; title: string; className: string; subject: string; numberOfStudents: number }
     | undefined;
   const resolvedQuizInfo = {
-    title: stateQuizInfo?.title ?? quiz.quizInfo.title,
-    class: stateQuizInfo?.className ?? quiz.quizInfo.class,
-    subject: stateQuizInfo?.subject ?? quiz.quizInfo.subject,
+    id: stateQuizInfo?.id ?? quiz.id,
+    title: stateQuizInfo?.title ?? quiz.title,
+    course: stateQuizInfo?.className ?? quiz.course,
+    subject: stateQuizInfo?.subject ?? quiz.subject,
   };
   const hasRouterState = Boolean(stateQuizInfo);
 
-  const pillStyles =
-    "min-w-38 flex justify-center items-center gap-1.5 text-sm text-zinc-500 border border-zinc-200 rounded-full px-3 py-1 transition-all hover:border-zinc-400";
   const [quizState, setQuizState] = useState({
     ...(hasRouterState
       ? {
-          quizInfo: resolvedQuizInfo,
-          quizQuestions: [
+          ...resolvedQuizInfo,
+          questions: [
             {
               id: crypto.randomUUID(),
-              question: "",
+              text: "",
               choices: ["", "", "", ""],
               time: 30,
               correctChoice: 1,
@@ -70,14 +82,15 @@ export default function QuizEditorPage() {
         }
       : {
           ...quiz,
-          quizInfo: resolvedQuizInfo,
+          ...resolvedQuizInfo,
         }),
   });
-  const { quizInfo, quizQuestions } = quizState;
+
+  const { id, title, subject, course, questions } = quizState;
 
   const totalSeconds = useMemo(() => {
-    return quizQuestions.reduce((acc, q) => acc + q.time, 0);
-  }, [quizQuestions]);
+    return questions.reduce((acc, q) => acc + q.time, 0);
+  }, [questions]);
 
   const totalTime = useMemo(() => {
     const minutes = Math.floor(totalSeconds / 60);
@@ -86,33 +99,34 @@ export default function QuizEditorPage() {
   }, [totalSeconds]);
 
   const questionCount = useMemo(() => {
-    return quizQuestions.length;
-  }, [quizQuestions]);
+    return questions.length;
+  }, [questions]);
 
   const setQuizQuestions = (updatedQuestions: Question[]) => {
     setQuizState((prev) => {
       return {
         ...prev,
-        quizQuestions: updatedQuestions,
+        questions: updatedQuestions,
       };
     });
   };
-  const setQuizClass = (newClass: string) => {
-    setQuizState((prev) => {
-      return {
-        ...prev,
-        quizInfo: { ...prev.quizInfo, class: newClass },
-      };
-    });
-  };
-  const setQuizSubject = (newSubject: string) => {
-    setQuizState((prev) => {
-      return {
-        ...prev,
-        quizInfo: { ...prev.quizInfo, subject: newSubject },
-      };
-    });
-  };
+  // TODO Quiz editor head card editing option
+  // const setQuizClass = (newClass: string) => {
+  //   setQuizState((prev) => {
+  //     return {
+  //       ...prev,
+  //       class: newClass,
+  //     };
+  //   });
+  // };
+  // const setQuizSubject = (newSubject: string) => {
+  //   setQuizState((prev) => {
+  //     return {
+  //       ...prev,
+  //       subject: newSubject,
+  //     };
+  //   });
+  // };
 
   const handleExport = () => {
     const json = JSON.stringify(quizState, null, 2);
@@ -121,7 +135,7 @@ export default function QuizEditorPage() {
 
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `${quizInfo.title}.json`;
+    anchor.download = `${title}.json`;
     anchor.click();
 
     URL.revokeObjectURL(url);
@@ -142,13 +156,23 @@ export default function QuizEditorPage() {
     reader.readAsText(file);
   };
 
+  async function handleLaunch(): Promise<void> {
+    try {
+      const professorId = getOrCreateId("professorId");
+      const { sessionId, quizCode } = await launchSession(id, professorId, quiz);
+      navigate(`/sharing/${quizCode}`, { state: sessionId });
+    } catch (error) {
+      console.error("Failed to launch session: " + error);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-zinc-100 flex justify-center py-12 px-12 md:px-36">
       <div className="w-full max-w-4xl">
         <Card variant="outline" fullWidth padding="md" className="flex flex-col gap-4">
           {/* Title and description */}
           <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-bold text-zinc-900">{quizInfo.title}</h1>
+            <h1 className="text-3xl font-bold text-zinc-900">{title}</h1>
             <p className="text-zinc-400 text-sm">
               Enter an optional description or instructions for the students...
             </p>
@@ -175,14 +199,14 @@ export default function QuizEditorPage() {
             <div className={pillStyles}>
               <ChalkboardTeacherIcon size={16} />
               <span>
-                Class: <strong className="text-zinc-700">{quizInfo.class}</strong>
+                Class: <strong className="text-zinc-700">{course}</strong>
               </span>
             </div>
 
             <div className={pillStyles}>
               <FlaskIcon size={16} />
               <span>
-                Subject: <strong className="text-zinc-700">{quizInfo.subject}</strong>
+                Subject: <strong className="text-zinc-700">{subject}</strong>
               </span>
             </div>
           </div>
@@ -190,14 +214,12 @@ export default function QuizEditorPage() {
 
         {/* Question List */}
         <QuestionCardList
-          quizQuestions={quizQuestions}
+          quizQuestions={questions}
           setQuizQuestions={setQuizQuestions}
         ></QuestionCardList>
 
         <QuizEditorToolBar
-          onLaunch={function (): void {
-            throw new Error("Function not implemented.");
-          }}
+          onLaunch={handleLaunch}
           onExport={handleExport}
           onImport={handleImport}
         ></QuizEditorToolBar>

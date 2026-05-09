@@ -3,6 +3,7 @@ import { useState } from "react";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import Input from "../components/Input";
+import type { Quiz } from "@/types";
 
 type StepKey = "roomCode" | "studentName";
 
@@ -31,13 +32,6 @@ const fields: Field[] = [
   },
 ];
 
-type QuizInfo = {
-  title: string;
-  className: string;
-  subject: string;
-  joinedCount: number;
-};
-
 const JoinQuiz = () => {
   const [formValues, setFormValues] = useState<Record<StepKey, string>>({
     roomCode: "",
@@ -47,11 +41,13 @@ const JoinQuiz = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCodeValid, setIsCodeValid] = useState(false);
 
-  const quizInfo: QuizInfo = {
+  const quizInfo: Quiz = {
+    id: crypto.randomUUID(),
     title: "Web Development Quiz",
-    className: "GI-S6",
+    course: "GI-S6",
     subject: "React Fundamentals",
-    joinedCount: 18,
+    maxStudents: 20,
+    questions: [],
   };
 
   const validateForm = () => {
@@ -146,7 +142,7 @@ const JoinQuiz = () => {
                 <div className="grid gap-3 rounded-2xl border border-gray-100 bg-gray-50 p-4">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Class Name</span>
-                    <span className="font-semibold text-gray-900">{quizInfo.className}</span>
+                    <span className="font-semibold text-gray-900">{quizInfo.course}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Subject</span>
@@ -154,7 +150,8 @@ const JoinQuiz = () => {
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Students Joined</span>
-                    <span className="font-semibold text-gray-900">{quizInfo.joinedCount}</span>
+                    {/* TODO Replace 18 with the session currentStudents property*/}
+                    <span className="font-semibold text-gray-900">{18}</span>
                   </div>
                 </div>
               </div>

@@ -1,6 +1,6 @@
 import QuestionCard from "@/components/QuestionCard";
 
-import type { Question } from "@/types/quiz";
+import type { Question } from "@/types/index";
 
 import { PlusCircleIcon } from "@phosphor-icons/react";
 
@@ -18,7 +18,7 @@ export default function QuestionCardList({
   function handleAddQuestion() {
     const newQuestion: Question = {
       id: crypto.randomUUID(),
-      question: "",
+      text: "",
       choices: ["", "", "", ""],
       time: 60,
       correctChoice: 1,
