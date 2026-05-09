@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import { findSessionByCode, joinSession } from "@/services/sessionServices";
@@ -126,7 +127,7 @@ const JoinQuiz = () => {
 
   return (
     <div
-      className="min-h-screen w-full text-gray-900 selection:bg-purple-200 selection:text-white"
+      className="min-h-screen w-full text-gray-900 selection:bg-purple-200 selection:text-white flex flex-col"
       style={{
         background: `
           radial-gradient(circle at 10% 20%, rgba(132, 85, 239, 0.15) 0%, transparent 40%),
@@ -136,7 +137,7 @@ const JoinQuiz = () => {
     >
       <NavBar />
 
-      <main className="relative flex items-center justify-center py-16">
+      <main className="relative flex flex-1 items-center justify-center py-16">
         <div className="w-full max-w-2xl mx-auto px-6">
           <div className="bg-white/80 backdrop-blur-xl rounded-[32px] border p-10 shadow-[0_0_40px_-10px_rgba(132,85,239,0.25)]">
             <div className="text-center">
@@ -172,6 +173,8 @@ const JoinQuiz = () => {
           </div>
         </div>
       </main>
+
+      <Footer />
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">

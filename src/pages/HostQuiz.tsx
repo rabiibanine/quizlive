@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import NavBar from "@/components/NavBar";
+import Footer from "@/components/Footer";
 import  Card from "@/components/Card";
 import { AnswerStatCard, LeaderboardCard } from "@/components/quiz";
 import StepProgress from "@/components/StepProgress";
@@ -87,7 +88,7 @@ const HostQuiz = () => {
 
   return (
     <div
-      className="min-h-screen w-full text-gray-900 selection:bg-purple-200 selection:text-white"
+      className="min-h-screen w-full text-gray-900 selection:bg-purple-200 selection:text-white flex flex-col"
       style={{
         background: `
           radial-gradient(circle at 10% 20%, rgba(132, 85, 239, 0.15) 0%, transparent 40%),
@@ -97,7 +98,7 @@ const HostQuiz = () => {
     >
       <NavBar />
 
-      <main className="relative py-16">
+      <main className="relative flex-1 py-16">
         <div className="mx-auto w-full max-w-6xl px-6">
           <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-purple-600">
             <span className="rounded-full bg-purple-100 px-3 py-1 text-purple-700">
@@ -182,6 +183,8 @@ const HostQuiz = () => {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 };

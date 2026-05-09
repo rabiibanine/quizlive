@@ -6,6 +6,7 @@ import { FiCheck, FiCopy } from "react-icons/fi";
 import { IoPersonOutline } from "react-icons/io5";
 
 import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 import Button from "../components/Button";
 import { BsQrCode } from "react-icons/bs";
 
@@ -83,7 +84,7 @@ const SharingPage = () => {
 
   return (
     <div
-      className="select-none min-h-screen w-full text-gray-900 selection:bg-purple-200 selection:text-white"
+      className="select-none min-h-screen w-full text-gray-900 selection:bg-purple-200 selection:text-white flex flex-col"
       style={{
         background: `
           radial-gradient(circle at 10% 20%, rgba(132, 85, 239, 0.15) 0%, transparent 40%),
@@ -95,7 +96,7 @@ const SharingPage = () => {
       <NavBar />
 
       {/* Main content */}
-      <main className="relative flex items-center justify-center py-10 overflow-hidden">
+      <main className="relative flex flex-1 items-center justify-center py-10 overflow-hidden">
         <div className="w-full max-w-4xl mx-auto px-8">
           {/* Header */}
           <div className="animate_fadeInUp text-center mt-6">
@@ -186,6 +187,8 @@ const SharingPage = () => {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 };

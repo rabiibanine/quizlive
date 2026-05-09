@@ -3,7 +3,7 @@ import Card from "./Card";
 const features = [
   {
     title: "AI-Powered Generation",
-    description: "Instantly create engaging quizzes from your course material using advanced AI models.",
+    description: "Generate engaging quizzes instantly with advanced AI, or take full control by building manually or importing JSON files.",
     icon: "/icons/add.svg",
   },
   {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import NavBar from "@/components/NavBar";
+import Footer from "@/components/Footer";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Input from "@/components/Input";
@@ -163,7 +164,7 @@ const QuizForm = () => {
 
   return (
     <div
-      className="min-h-screen w-full text-gray-900 selection:bg-purple-200 selection:text-white"
+      className="min-h-screen w-full text-gray-900 selection:bg-purple-200 selection:text-white flex flex-col"
       style={{
         background: `
           radial-gradient(circle at 10% 20%, rgba(132, 85, 239, 0.15) 0%, transparent 40%),
@@ -173,7 +174,7 @@ const QuizForm = () => {
     >
       <NavBar />
 
-      <main className="relative py-16 overflow-hidden">
+      <main className="relative flex-1 py-16 overflow-hidden">
         <div className="w-full max-w-6xl mx-auto px-6">
           <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] items-start">
             <div className="hidden lg:flex flex-col gap-4">
@@ -250,6 +251,8 @@ const QuizForm = () => {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 };
