@@ -31,7 +31,7 @@ const StepProgress = ({
       </div>
       <div className={`mt-3 h-2 w-full rounded-full ${trackClassName}`}>
         <div
-          className={`h-full rounded-full ${barClassName}`}
+          className={`h-full rounded-full transition-[width] duration-300 ease-out ${barClassName}`}
           style={{ width: `${progress}%` }}
         />
       </div>
