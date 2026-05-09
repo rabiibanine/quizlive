@@ -20,7 +20,7 @@ function Home() {
         <h1 className="text-3xl md:text-5xl md:mt-6 max-w-[18ch] text-black font-semibold">
           Quiz Generator Live
         </h1>
-        <p className="text-3xl md:text-4xl md:mt-4 max-w-[18ch] text-black">Chose Who You are?</p>
+        <p className="text-3xl md:text-4xl md:mt-4 max-w-[18ch] text-black">Choose Who You are?</p>
         <div className="flex items-center gap-4 md:mt-2 mt-2">
           <div className="flex items-center gap-4 md:mt-8 mt-2">
             <Button variant="black" className="md:w-40 w-32" onClick={() => navigate("/quiz-form")}>
