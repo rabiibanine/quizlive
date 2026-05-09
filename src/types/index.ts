@@ -21,6 +21,8 @@ export interface Session {
   professorId: UUID;
   status: "waiting" | "active" | "ended";
   currentQuestion: number;
+  currentStudents: number;
+  maxStudents: number;
   questions: Question[];
   students: Student[];
   createdAt: string;
@@ -31,6 +33,5 @@ export interface Quiz {
   title: string;
   course: string;
   subject: string;
-  maxStudents: number;
   questions: Question[];
 }

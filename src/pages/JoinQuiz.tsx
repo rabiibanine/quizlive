@@ -3,7 +3,10 @@ import { useState } from "react";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import Input from "../components/Input";
-import type { Quiz } from "@/types";
+import { findSessionByCode, joinSession } from "@/services/sessionServices";
+import { getOrCreateId } from "@/utils/helpers";
+import type { Student } from "@/types";
+import { useNavigate } from "react-router-dom";
 
 type StepKey = "roomCode" | "studentName";
 
@@ -41,14 +44,14 @@ const JoinQuiz = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCodeValid, setIsCodeValid] = useState(false);
 
-  const quizInfo: Quiz = {
-    id: crypto.randomUUID(),
-    title: "Web Development Quiz",
-    course: "GI-S6",
-    subject: "React Fundamentals",
-    maxStudents: 20,
-    questions: [],
-  };
+  const [modalInfo, setModalInfo] = useState({
+    title: "",
+    course: "",
+    subject: "",
+    currentStudents: 0,
+  });
+
+  const navigate = useNavigate();
 
   const validateForm = () => {
     const nextErrors: Partial<Record<StepKey, string>> = {};
@@ -69,14 +72,57 @@ const JoinQuiz = () => {
     }
   };
 
-  const handleSubmit = () => {
-    if (!validateForm()) return;
-    const normalizedCode = formValues.roomCode.trim();
+  const handleSubmit = async () => {
+    // OLD CODE
+    // if (!validateForm()) return;
+    // const normalizedCode = formValues.roomCode.trim();
     //Arbitrary value for testing😊
-    const valid = normalizedCode === "676767";
-    setIsCodeValid(valid);
-    setIsModalOpen(true);
+    // const valid = normalizedCode === "676767";
+    // setIsCodeValid(valid);
+    // setIsModalOpen(true);
+
+    if (!validateForm()) return;
+
+    const enteredCode = formValues.roomCode.trim();
+    try {
+      const data = await findSessionByCode(enteredCode);
+      if (!data) return;
+      const { title, course, subject } = data.quiz;
+      const { currentStudents } = data;
+      setModalInfo({ title, course, subject, currentStudents });
+      setIsCodeValid(true);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error("Error while fetching session.");
+    }
   };
+
+  async function handleJoin(): Promise<void> {
+    const enteredCode = formValues.roomCode.trim();
+    const enteredName = formValues.studentName.trim();
+    try {
+      const session = await findSessionByCode(enteredCode);
+
+      if (!session) {
+        // show error
+        return;
+      }
+
+      const student: Student = {
+        id: getOrCreateId("studentId"),
+        name: enteredName,
+        points: 0,
+        answers: [],
+      };
+
+      await joinSession(session.id, student);
+      // TODO Make sure the student page changes
+      navigate(`/quiz/${enteredCode}`, { state: { sessionId: session.id, student } });
+    } catch (error) {
+      console.error("Failed to join session:", error);
+      // show error to student
+    }
+  }
 
   return (
     <div
@@ -136,22 +182,22 @@ const JoinQuiz = () => {
                   <p className="text-xs font-semibold tracking-[0.4em] text-purple-600">
                     QUIZ INFO
                   </p>
-                  <h2 className="mt-2 text-2xl font-bold text-black">{quizInfo.title}</h2>
+                  <h2 className="mt-2 text-2xl font-bold text-black">{modalInfo.title}</h2>
                   <p className="text-gray-600 mt-1">Review the details before joining.</p>
                 </div>
                 <div className="grid gap-3 rounded-2xl border border-gray-100 bg-gray-50 p-4">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Class Name</span>
-                    <span className="font-semibold text-gray-900">{quizInfo.course}</span>
+                    <span className="font-semibold text-gray-900">{modalInfo.course}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Subject</span>
-                    <span className="font-semibold text-gray-900">{quizInfo.subject}</span>
+                    <span className="font-semibold text-gray-900">{modalInfo.subject}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Students Joined</span>
                     {/* TODO Replace 18 with the session currentStudents property*/}
-                    <span className="font-semibold text-gray-900">{18}</span>
+                    <span className="font-semibold text-gray-900">{modalInfo.currentStudents}</span>
                   </div>
                 </div>
               </div>
@@ -167,7 +213,7 @@ const JoinQuiz = () => {
 
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               {isCodeValid && (
-                <Button variant="black" className="w-full px-8 py-3">
+                <Button variant="black" className="w-full px-8 py-3" onClick={handleJoin}>
                   Confirm & Join
                 </Button>
               )}

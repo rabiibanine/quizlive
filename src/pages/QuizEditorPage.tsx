@@ -18,7 +18,6 @@ const quiz: Quiz = {
   title: "Biology Quiz",
   course: "Biology",
   subject: "Immunology",
-  maxStudents: 40,
   questions: [
     {
       id: crypto.randomUUID(),
