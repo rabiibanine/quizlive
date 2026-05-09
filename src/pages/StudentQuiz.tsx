@@ -2,31 +2,18 @@ import { useEffect, useState } from "react";
 
 import NavBar from "@/components/NavBar";
 import Button from "@/components/Button";
-import  Card  from "@/components/Card";
+import Card from "@/components/Card";
 import StepProgress from "@/components/StepProgress";
-import quizMock from "../data/quizMock.json";
+import quizMock from "@/data/quizMock.json";
 
-type QuizChoice = {
-  id: number;
-  text: string;
-  isCorrect: boolean;
-  selectedCount: number;
-};
+import type { Quiz } from "@/types";
 
-type QuizQuestion = {
-  id: number;
-  text: string;
-  timeSeconds: number;
-  choices: QuizChoice[];
-};
-
-type QuizSession = {
-  quizTitle: string;
-  className: string;
-  subject: string;
-  studentsJoined: number;
-  questions: QuizQuestion[];
-};
+// type QuizChoice = {
+//   id: number;
+//   text: string;
+//   isCorrect: boolean;
+//   selectedCount: number;
+// };
 
 const formatTime = (totalSeconds: number) => {
   const minutes = Math.floor(totalSeconds / 60);
@@ -37,12 +24,10 @@ const formatTime = (totalSeconds: number) => {
 const optionLabels = ["A", "B", "C", "D"];
 
 const StudentQuiz = () => {
-  const quiz = quizMock as QuizSession;
+  const quiz = quizMock as Quiz;
   const [activeIndex, setActiveIndex] = useState(0);
-  const [secondsLeft, setSecondsLeft] = useState(
-    quiz.questions[0]?.timeSeconds ?? 0
-  );
-  const [selectedChoiceId, setSelectedChoiceId] = useState<number | null>(null);
+  const [secondsLeft, setSecondsLeft] = useState(quiz.questions[0]?.time ?? 0);
+  const [selectedChoiceIndex, setSelectedChoiceIndex] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const activeQuestion = quiz.questions[activeIndex];
 
@@ -55,7 +40,7 @@ const StudentQuiz = () => {
 
         setActiveIndex((index) => {
           const nextIndex = Math.min(index + 1, quiz.questions.length - 1);
-          setSecondsLeft(quiz.questions[nextIndex]?.timeSeconds ?? 0);
+          setSecondsLeft(quiz.questions[nextIndex]?.time ?? 0);
           return nextIndex;
         });
 
@@ -67,21 +52,21 @@ const StudentQuiz = () => {
   }, [quiz.questions]);
 
   useEffect(() => {
-    setSelectedChoiceId(null);
+    setSelectedChoiceIndex(null);
     setIsSubmitted(false);
   }, [activeIndex]);
 
   const handleChoiceSelect = (choiceId: number) => {
     if (isSubmitted) return;
-    setSelectedChoiceId(choiceId);
+    setSelectedChoiceIndex(choiceId);
   };
 
   const handleSubmit = () => {
-    if (selectedChoiceId === null) return;
+    if (selectedChoiceIndex === null) return;
     setIsSubmitted(true);
   };
 
-  const canSubmit = selectedChoiceId !== null && !isSubmitted;
+  const canSubmit = selectedChoiceIndex !== null && !isSubmitted;
 
   return (
     <div
@@ -98,19 +83,13 @@ const StudentQuiz = () => {
       <main className="relative py-16">
         <div className="mx-auto w-full max-w-6xl px-6">
           <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-purple-600">
-            <span className="rounded-full bg-purple-100 px-3 py-1 text-purple-700">
-              Live Now
-            </span>
-            <span className="rounded-full bg-white/80 px-3 py-1 text-gray-700">
-              {quiz.className}
-            </span>
-            <span className="rounded-full bg-white/80 px-3 py-1 text-gray-700">
-              {quiz.subject}
-            </span>
+            <span className="rounded-full bg-purple-100 px-3 py-1 text-purple-700">Live Now</span>
+            <span className="rounded-full bg-white/80 px-3 py-1 text-gray-700">{quiz.course}</span>
+            <span className="rounded-full bg-white/80 px-3 py-1 text-gray-700">{quiz.subject}</span>
           </div>
 
           <h1 className="mt-4 text-3xl font-bold text-black md:text-4xl">
-            Your Quiz: {quiz.quizTitle}
+            Your Quiz: {quiz.title}
           </h1>
           <p className="mt-2 text-gray-600">
             Choose the correct answer and submit before time runs out.
@@ -137,17 +116,17 @@ const StudentQuiz = () => {
 
               <div className="mt-8 grid gap-5 md:grid-cols-2">
                 {activeQuestion.choices.map((choice, index) => {
-                  const isSelected = selectedChoiceId === choice.id;
+                  const isSelected = selectedChoiceIndex === index;
                   return (
                     <button
-                      key={choice.id}
+                      key={choice[index]}
                       type="button"
                       className={`group relative flex min-h-[120px] w-full items-start gap-5 rounded-2xl border bg-white/90 px-6 py-6 text-left transition-all duration-200 md:min-h-[132px] ${
                         isSelected
                           ? "border-purple-500 bg-purple-50/80 shadow-[0_18px_45px_-30px_rgba(88,28,135,0.6)] ring-1 ring-purple-200"
                           : "border-gray-200/80 shadow-[0_12px_30px_-28px_rgba(15,23,42,0.35)] hover:border-purple-300 hover:shadow-[0_18px_35px_-30px_rgba(88,28,135,0.4)]"
                       } ${isSubmitted && !isSelected ? "opacity-70" : ""}`}
-                      onClick={() => handleChoiceSelect(choice.id)}
+                      onClick={() => handleChoiceSelect(index)}
                       disabled={isSubmitted}
                       aria-pressed={isSelected}
                     >
@@ -161,7 +140,7 @@ const StudentQuiz = () => {
                         {optionLabels[index] ?? ""}
                       </span>
                       <span className="text-base font-semibold leading-snug text-gray-900">
-                        {choice.text}
+                        {choice[index]}
                       </span>
                     </button>
                   );
@@ -208,4 +187,3 @@ const StudentQuiz = () => {
 };
 
 export default StudentQuiz;
-

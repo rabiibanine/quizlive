@@ -1,37 +1,43 @@
 {
+  "id": "fb03e2fc-dbed-4737-8f14-0eb9677621d5",
   "title": "Chapter 5",
   "course": "GI-S6",
   "subject": "Web Dev",
   "questions": [
     {
-      "id": 1,
+      "id": "fb03e2fc-dbed-4737-8f14-0eb9677621d5",
       "text": "Question 1",
       "time": 20,
-      "choices": ["Option 1", "Option 2", "Option 3", "Option 4"]
+      "choices": ["Option 1", "Option 2", "Option 3", "Option 4"],
+      "correctChoice": 1
     },
     {
-      "id": 2,
+      "id": "fb03e2fc-dbed-4737-8f14-0eb9677621d5",
       "text": "Question 2",
       "time": 25,
-      "choices": ["Option 1", "Option 2", "Option 3", "Option 4"]
+      "choices": ["Option 1", "Option 2", "Option 3", "Option 4"],
+      "correctChoice": 1
     },
     {
-      "id": 3,
+      "id": "fb03e2fc-dbed-4737-8f14-0eb9677621d5",
       "text": "Question 3",
       "time": 20,
-      "choices": ["Option 1", "Option 2", "Option 3", "Option 4"]
+      "choices": ["Option 1", "Option 2", "Option 3", "Option 4"],
+      "correctChoice": 1
     },
     {
-      "id": 4,
+      "id": "fb03e2fc-dbed-4737-8f14-0eb9677621d5",
       "text": "Question 4",
       "time": 35,
-      "choices": ["Option 1", "Option 2", "Option 3", "Option 4"]
+      "choices": ["Option 1", "Option 2", "Option 3", "Option 4"],
+      "correctChoice": 1
     },
     {
-      "id": 5,
+      "id": "fb03e2fc-dbed-4737-8f14-0eb9677621d5",
       "text": "Question 5",
       "time": 15,
-      "choices": ["Option 1", "Option 2", "Option 3", "Option 4"]
+      "choices": ["Option 1", "Option 2", "Option 3", "Option 4"],
+      "correctChoice": 1
     }
   ]
 }
