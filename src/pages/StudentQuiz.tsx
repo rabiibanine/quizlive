@@ -35,7 +35,6 @@ const StudentQuiz = () => {
   const [selectedChoiceIndex, setSelectedChoiceIndex] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
-  const [isWaiting, setIsWaiting] = useState<boolean>(true);
 
   const activeQuestion = quiz.questions[activeIndex];
 
@@ -84,10 +83,6 @@ const StudentQuiz = () => {
 
   const canSubmit = selectedChoiceIndex !== null && !isSubmitted;
 
-  if (!session) return <p>Loading...</p>;
-
-  if (session.status === "waiting") return <p>Waiting for professor...</p>;
-
   return (
     <div
       className="min-h-screen w-full text-gray-900 selection:bg-purple-200 selection:text-white"
@@ -121,83 +116,96 @@ const StudentQuiz = () => {
               padding="lg"
               className="rounded-3xl border-white/70 bg-white/80 backdrop-blur-xl shadow-[0_25px_60px_-40px_rgba(15,23,42,0.45)]"
             >
-              <StepProgress
-                label="Question"
-                currentStep={activeIndex}
-                totalSteps={quiz.questions.length}
-                className="flex-1"
-                labelClassName="text-xs font-semibold uppercase tracking-[0.3em] text-purple-600"
-                percentClassName="hidden"
-              />
+              {" "}
+              {session?.status === "waiting" ? (
+                <p> Waiting for Quiz to start...</p>
+              ) : (
+                <>
+                  <StepProgress
+                    label="Question"
+                    currentStep={activeIndex}
+                    totalSteps={quiz.questions.length}
+                    className="flex-1"
+                    labelClassName="text-xs font-semibold uppercase tracking-[0.3em] text-purple-600"
+                    percentClassName="hidden"
+                  />
 
-              <h2 className="mt-6 text-2xl font-semibold text-black md:text-3xl">
-                Question {activeIndex + 1} of {quiz.questions.length}: {activeQuestion.text}
-              </h2>
+                  <h2 className="mt-6 text-2xl font-semibold text-black md:text-3xl">
+                    Question {activeIndex + 1} of {quiz.questions.length}: {activeQuestion.text}
+                  </h2>
 
-              <div className="mt-8 grid gap-5 md:grid-cols-2">
-                {activeQuestion.choices.map((choice, index) => {
-                  const isSelected = selectedChoiceIndex === index;
-                  return (
-                    <button
-                      key={choice[index]}
-                      type="button"
-                      className={`group relative flex min-h-[120px] w-full items-start gap-5 rounded-2xl border bg-white/90 px-6 py-6 text-left transition-all duration-200 md:min-h-[132px] ${
-                        isSelected
-                          ? "border-purple-500 bg-purple-50/80 shadow-[0_18px_45px_-30px_rgba(88,28,135,0.6)] ring-1 ring-purple-200"
-                          : "border-gray-200/80 shadow-[0_12px_30px_-28px_rgba(15,23,42,0.35)] hover:border-purple-300 hover:shadow-[0_18px_35px_-30px_rgba(88,28,135,0.4)]"
-                      } ${isSubmitted && !isSelected ? "opacity-70" : ""}`}
-                      onClick={() => handleChoiceSelect(index)}
-                      disabled={isSubmitted}
-                      aria-pressed={isSelected}
+                  <div className="mt-8 grid gap-5 md:grid-cols-2">
+                    {activeQuestion.choices.map((choice, index) => {
+                      const isSelected = selectedChoiceIndex === index;
+                      return (
+                        <button
+                          key={choice[index]}
+                          type="button"
+                          className={`group relative flex min-h-[120px] w-full items-start gap-5 rounded-2xl border bg-white/90 px-6 py-6 text-left transition-all duration-200 md:min-h-[132px] ${
+                            isSelected
+                              ? "border-purple-500 bg-purple-50/80 shadow-[0_18px_45px_-30px_rgba(88,28,135,0.6)] ring-1 ring-purple-200"
+                              : "border-gray-200/80 shadow-[0_12px_30px_-28px_rgba(15,23,42,0.35)] hover:border-purple-300 hover:shadow-[0_18px_35px_-30px_rgba(88,28,135,0.4)]"
+                          } ${isSubmitted && !isSelected ? "opacity-70" : ""}`}
+                          onClick={() => handleChoiceSelect(index)}
+                          disabled={isSubmitted}
+                          aria-pressed={isSelected}
+                        >
+                          <span
+                            className={`flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold ${
+                              isSelected
+                                ? "bg-purple-600 text-white"
+                                : "bg-white text-gray-700 ring-1 ring-gray-200/70 group-hover:bg-purple-50 group-hover:text-purple-700"
+                            }`}
+                          >
+                            {optionLabels[index] ?? ""}
+                          </span>
+                          <span className="text-base font-semibold leading-snug text-gray-900">
+                            {choice[index]}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-sm text-gray-600">
+                      {isSubmitted
+                        ? "Answer submitted. Waiting for the next question."
+                        : "Select one answer and submit it."}
+                    </p>
+                    <Button
+                      variant={canSubmit ? "black" : "ghost"}
+                      className="px-8 py-3"
+                      onClick={handleSubmit}
+                      disabled={!canSubmit}
                     >
-                      <span
-                        className={`flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold ${
-                          isSelected
-                            ? "bg-purple-600 text-white"
-                            : "bg-white text-gray-700 ring-1 ring-gray-200/70 group-hover:bg-purple-50 group-hover:text-purple-700"
-                        }`}
-                      >
-                        {optionLabels[index] ?? ""}
-                      </span>
-                      <span className="text-base font-semibold leading-snug text-gray-900">
-                        {choice[index]}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
+                      {isSubmitted ? "Submitted" : "Submit Answer"}
+                    </Button>
+                  </div>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm text-gray-600">
-                  {isSubmitted
-                    ? "Answer submitted. Waiting for the next question."
-                    : "Select one answer and submit it."}
-                </p>
-                <Button
-                  variant={canSubmit ? "black" : "ghost"}
-                  className="px-8 py-3"
-                  onClick={handleSubmit}
-                  disabled={!canSubmit}
-                >
-                  {isSubmitted ? "Submitted" : "Submit Answer"}
-                </Button>
-              </div>
-
-              <p className="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-gray-500 lg:hidden">
-                Time Remaining: {formatTime(secondsLeft)}
-              </p>
+                  <p className="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-gray-500 lg:hidden">
+                    Time Remaining: {formatTime(secondsLeft)}
+                  </p>
+                </>
+              )}
             </Card>
 
             <div className="hidden rounded-3xl bg-black p-8 text-white shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] lg:block">
-              <div className="flex items-center gap-3 text-xs uppercase tracking-[0.25em] text-white/60">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20">
-                  <span className="h-3 w-3 rounded-full border border-white/40" />
-                </span>
-                Time Remaining
-              </div>
-              <div className="mt-10 text-5xl font-semibold tracking-tight">
-                {formatTime(secondsLeft)}
-              </div>
+              {session?.status === "waiting" ? (
+                <></>
+              ) : (
+                <>
+                  <div className="flex items-center gap-3 text-xs uppercase tracking-[0.25em] text-white/60">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20">
+                      <span className="h-3 w-3 rounded-full border border-white/40" />
+                    </span>
+                    Time Remaining
+                  </div>
+                  <div className="mt-10 text-5xl font-semibold tracking-tight">
+                    {formatTime(secondsLeft)}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

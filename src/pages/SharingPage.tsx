@@ -15,6 +15,7 @@ import { db } from "@/firebase/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 
 import type { Student } from "@/types/index";
+import { startSession } from "@/services/sessionServices";
 
 const studentsData: Student[] = [
   {
@@ -71,6 +72,14 @@ const SharingPage = () => {
     });
     return unsub;
   }, [sessionId]);
+
+  async function handleStart(): Promise<void> {
+    try {
+      await startSession(sessionId);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <div
@@ -145,7 +154,7 @@ const SharingPage = () => {
             >
               Share Link Quiz
             </Button>
-            <Button variant="black" className="w-full sm:w-64 py-3">
+            <Button variant="black" className="w-full sm:w-64 py-3" onClick={handleStart}>
               Start Game
             </Button>
           </div>

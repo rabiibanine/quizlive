@@ -59,3 +59,10 @@ export async function joinSession(sessionId: string, student: Student): Promise<
     students: arrayUnion(student),
   });
 }
+
+export async function startSession(sessionId: string) {
+  const sessionRef = doc(db, "sessions", sessionId);
+  await updateDoc(sessionRef, {
+    status: "active",
+  });
+}
