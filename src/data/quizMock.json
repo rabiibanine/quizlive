@@ -1,119 +1,37 @@
 {
-  "quizTitle": "Chapter 5",
-  "className": "GI-S6",
+  "title": "Chapter 5",
+  "course": "GI-S6",
   "subject": "Web Dev",
-  "studentsJoined": 24,
   "questions": [
     {
       "id": 1,
       "text": "Question 1",
-      "timeSeconds": 20,
-      "choices": [
-        { "id": 1, "text": "Option 1", "isCorrect": true, "selectedCount": 10 },
-        { "id": 2, "text": "Option 2", "isCorrect": false, "selectedCount": 6 },
-        { "id": 3, "text": "Option 3", "isCorrect": false, "selectedCount": 5 },
-        { "id": 4, "text": "Option 4", "isCorrect": false, "selectedCount": 3 }
-      ]
+      "time": 20,
+      "choices": ["Option 1", "Option 2", "Option 3", "Option 4"]
     },
     {
       "id": 2,
       "text": "Question 2",
-      "timeSeconds": 25,
-      "choices": [
-        { "id": 1, "text": "Option 1", "isCorrect": false, "selectedCount": 7 },
-        { "id": 2, "text": "Option 2", "isCorrect": true, "selectedCount": 9 },
-        { "id": 3, "text": "Option 3", "isCorrect": false, "selectedCount": 4 },
-        { "id": 4, "text": "Option 4", "isCorrect": false, "selectedCount": 4 }
-      ]
+      "time": 25,
+      "choices": ["Option 1", "Option 2", "Option 3", "Option 4"]
     },
     {
       "id": 3,
       "text": "Question 3",
-      "timeSeconds": 20,
-      "choices": [
-        { "id": 1, "text": "Option 1", "isCorrect": false, "selectedCount": 5 },
-        { "id": 2, "text": "Option 2", "isCorrect": false, "selectedCount": 6 },
-        { "id": 3, "text": "Option 3", "isCorrect": true, "selectedCount": 8 },
-        { "id": 4, "text": "Option 4", "isCorrect": false, "selectedCount": 5 }
-      ]
+      "time": 20,
+      "choices": ["Option 1", "Option 2", "Option 3", "Option 4"]
     },
     {
       "id": 4,
       "text": "Question 4",
-      "timeSeconds": 35,
-      "choices": [
-        { "id": 1, "text": "Option 1", "isCorrect": false, "selectedCount": 4 },
-        { "id": 2, "text": "Option 2", "isCorrect": false, "selectedCount": 5 },
-        { "id": 3, "text": "Option 3", "isCorrect": false, "selectedCount": 6 },
-        { "id": 4, "text": "Option 4", "isCorrect": true, "selectedCount": 9 }
-      ]
+      "time": 35,
+      "choices": ["Option 1", "Option 2", "Option 3", "Option 4"]
     },
     {
       "id": 5,
       "text": "Question 5",
-      "timeSeconds": 15,
-      "choices": [
-        { "id": 1, "text": "Option 1", "isCorrect": true, "selectedCount": 11 },
-        { "id": 2, "text": "Option 2", "isCorrect": false, "selectedCount": 5 },
-        { "id": 3, "text": "Option 3", "isCorrect": false, "selectedCount": 4 },
-        { "id": 4, "text": "Option 4", "isCorrect": false, "selectedCount": 4 }
-      ]
-    },
-    {
-      "id": 6,
-      "text": "Question 6",
-      "timeSeconds": 40,
-      "choices": [
-        { "id": 1, "text": "Option 1", "isCorrect": false, "selectedCount": 6 },
-        { "id": 2, "text": "Option 2", "isCorrect": true, "selectedCount": 10 },
-        { "id": 3, "text": "Option 3", "isCorrect": false, "selectedCount": 5 },
-        { "id": 4, "text": "Option 4", "isCorrect": false, "selectedCount": 3 }
-      ]
-    },
-    {
-      "id": 7,
-      "text": "Question 7",
-      "timeSeconds": 30,
-      "choices": [
-        { "id": 1, "text": "Option 1", "isCorrect": false, "selectedCount": 4 },
-        { "id": 2, "text": "Option 2", "isCorrect": false, "selectedCount": 6 },
-        { "id": 3, "text": "Option 3", "isCorrect": true, "selectedCount": 9 },
-        { "id": 4, "text": "Option 4", "isCorrect": false, "selectedCount": 5 }
-      ]
-    },
-    {
-      "id": 8,
-      "text": "Question 8",
-      "timeSeconds": 25,
-      "choices": [
-        { "id": 1, "text": "Option 1", "isCorrect": false, "selectedCount": 5 },
-        { "id": 2, "text": "Option 2", "isCorrect": false, "selectedCount": 7 },
-        { "id": 3, "text": "Option 3", "isCorrect": false, "selectedCount": 6 },
-        { "id": 4, "text": "Option 4", "isCorrect": true, "selectedCount": 6 }
-      ]
-    },
-    {
-      "id": 9,
-      "text": "Question 9",
-      "timeSeconds": 20,
-      "choices": [
-        { "id": 1, "text": "Option 1", "isCorrect": true, "selectedCount": 8 },
-        { "id": 2, "text": "Option 2", "isCorrect": false, "selectedCount": 7 },
-        { "id": 3, "text": "Option 3", "isCorrect": false, "selectedCount": 5 },
-        { "id": 4, "text": "Option 4", "isCorrect": false, "selectedCount": 4 }
-      ]
-    },
-    {
-      "id": 10,
-      "text": "Question 10",
-      "timeSeconds": 30,
-      "choices": [
-        { "id": 1, "text": "Option 1", "isCorrect": false, "selectedCount": 6 },
-        { "id": 2, "text": "Option 2", "isCorrect": true, "selectedCount": 9 },
-        { "id": 3, "text": "Option 3", "isCorrect": false, "selectedCount": 5 },
-        { "id": 4, "text": "Option 4", "isCorrect": false, "selectedCount": 4 }
-      ]
+      "time": 15,
+      "choices": ["Option 1", "Option 2", "Option 3", "Option 4"]
     }
   ]
 }
-
