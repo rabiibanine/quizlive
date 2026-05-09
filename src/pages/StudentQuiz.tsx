@@ -6,7 +6,10 @@ import Card from "@/components/Card";
 import StepProgress from "@/components/StepProgress";
 import quizMock from "@/data/quizMock.json";
 
-import type { Quiz } from "@/types";
+import type { Quiz, Session } from "@/types";
+import { doc, onSnapshot } from "firebase/firestore";
+import { useLocation } from "react-router-dom";
+import { db } from "@/firebase/firebase";
 
 // type QuizChoice = {
 //   id: number;
@@ -25,10 +28,15 @@ const optionLabels = ["A", "B", "C", "D"];
 
 const StudentQuiz = () => {
   const quiz = quizMock as Quiz;
+  const { sessionId, student } = useLocation().state;
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(quiz.questions[0]?.time ?? 0);
   const [selectedChoiceIndex, setSelectedChoiceIndex] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isWaiting, setIsWaiting] = useState<boolean>(true);
+
   const activeQuestion = quiz.questions[activeIndex];
 
   useEffect(() => {
@@ -56,6 +64,14 @@ const StudentQuiz = () => {
     setIsSubmitted(false);
   }, [activeIndex]);
 
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, "sessions", sessionId), (snap) => {
+      if (!snap.exists()) return;
+      setSession(snap.data() as Session);
+    });
+    return unsub;
+  }, [sessionId]);
+
   const handleChoiceSelect = (choiceId: number) => {
     if (isSubmitted) return;
     setSelectedChoiceIndex(choiceId);
@@ -67,6 +83,10 @@ const StudentQuiz = () => {
   };
 
   const canSubmit = selectedChoiceIndex !== null && !isSubmitted;
+
+  if (!session) return <p>Loading...</p>;
+
+  if (session.status === "waiting") return <p>Waiting for professor...</p>;
 
   return (
     <div

@@ -6,6 +6,7 @@ import Input from "../components/Input";
 import { findSessionByCode, joinSession } from "@/services/sessionServices";
 import { getOrCreateId } from "@/utils/helpers";
 import type { Student } from "@/types";
+import { useNavigate } from "react-router-dom";
 
 type StepKey = "roomCode" | "studentName";
 
@@ -49,6 +50,8 @@ const JoinQuiz = () => {
     subject: "",
     currentStudents: 0,
   });
+
+  const navigate = useNavigate();
 
   const validateForm = () => {
     const nextErrors: Partial<Record<StepKey, string>> = {};
@@ -114,7 +117,7 @@ const JoinQuiz = () => {
 
       await joinSession(session.id, student);
       // TODO Make sure the student page changes
-      // navigate(`/lobby/${enteredCode}`, { state: { sessionId: session.id, student } });
+      navigate(`/quiz/${enteredCode}`, { state: { sessionId: session.id, student } });
     } catch (error) {
       console.error("Failed to join session:", error);
       // show error to student
