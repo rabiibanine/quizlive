@@ -1,17 +1,31 @@
 import { useEffect, useMemo, useState } from "react";
 
 import NavBar from "@/components/NavBar";
-import Card from "@/components/Card";
+import  Card from "@/components/Card";
 import { AnswerStatCard, LeaderboardCard } from "@/components/quiz";
 import StepProgress from "@/components/StepProgress";
 import quizMock from "@/data/quizMock.json";
-import type { Session } from "@/types";
 
 type QuizChoice = {
   id: number;
   text: string;
   isCorrect: boolean;
   selectedCount: number;
+};
+
+type QuizQuestion = {
+  id: number;
+  text: string;
+  timeSeconds: number;
+  choices: QuizChoice[];
+};
+
+type QuizSession = {
+  quizTitle: string;
+  className: string;
+  subject: string;
+  studentsJoined: number;
+  questions: QuizQuestion[];
 };
 
 const formatTime = (totalSeconds: number) => {
@@ -21,7 +35,7 @@ const formatTime = (totalSeconds: number) => {
 };
 
 const HostQuiz = () => {
-  const quiz = quizMock as Session;
+  const quiz = quizMock as QuizSession;
   const [activeIndex, setActiveIndex] = useState(0);
   const [showFullLeaderboard, setShowFullLeaderboard] = useState(false);
   const activeQuestion = quiz.questions[activeIndex];
@@ -36,7 +50,9 @@ const HostQuiz = () => {
     { id: 8, rank: 8, name: "Nora B.", points: 860 },
   ];
 
-  const [secondsLeft, setSecondsLeft] = useState(quiz.questions[0]?.timeSeconds ?? 0);
+  const [secondsLeft, setSecondsLeft] = useState(
+    quiz.questions[0]?.timeSeconds ?? 0
+  );
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -59,7 +75,10 @@ const HostQuiz = () => {
   }, [quiz.questions]);
 
   const totalResponses = useMemo(() => {
-    return activeQuestion.choices.reduce((total, choice) => total + choice.selectedCount, 0);
+    return activeQuestion.choices.reduce(
+      (total, choice) => total + choice.selectedCount,
+      0
+    );
   }, [activeQuestion]);
 
   const leadingCount = useMemo(() => {
@@ -81,11 +100,15 @@ const HostQuiz = () => {
       <main className="relative py-16">
         <div className="mx-auto w-full max-w-6xl px-6">
           <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-purple-600">
-            <span className="rounded-full bg-purple-100 px-3 py-1 text-purple-700">Live Now</span>
+            <span className="rounded-full bg-purple-100 px-3 py-1 text-purple-700">
+              Live Now
+            </span>
             <span className="rounded-full bg-white/80 px-3 py-1 text-gray-700">
               {quiz.className}
             </span>
-            <span className="rounded-full bg-white/80 px-3 py-1 text-gray-700">{quiz.subject}</span>
+            <span className="rounded-full bg-white/80 px-3 py-1 text-gray-700">
+              {quiz.subject}
+            </span>
           </div>
 
           <h1 className="mt-4 text-3xl font-bold text-black md:text-4xl">
