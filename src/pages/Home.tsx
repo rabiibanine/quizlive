@@ -1,5 +1,4 @@
 import Orb from "../components/Orb";
-import Advantages from "../components/Advantages";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
@@ -34,8 +33,6 @@ function Home() {
           </div>
         </div>
       </div>
-
-      <Advantages />
     </div>
   );
 }
