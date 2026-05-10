@@ -39,9 +39,9 @@ export default function QuestionCardList({
   return (
     <>
       <div className="mt-8 mb-4 px-2 flex justify-between items-center w-full">
-        <h1 className="text-xl font-semibold text-zinc-700">Questions</h1>
+        <h1 className="text-xl font-semibold text-white/80">Questions</h1>
         <PlusCircleIcon
-          className="scale-125 text-zinc-700 cursor-pointer transition-all hover:scale-150 active:scale-125"
+          className="scale-125 text-purple-200 cursor-pointer transition-all hover:scale-150 active:scale-125"
           onClick={handleAddQuestion}
         ></PlusCircleIcon>
       </div>

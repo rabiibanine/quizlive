@@ -74,7 +74,7 @@ const instructionCards = [
   },
 ];
 
-const QuizForm = () => {
+const HostQuizForm = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [formValues, setFormValues] = useState<Record<StepKey, string>>({
@@ -264,4 +264,4 @@ const QuizForm = () => {
   );
 };
 
-export default QuizForm;
+export default HostQuizForm;

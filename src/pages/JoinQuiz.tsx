@@ -186,10 +186,8 @@ const JoinQuiz = () => {
                   <p className="text-xs font-semibold uppercase tracking-[0.4em] text-purple-200">
                     Quiz Info
                   </p>
-                  <h2 className="mt-2 text-2xl font-bold text-black">{modalInfo.title}</h2>
-                  <p className="text-gray-600 mt-1">Review the details before joining.</p>
                   <h2 className="mt-2 text-2xl font-semibold text-white">
-                    {quizInfo.title}
+                    {modalInfo.title}
                   </h2>
                   <p className="mt-1 text-sm text-white/60">
                     Review the details before joining.
@@ -197,16 +195,12 @@ const JoinQuiz = () => {
                 </div>
                 <div className="grid gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-500">Class Name</span>
-                    <span className="font-semibold text-gray-900">{modalInfo.course}</span>
                     <span className="text-white/60">Class Name</span>
-                    <span className="font-semibold text-white">{quizInfo.course}</span>
+                    <span className="font-semibold text-white">{modalInfo.course}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-500">Subject</span>
-                    <span className="font-semibold text-gray-900">{modalInfo.subject}</span>
                     <span className="text-white/60">Subject</span>
-                    <span className="font-semibold text-white">{quizInfo.subject}</span>
+                    <span className="font-semibold text-white">{modalInfo.subject}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-white/60">Students Joined</span>
@@ -233,6 +227,7 @@ const JoinQuiz = () => {
                 <Button
                   variant="lavender"
                   className="w-full rounded-2xl px-8 py-3 text-sm font-semibold"
+                  onClick={handleJoin}
                 >
                   Confirm & Join
                 </Button>

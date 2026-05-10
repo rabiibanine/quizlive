@@ -50,7 +50,7 @@ const quiz: Quiz = {
 
 export default function QuizEditorPage() {
   const pillStyles =
-    "min-w-38 flex justify-center items-center gap-1.5 text-sm text-zinc-500 border border-zinc-200 rounded-full px-3 py-1 transition-all hover:border-zinc-400";
+    "min-w-38 flex justify-center items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.25em] text-white/70 border border-white/10 rounded-full px-3 py-1 bg-white/5";
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -166,46 +166,56 @@ export default function QuizEditorPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-100 flex justify-center py-12 px-12 md:px-36">
+    <div
+      className="min-h-screen w-full bg-slate-950 text-white flex justify-center py-12 px-6 md:px-36"
+      style={{
+        background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
+      }}
+    >
       <div className="w-full max-w-4xl">
-        <Card variant="outline" fullWidth padding="md" className="flex flex-col gap-4">
+        <Card
+          variant="none"
+          fullWidth
+          padding="md"
+          className="flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 backdrop-blur"
+        >
           {/* Title and description */}
           <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-bold text-zinc-900">{title}</h1>
-            <p className="text-zinc-400 text-sm">
+            <h1 className="text-3xl font-semibold text-white">{title}</h1>
+            <p className="text-sm text-white/60">
               Enter an optional description or instructions for the students...
             </p>
           </div>
 
-          <hr className="border-zinc-200" />
+          <hr className="border-white/10" />
 
           {/* Metadata row */}
           <div className="flex flex-wrap justify-between items-center gap-4">
             <div className={pillStyles}>
               <BookOpenIcon size={16} />
               <span>
-                Questions: <strong className="text-zinc-700">{questionCount}</strong>
+                Questions: <strong className="text-white">{questionCount}</strong>
               </span>
             </div>
 
             <div className={pillStyles}>
               <ClockIcon size={16} />
               <span>
-                Time: <strong className="text-zinc-700">{totalTime}</strong>
+                Time: <strong className="text-white">{totalTime}</strong>
               </span>
             </div>
 
             <div className={pillStyles}>
               <ChalkboardTeacherIcon size={16} />
               <span>
-                Class: <strong className="text-zinc-700">{course}</strong>
+                Class: <strong className="text-white">{course}</strong>
               </span>
             </div>
 
             <div className={pillStyles}>
               <FlaskIcon size={16} />
               <span>
-                Subject: <strong className="text-zinc-700">{subject}</strong>
+                Subject: <strong className="text-white">{subject}</strong>
               </span>
             </div>
           </div>
