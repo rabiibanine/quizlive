@@ -8,6 +8,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   inputSize?: InputSize;
   fullWidth?: boolean;
+  labelClassName?: string;
 }
 
 const sizeClasses: Record<InputSize, string> = {
@@ -25,6 +26,7 @@ function Input({
   disabled,
   className = "",
   id,
+  labelClassName = "",
   ...rest
 }: InputProps) {
   // falls back to label text if no id provided, for accessibility
@@ -33,7 +35,10 @@ function Input({
   return (
     <div className={`flex flex-col gap-1 ${fullWidth ? "w-full" : ""}`}>
       {label && (
-        <label htmlFor={inputId} className="text-sm font-medium text-gray-900">
+        <label
+          htmlFor={inputId}
+          className={`text-sm font-medium text-gray-900 ${labelClassName}`}
+        >
           {label}
         </label>
       )}
@@ -56,7 +61,9 @@ function Input({
       />
 
       {(error || helperText) && (
-        <span className={`text-xs ${error ? "text-red-500" : "text-gray-500"}`}>
+        <span
+          className={`text-xs ${error ? "text-red-500" : "text-gray-500"}`}
+        >
           {error ?? helperText}
         </span>
       )}
