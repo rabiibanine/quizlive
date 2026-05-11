@@ -16,23 +16,23 @@ export interface Student {
   joinedAt: string;
 }
 
-export interface Session {
-  code: string;
-  quizId: UUID;
-  professorId: UUID;
-  status: "waiting" | "active" | "ended";
-  currentQuestion: number;
-  currentStudents: number;
-  maxStudents: number;
-  questions: Question[];
-  students: Student[];
-  createdAt: string;
-}
-
 export interface Quiz {
   id: UUID;
   title: string;
   course: string;
   subject: string;
   questions: Question[];
+}
+
+export interface Session {
+  quizCode: string;
+  quizId: UUID;
+  professorId: UUID;
+  status: "waiting" | "active" | "ended";
+  currentQuestion: number;
+  currentStudents: number;
+  maxStudents: number;
+  quiz: Quiz;
+  students: Student[];
+  createdAt: string;
 }

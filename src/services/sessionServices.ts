@@ -1,7 +1,6 @@
 import {
   collection,
   addDoc,
-  serverTimestamp,
   getDocs,
   query,
   where,
@@ -12,7 +11,7 @@ import {
   increment,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
-import type { Quiz, Student } from "@/types/index";
+import type { Quiz, Session, Student } from "@/types/index";
 
 type UUID = ReturnType<typeof crypto.randomUUID>;
 
@@ -38,8 +37,9 @@ export async function launchSession(quizId: string, professorId: string, quiz: Q
     currentStudents: 0,
     currentQuestion: 0,
     students: [],
-    createdAt: serverTimestamp(),
-  });
+    maxStudents: 20,
+    createdAt: new Date().toISOString(),
+  } as Session);
   return { sessionId: ref.id, quizCode };
 }
 
