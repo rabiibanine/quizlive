@@ -19,7 +19,12 @@ export default function QuestionCardList({
     const newQuestion: Question = {
       id: crypto.randomUUID(),
       text: "",
-      choices: ["", "", "", ""],
+      choices: [
+        { text: "", count: 0 },
+        { text: "", count: 0 },
+        { text: "", count: 0 },
+        { text: "", count: 0 },
+      ],
       time: 60,
       correctChoice: 1,
     };
@@ -67,3 +72,4 @@ export default function QuestionCardList({
     </>
   );
 }
+
