@@ -1,4 +1,5 @@
 import Card from "@/components/Card";
+import { useMemo } from "react";
 
 interface AnswerStatCardProps {
   label: string;
@@ -15,6 +16,11 @@ const AnswerStatCard = ({
   isLeading = false,
   tone = "light",
 }: AnswerStatCardProps) => {
+  const percent = useMemo(() => {
+    if (currentStudents === 0) return 0;
+    return Math.round((count / currentStudents) * 100);
+  }, [count]);
+
   const isDark = tone === "dark";
   const cardVariant = isDark ? "none" : "outline";
   const borderClass = isDark
