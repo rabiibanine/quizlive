@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { doc, onSnapshot } from "firebase/firestore";
 
@@ -18,10 +18,19 @@ const formatTime = (totalSeconds: number) => {
 };
 
 const HostQuiz = () => {
-  const { sessionId } = useLocation().state;
+  const state = useLocation().state;
+  const navigate = useNavigate();
   const [session, setSession] = useState<Session | null>(null);
   const [showFullLeaderboard, setShowFullLeaderboard] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(0);
+
+  useEffect(() => {
+    if (!state) navigate("/");
+  }, [state]);
+
+  if (!state) return null;
+
+  const { sessionId } = state;
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, "sessions", sessionId), (snap) => {
@@ -31,7 +40,7 @@ const HostQuiz = () => {
     return unsub;
   }, [sessionId]);
 
-  const activeQuestion = session?.questions[session.currentQuestion];
+  const activeQuestion = session?.quiz.questions[session.currentQuestion];
 
   useEffect(() => {
     if (!activeQuestion) return;
@@ -57,7 +66,7 @@ const HostQuiz = () => {
         <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.25em] text-purple-200">
           <span className="rounded-full bg-purple-200 px-3 py-1 text-purple-900">Live Now</span>
           <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80">
-            {session.quiz.className}
+            {session.quiz.course}
           </span>
           <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80">
             {session.quiz.subject}
@@ -83,7 +92,7 @@ const HostQuiz = () => {
               <StepProgress
                 label="Question"
                 currentStep={session.currentQuestion}
-                totalSteps={session.questions.length}
+                totalSteps={session.quiz.questions.length}
                 className="flex-1"
                 labelClassName="text-xs font-semibold uppercase tracking-[0.3em] text-white/60"
                 percentClassName="hidden"
@@ -94,15 +103,15 @@ const HostQuiz = () => {
                 {session.students.length} students connected
               </span>
             </div>
-
             <h2 className="mt-6 text-2xl font-semibold text-white md:text-3xl">
-              Question {session.currentQuestion + 1} of {session.questions.length}:{" "}
+              Question {session.currentQuestion + 1} of {session.quiz.questions.length}:{" "}
               {activeQuestion.text}
-            </h2>
-
+            </h2>{" "}
+            percent={20}
             <div className="mt-8 grid gap-5 md:grid-cols-2">
               {activeQuestion.choices.map((choice, index) => (
-                <AnswerStatCard key={index} label={choice} tone="dark" />
+                // TODO Fix this
+                <AnswerStatCard key={index} label={choice} tone="dark" count={20} percent={20} />
               ))}
             </div>
           </Card>
@@ -122,3 +131,5 @@ const HostQuiz = () => {
     </div>
   );
 };
+
+export default HostQuiz;

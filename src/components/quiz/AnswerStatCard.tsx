@@ -1,4 +1,4 @@
-import  Card  from "@/components/Card";
+import Card from "@/components/Card";
 
 type AnswerStatCardProps = {
   label: string;
@@ -10,8 +10,8 @@ type AnswerStatCardProps = {
 
 const AnswerStatCard = ({
   label,
-  count,
-  percent,
+  count = 20,
+  percent = 20,
   isLeading = false,
   tone = "light",
 }: AnswerStatCardProps) => {
@@ -52,10 +52,7 @@ const AnswerStatCard = ({
         </div>
       </div>
       <div className={`mt-4 h-1.5 w-full rounded-full ${trackClass}`}>
-        <div
-          className={`h-full rounded-full ${barClass}`}
-          style={{ width: `${percent}%` }}
-        />
+        <div className={`h-full rounded-full ${barClass}`} style={{ width: `${percent}%` }} />
       </div>
     </Card>
   );
