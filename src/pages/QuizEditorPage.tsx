@@ -23,41 +23,6 @@ import { useMemo, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const quiz: Quiz = {
-  id: crypto.randomUUID(),
-  title: "Biology Quiz",
-  course: "Biology",
-  subject: "Immunology",
-  questions: [
-    {
-      id: crypto.randomUUID(),
-      text: "What is the main function of antibodies?",
-      choices: [
-        "To attack viruses directly",
-        "To signal immune cells",
-        "To neutralize foreign pathogens",
-        "To create red blood cells",
-      ],
-      time: 60,
-      correctChoice: 3, // (1-based, 1-4)
-    },
-    {
-      id: crypto.randomUUID(),
-      text: "Which cell type produces antibodies?",
-      choices: ["B cells", "T cells", "Macrophages", "Dendritic cells"],
-      time: 60,
-      correctChoice: 1,
-    },
-    {
-      id: crypto.randomUUID(),
-      text: "Where does hematopoiesis primarily take place in adults?",
-      choices: ["Spleen", "Liver", "Bone marrow", "Thymus"],
-      time: 45,
-      correctChoice: 3,
-    },
-  ],
-};
-
 export default function QuizEditorPage() {
   const pillStyles =
     "min-w-38 flex justify-center items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.25em] text-white/70 border border-white/10 rounded-full px-3 py-1 bg-white/5";
@@ -313,3 +278,4 @@ export default function QuizEditorPage() {
     </div>
   );
 }
+
