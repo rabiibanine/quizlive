@@ -109,7 +109,6 @@ const JoinQuiz = () => {
       };
 
       await joinSession(session.id, student);
-      // TODO Make sure the student page changes
       navigate(`/quiz/${enteredCode}`, { state: { sessionId: session.id, student } });
     } catch (error) {
       console.error("Failed to join session:", error);
@@ -196,9 +195,7 @@ const JoinQuiz = () => {
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-white/60">Students Joined</span>
-                    {/* TODO Replace 18 with the session currentStudents property*/}
-                    <span className="font-semibold text-gray-900">{modalInfo.currentStudents}</span>
-                    <span className="font-semibold text-white">{18}</span>
+                    <span className="font-semibold text-white">{modalInfo.currentStudents}</span>
                   </div>
                 </div>
               </div>
