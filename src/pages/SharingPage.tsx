@@ -64,7 +64,7 @@ const SharingPage = () => {
   async function handleStart(): Promise<void> {
     try {
       await startSession(sessionId);
-      navigate(`/quiz/${roomCode}/host`, { state: sessionId });
+      navigate(`/quiz/${roomCode}/host`, { state: { sessionId: sessionId } });
     } catch (error) {
       console.error(error);
     }
