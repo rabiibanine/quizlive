@@ -13,6 +13,7 @@ export interface Student {
   name: string;
   points: number;
   answers: [];
+  joinedAt: string;
 }
 
 export interface Session {

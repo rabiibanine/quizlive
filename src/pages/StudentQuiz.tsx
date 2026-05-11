@@ -21,7 +21,7 @@ const optionLabels = ["A", "B", "C", "D"];
 const StudentQuiz = () => {
   // Logic kept exactly from Code 2
   const quiz = quizMock as Quiz;
-  const { sessionId, student } = useLocation().state;
+  const { sessionId } = useLocation().state;
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(quiz.questions[0]?.time ?? 0);
@@ -84,7 +84,6 @@ const StudentQuiz = () => {
         background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
       }}
     >
-
       <main className="mx-auto flex flex-1 min-h-screen w-full max-w-6xl flex-col gap-10 px-6 py-16 lg:flex-row lg:gap-12">
         <aside className="w-full lg:max-w-[280px]">
           {session?.status !== "waiting" && (
@@ -107,9 +106,7 @@ const StudentQuiz = () => {
 
         <section className="flex-1">
           <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.25em] text-purple-200">
-            <span className="rounded-full bg-purple-200 px-3 py-1 text-purple-900">
-              Live Now
-            </span>
+            <span className="rounded-full bg-purple-200 px-3 py-1 text-purple-900">Live Now</span>
             <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80">
               {quiz.course}
             </span>
@@ -160,9 +157,7 @@ const StudentQuiz = () => {
                       >
                         {optionLabels[index] ?? ""}
                       </span>
-                      <span className="text-base font-medium text-white">
-                        {choice[index]}
-                      </span>
+                      <span className="text-base font-medium text-white">{choice[index]}</span>
                     </button>
                   );
                 })}
@@ -187,9 +182,9 @@ const StudentQuiz = () => {
           )}
         </section>
       </main>
-
     </div>
   );
 };
 
 export default StudentQuiz;
+

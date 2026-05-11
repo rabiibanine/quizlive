@@ -106,6 +106,7 @@ const JoinQuiz = () => {
         name: enteredName,
         points: 0,
         answers: [],
+        joinedAt: new Date().toISOString(),
       };
 
       await joinSession(session.id, student);
