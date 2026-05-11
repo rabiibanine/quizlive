@@ -3,11 +3,10 @@ import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import StepProgress from "@/components/StepProgress";
 import TimerCard from "@/components/quiz/TimerCard";
-import quizMock from "@/data/quizMock.json";
 
-import type { Quiz, Session } from "@/types";
+import type { Session } from "@/types";
 import { doc, onSnapshot } from "firebase/firestore";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "@/firebase/firebase";
 
 const formatTime = (totalSeconds: number) => {
@@ -16,67 +15,64 @@ const formatTime = (totalSeconds: number) => {
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 };
 
-const optionLabels = ["A", "B", "C", "D"];
-
 const StudentQuiz = () => {
-  // Logic kept exactly from Code 2
-  const quiz = quizMock as Quiz;
-  const { sessionId } = useLocation().state;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const state = location.state as { sessionId: string } | null;
 
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [secondsLeft, setSecondsLeft] = useState(quiz.questions[0]?.time ?? 0);
+  const [session, setSession] = useState<Session | null>(null);
+  const [secondsLeft, setSecondsLeft] = useState(0);
   const [selectedChoiceIndex, setSelectedChoiceIndex] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [session, setSession] = useState<Session | null>(null);
-
-  const activeQuestion = quiz.questions[activeIndex];
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setSecondsLeft((prev) => {
-        if (prev > 1) {
-          return prev - 1;
-        }
-
-        setActiveIndex((index) => {
-          const nextIndex = Math.min(index + 1, quiz.questions.length - 1);
-          setSecondsLeft(quiz.questions[nextIndex]?.time ?? 0);
-          return nextIndex;
-        });
-
-        return 0;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [quiz.questions]);
+    if (!state) navigate("/home");
+  }, [state]);
 
   useEffect(() => {
-    setSelectedChoiceIndex(null);
-    setIsSubmitted(false);
-  }, [activeIndex]);
-
-  useEffect(() => {
-    const unsub = onSnapshot(doc(db, "sessions", sessionId), (snap) => {
+    if (!state?.sessionId) return;
+    const unsub = onSnapshot(doc(db, "sessions", state.sessionId), (snap) => {
       if (!snap.exists()) return;
       setSession(snap.data() as Session);
     });
     return unsub;
-  }, [sessionId]);
+  }, [state?.sessionId]);
 
-  const handleChoiceSelect = (choiceId: number) => {
+  // reset answer state when question changes
+  useEffect(() => {
+    if (!session) return;
+    setSelectedChoiceIndex(null);
+    setIsSubmitted(false);
+    setSecondsLeft(session.quiz.questions[session.currentQuestion]?.time ?? 0);
+  }, [session?.currentQuestion]);
+
+  // timer counts down locally, driven by session.currentQuestion
+  useEffect(() => {
+    if (!session || session.status !== "active") return;
+    const timer = setInterval(() => {
+      setSecondsLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [session?.currentQuestion, session?.status]);
+
+  if (!state) return null;
+  if (!session) return <p>Loading...</p>;
+
+  const activeQuestion = session.quiz.questions[session.currentQuestion];
+
+  const handleChoiceSelect = (index: number) => {
     if (isSubmitted) return;
-    setSelectedChoiceIndex(choiceId);
+    setSelectedChoiceIndex(index);
   };
 
   const handleSubmit = () => {
     if (selectedChoiceIndex === null) return;
     setIsSubmitted(true);
+    // TODO: write answer to Firestore
   };
 
   const canSubmit = selectedChoiceIndex !== null && !isSubmitted;
 
-  // Styling kept exactly from Code 1, adapting only to Code 2's state variables and waiting status
   return (
     <div
       className="min-h-screen w-full bg-slate-950 text-white flex flex-col"
@@ -86,14 +82,14 @@ const StudentQuiz = () => {
     >
       <main className="mx-auto flex flex-1 min-h-screen w-full max-w-6xl flex-col gap-10 px-6 py-16 lg:flex-row lg:gap-12">
         <aside className="w-full lg:max-w-[280px]">
-          {session?.status !== "waiting" && (
+          {session.status === "active" && (
             <>
               <TimerCard time={formatTime(secondsLeft)} />
               <div className="mt-12">
                 <StepProgress
                   label="Question"
-                  currentStep={activeIndex}
-                  totalSteps={quiz.questions.length}
+                  currentStep={session.currentQuestion}
+                  totalSteps={session.quiz.questions.length}
                   labelClassName="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/60"
                   percentClassName="hidden"
                   trackClassName="bg-white/10"
@@ -108,28 +104,29 @@ const StudentQuiz = () => {
           <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.25em] text-purple-200">
             <span className="rounded-full bg-purple-200 px-3 py-1 text-purple-900">Live Now</span>
             <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80">
-              {quiz.course}
+              {session.quiz.course}
             </span>
             <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80">
-              {quiz.subject}
+              {session.quiz.subject}
             </span>
           </div>
 
           <h1 className="mt-6 text-2xl font-semibold text-white md:text-3xl">
-            Your Quiz: {quiz.title}
+            Your Quiz: {session.quiz.title}
           </h1>
           <p className="mt-2 text-sm text-white/60">
             Choose the correct answer and submit before time runs out.
           </p>
 
-          {session?.status === "waiting" ? (
+          {session.status === "waiting" ? (
             <div className="mt-10">
               <p className="text-lg font-semibold text-white/80">Waiting for Quiz to start...</p>
             </div>
           ) : (
             <>
               <h2 className="mt-10 text-lg font-semibold text-white/80">
-                Question {activeIndex + 1} of {quiz.questions.length}: {activeQuestion.text}
+                Question {session.currentQuestion + 1} of {session.quiz.questions.length}:{" "}
+                {activeQuestion.text}
               </h2>
 
               <div className="mt-6 grid gap-6 md:grid-cols-2">
@@ -137,7 +134,7 @@ const StudentQuiz = () => {
                   const isSelected = selectedChoiceIndex === index;
                   return (
                     <button
-                      key={choice[index]}
+                      key={index}
                       type="button"
                       className={`group relative flex min-h-[140px] w-full items-center gap-4 rounded-3xl border bg-white/5 px-6 py-6 text-left transition-all duration-200 ${
                         isSelected
@@ -155,9 +152,9 @@ const StudentQuiz = () => {
                             : "border border-white/20 text-white/70"
                         }`}
                       >
-                        {optionLabels[index] ?? ""}
+                        {index + 1}
                       </span>
-                      <span className="text-base font-medium text-white">{choice[index]}</span>
+                      <span className="text-base font-medium text-white">{choice}</span>
                     </button>
                   );
                 })}
