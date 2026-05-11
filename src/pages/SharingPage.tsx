@@ -5,8 +5,6 @@ import { useLocation, useParams } from "react-router-dom";
 import { FiCheck, FiCopy } from "react-icons/fi";
 import { IoPersonOutline } from "react-icons/io5";
 
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
 import Button from "../components/Button";
 import { BsQrCode } from "react-icons/bs";
 
@@ -100,16 +98,12 @@ const SharingPage = () => {
         background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
       }}
     >
-      <NavBar />
-
       {/* Main content */}
       <main className="relative flex flex-1 items-center justify-center py-10 overflow-hidden">
         <div className="w-full max-w-4xl mx-auto px-8">
           {/* Header */}
           <div className="animate_fadeInUp text-center mt-6">
-            <p className="text-lg font-semibold tracking-widest text-purple-200 mb-1">
-              QUIZ READY
-            </p>
+            <p className="text-lg font-semibold tracking-widest text-purple-200 mb-1">QUIZ READY</p>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
               You have created your quiz
             </h1>
@@ -215,8 +209,6 @@ const SharingPage = () => {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 };
