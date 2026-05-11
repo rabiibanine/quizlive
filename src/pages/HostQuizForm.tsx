@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import NavBar from "@/components/NavBar";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Input from "@/components/Input";
@@ -75,7 +74,7 @@ const instructionCards = [
   },
 ];
 
-const QuizForm = () => {
+const HostQuizForm = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [formValues, setFormValues] = useState<Record<StepKey, string>>({
@@ -163,58 +162,62 @@ const QuizForm = () => {
 
   return (
     <div
-      className="min-h-screen w-full text-gray-900 selection:bg-purple-200 selection:text-white"
+      className="min-h-screen w-full bg-slate-950 text-white"
       style={{
-        background: `
-          radial-gradient(circle at 10% 20%, rgba(132, 85, 239, 0.15) 0%, transparent 40%),
-          radial-gradient(circle at 90% 80%, rgba(0, 144, 169, 0.15) 0%, transparent 40%)
-        `,
+        background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
       }}
     >
-      <NavBar />
 
-      <main className="relative py-16 overflow-hidden">
-        <div className="w-full max-w-6xl mx-auto px-6">
-          <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] items-start">
-            <div className="hidden lg:flex flex-col gap-4">
+      <main className="relative flex-1 overflow-hidden py-16">
+        <div className="mx-auto w-full max-w-6xl px-6">
+          <div className="grid items-start gap-10 lg:grid-cols-[1fr_1.1fr]">
+            <div className="hidden flex-col gap-4 lg:flex">
               <div>
-                <p className="text-sm font-semibold tracking-widest text-purple-600 mb-2">
-                  START SESSION
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.35em] text-purple-200">
+                  Start Session
                 </p>
-                <h1 className="text-3xl md:text-4xl font-bold text-black">
+                <h1 className="text-3xl font-semibold text-white md:text-4xl">
                   Configure your quiz details
                 </h1>
-                <p className="text-gray-600 mt-3">
+                <p className="mt-3 text-sm text-white/60">
                   Set up the quiz before students join. You can adjust these settings any time
                   before you go live.
                 </p>
               </div>
 
               {instructionCards.map((card) => (
-                <Card key={card.title} variant="outline" className="bg-white/70 backdrop-blur-xl">
-                  <h3 className="text-lg font-semibold text-black">{card.title}</h3>
-                  <p className="text-sm text-gray-600 mt-2">{card.body}</p>
+                <Card
+                  key={card.title}
+                  variant="none"
+                  className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur"
+                >
+                  <h3 className="text-lg font-semibold text-white">{card.title}</h3>
+                  <p className="mt-2 text-sm text-white/60">{card.body}</p>
                 </Card>
               ))}
             </div>
 
-            <div className="bg-white/80 backdrop-blur-xl rounded-2xl border p-8 shadow-[0_0_40px_-10px_rgba(132,85,239,0.3)]">
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-[0_18px_40px_-24px_rgba(147,102,255,0.5)] backdrop-blur">
               <div className="mb-6 lg:hidden">
-                <p className="text-sm font-semibold tracking-widest text-purple-600 mb-2">
-                  START SESSION
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.35em] text-purple-200">
+                  Start Session
                 </p>
-                <h1 className="text-2xl font-bold text-black">Configure your quiz details</h1>
-                <p className="text-gray-600 mt-2">Set up the quiz before students join.</p>
+                <h1 className="text-2xl font-semibold text-white">
+                  Configure your quiz details
+                </h1>
+                <p className="mt-2 text-sm text-white/60">
+                  Set up the quiz before students join.
+                </p>
               </div>
 
               <StepProgress
                 currentStep={currentStep}
                 totalSteps={steps.length}
                 className="mt-2"
-                labelClassName="text-sm text-gray-500"
-                percentClassName="text-sm text-gray-500"
-                trackClassName="bg-gray-200"
-                barClassName="bg-purple-500"
+                labelClassName="text-xs font-semibold uppercase tracking-[0.3em] text-white/60"
+                percentClassName="text-xs font-semibold uppercase tracking-[0.3em] text-white/60"
+                trackClassName="bg-white/10"
+                barClassName="bg-purple-300"
               />
 
               <div className="mt-8">
@@ -230,19 +233,25 @@ const QuizForm = () => {
                   value={formValues[activeStep.key]}
                   onChange={(event) => handleChange(activeStep.key, event.target.value)}
                   error={errors[activeStep.key]}
+                  labelClassName="text-white/80"
+                  className="rounded-2xl border-white/10 bg-white/5 text-white placeholder:text-white/40 focus:ring-purple-200"
                 />
               </div>
 
-              <div className="mt-10 flex flex-col sm:flex-row gap-3">
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                 <Button
                   variant="white"
-                  className="w-full sm:w-auto px-8 py-3"
+                  className="w-full rounded-2xl border-white/10 bg-white/10 px-8 py-3 text-sm font-semibold text-white hover:border-white/20 hover:bg-white/20 disabled:cursor-not-allowed disabled:border-white/5 disabled:bg-white/5 disabled:text-white/40 sm:w-auto"
                   onClick={handleBack}
                   disabled={currentStep === 0}
                 >
                   Back
                 </Button>
-                <Button variant="black" className="w-full sm:flex-1 px-8 py-3" onClick={handleNext}>
+                <Button
+                  variant="lavender"
+                  className="w-full rounded-2xl px-8 py-3 text-sm font-semibold sm:flex-1"
+                  onClick={handleNext}
+                >
                   {currentStep === steps.length - 1 ? "Create Session" : "Next"}
                 </Button>
               </div>
@@ -250,8 +259,9 @@ const QuizForm = () => {
           </div>
         </div>
       </main>
+
     </div>
   );
 };
 
-export default QuizForm;
+export default HostQuizForm;

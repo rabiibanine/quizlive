@@ -78,6 +78,18 @@
   --ui-background: #ffffff;
 }
 
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  background-color: var(--color-surface-raised);
+  color: var(--color-content-primary);
+  font-family: var(--font-family-sans);
+}
+
 @keyframes growHeight {
   from {
     height: 0;

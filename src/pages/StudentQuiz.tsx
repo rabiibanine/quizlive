@@ -1,22 +1,14 @@
 import { useEffect, useState } from "react";
 
-import NavBar from "@/components/NavBar";
 import Button from "@/components/Button";
-import Card from "@/components/Card";
 import StepProgress from "@/components/StepProgress";
+import TimerCard from "@/components/quiz/TimerCard";
 import quizMock from "@/data/quizMock.json";
 
 import type { Quiz, Session } from "@/types";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useLocation } from "react-router-dom";
 import { db } from "@/firebase/firebase";
-
-// type QuizChoice = {
-//   id: number;
-//   text: string;
-//   isCorrect: boolean;
-//   selectedCount: number;
-// };
 
 const formatTime = (totalSeconds: number) => {
   const minutes = Math.floor(totalSeconds / 60);
@@ -27,6 +19,7 @@ const formatTime = (totalSeconds: number) => {
 const optionLabels = ["A", "B", "C", "D"];
 
 const StudentQuiz = () => {
+  // Logic kept exactly from Code 2
   const quiz = quizMock as Quiz;
   const { sessionId, student } = useLocation().state;
 
@@ -83,133 +76,118 @@ const StudentQuiz = () => {
 
   const canSubmit = selectedChoiceIndex !== null && !isSubmitted;
 
+  // Styling kept exactly from Code 1, adapting only to Code 2's state variables and waiting status
   return (
     <div
-      className="min-h-screen w-full text-gray-900 selection:bg-purple-200 selection:text-white"
+      className="min-h-screen w-full bg-slate-950 text-white flex flex-col"
       style={{
-        background: `
-          radial-gradient(circle at 10% 20%, rgba(132, 85, 239, 0.15) 0%, transparent 40%),
-          radial-gradient(circle at 90% 80%, rgba(0, 144, 169, 0.15) 0%, transparent 40%)
-        `,
+        background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
       }}
     >
-      <NavBar />
 
-      <main className="relative py-16">
-        <div className="mx-auto w-full max-w-6xl px-6">
-          <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-purple-600">
-            <span className="rounded-full bg-purple-100 px-3 py-1 text-purple-700">Live Now</span>
-            <span className="rounded-full bg-white/80 px-3 py-1 text-gray-700">{quiz.course}</span>
-            <span className="rounded-full bg-white/80 px-3 py-1 text-gray-700">{quiz.subject}</span>
+      <main className="mx-auto flex flex-1 min-h-screen w-full max-w-6xl flex-col gap-10 px-6 py-16 lg:flex-row lg:gap-12">
+        <aside className="w-full lg:max-w-[280px]">
+          {session?.status !== "waiting" && (
+            <>
+              <TimerCard time={formatTime(secondsLeft)} />
+              <div className="mt-12">
+                <StepProgress
+                  label="Question"
+                  currentStep={activeIndex}
+                  totalSteps={quiz.questions.length}
+                  labelClassName="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/60"
+                  percentClassName="hidden"
+                  trackClassName="bg-white/10"
+                  barClassName="bg-purple-300"
+                />
+              </div>
+            </>
+          )}
+        </aside>
+
+        <section className="flex-1">
+          <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.25em] text-purple-200">
+            <span className="rounded-full bg-purple-200 px-3 py-1 text-purple-900">
+              Live Now
+            </span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80">
+              {quiz.course}
+            </span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80">
+              {quiz.subject}
+            </span>
           </div>
 
-          <h1 className="mt-4 text-3xl font-bold text-black md:text-4xl">
+          <h1 className="mt-6 text-2xl font-semibold text-white md:text-3xl">
             Your Quiz: {quiz.title}
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-sm text-white/60">
             Choose the correct answer and submit before time runs out.
           </p>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-[1.6fr_0.6fr]">
-            <Card
-              variant="outline"
-              padding="lg"
-              className="rounded-3xl border-white/70 bg-white/80 backdrop-blur-xl shadow-[0_25px_60px_-40px_rgba(15,23,42,0.45)]"
-            >
-              {" "}
-              {session?.status === "waiting" ? (
-                <p> Waiting for Quiz to start...</p>
-              ) : (
-                <>
-                  <StepProgress
-                    label="Question"
-                    currentStep={activeIndex}
-                    totalSteps={quiz.questions.length}
-                    className="flex-1"
-                    labelClassName="text-xs font-semibold uppercase tracking-[0.3em] text-purple-600"
-                    percentClassName="hidden"
-                  />
-
-                  <h2 className="mt-6 text-2xl font-semibold text-black md:text-3xl">
-                    Question {activeIndex + 1} of {quiz.questions.length}: {activeQuestion.text}
-                  </h2>
-
-                  <div className="mt-8 grid gap-5 md:grid-cols-2">
-                    {activeQuestion.choices.map((choice, index) => {
-                      const isSelected = selectedChoiceIndex === index;
-                      return (
-                        <button
-                          key={choice[index]}
-                          type="button"
-                          className={`group relative flex min-h-[120px] w-full items-start gap-5 rounded-2xl border bg-white/90 px-6 py-6 text-left transition-all duration-200 md:min-h-[132px] ${
-                            isSelected
-                              ? "border-purple-500 bg-purple-50/80 shadow-[0_18px_45px_-30px_rgba(88,28,135,0.6)] ring-1 ring-purple-200"
-                              : "border-gray-200/80 shadow-[0_12px_30px_-28px_rgba(15,23,42,0.35)] hover:border-purple-300 hover:shadow-[0_18px_35px_-30px_rgba(88,28,135,0.4)]"
-                          } ${isSubmitted && !isSelected ? "opacity-70" : ""}`}
-                          onClick={() => handleChoiceSelect(index)}
-                          disabled={isSubmitted}
-                          aria-pressed={isSelected}
-                        >
-                          <span
-                            className={`flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold ${
-                              isSelected
-                                ? "bg-purple-600 text-white"
-                                : "bg-white text-gray-700 ring-1 ring-gray-200/70 group-hover:bg-purple-50 group-hover:text-purple-700"
-                            }`}
-                          >
-                            {optionLabels[index] ?? ""}
-                          </span>
-                          <span className="text-base font-semibold leading-snug text-gray-900">
-                            {choice[index]}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <p className="text-sm text-gray-600">
-                      {isSubmitted
-                        ? "Answer submitted. Waiting for the next question."
-                        : "Select one answer and submit it."}
-                    </p>
-                    <Button
-                      variant={canSubmit ? "black" : "ghost"}
-                      className="px-8 py-3"
-                      onClick={handleSubmit}
-                      disabled={!canSubmit}
-                    >
-                      {isSubmitted ? "Submitted" : "Submit Answer"}
-                    </Button>
-                  </div>
-
-                  <p className="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-gray-500 lg:hidden">
-                    Time Remaining: {formatTime(secondsLeft)}
-                  </p>
-                </>
-              )}
-            </Card>
-
-            <div className="hidden rounded-3xl bg-black p-8 text-white shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] lg:block">
-              {session?.status === "waiting" ? (
-                <></>
-              ) : (
-                <>
-                  <div className="flex items-center gap-3 text-xs uppercase tracking-[0.25em] text-white/60">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20">
-                      <span className="h-3 w-3 rounded-full border border-white/40" />
-                    </span>
-                    Time Remaining
-                  </div>
-                  <div className="mt-10 text-5xl font-semibold tracking-tight">
-                    {formatTime(secondsLeft)}
-                  </div>
-                </>
-              )}
+          {session?.status === "waiting" ? (
+            <div className="mt-10">
+              <p className="text-lg font-semibold text-white/80">Waiting for Quiz to start...</p>
             </div>
-          </div>
-        </div>
+          ) : (
+            <>
+              <h2 className="mt-10 text-lg font-semibold text-white/80">
+                Question {activeIndex + 1} of {quiz.questions.length}: {activeQuestion.text}
+              </h2>
+
+              <div className="mt-6 grid gap-6 md:grid-cols-2">
+                {activeQuestion.choices.map((choice, index) => {
+                  const isSelected = selectedChoiceIndex === index;
+                  return (
+                    <button
+                      key={choice[index]}
+                      type="button"
+                      className={`group relative flex min-h-[140px] w-full items-center gap-4 rounded-3xl border bg-white/5 px-6 py-6 text-left transition-all duration-200 ${
+                        isSelected
+                          ? "border-purple-300/80 bg-purple-300/10 shadow-[0_18px_40px_-24px_rgba(147,102,255,0.6)]"
+                          : "border-white/10 hover:border-purple-200/70 hover:bg-white/10"
+                      } ${isSubmitted && !isSelected ? "opacity-60" : ""}`}
+                      onClick={() => handleChoiceSelect(index)}
+                      disabled={isSubmitted}
+                      aria-pressed={isSelected}
+                    >
+                      <span
+                        className={`flex h-12 w-12 items-center justify-center rounded-full text-sm font-semibold transition-colors ${
+                          isSelected
+                            ? "bg-purple-200 text-purple-900"
+                            : "border border-white/20 text-white/70"
+                        }`}
+                      >
+                        {optionLabels[index] ?? ""}
+                      </span>
+                      <span className="text-base font-medium text-white">
+                        {choice[index]}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm text-white/60">
+                  {isSubmitted
+                    ? "Answer submitted. Waiting for the next question."
+                    : "Select one answer and submit it."}
+                </p>
+                <Button
+                  variant={canSubmit ? "lavender" : "ghost"}
+                  className="rounded-2xl px-8 py-3 text-sm font-semibold text-purple-900 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/10 disabled:text-white/40"
+                  onClick={handleSubmit}
+                  disabled={!canSubmit}
+                >
+                  {isSubmitted ? "Submitted" : "Submit Answer"}
+                </Button>
+              </div>
+            </>
+          )}
+        </section>
       </main>
+
     </div>
   );
 };

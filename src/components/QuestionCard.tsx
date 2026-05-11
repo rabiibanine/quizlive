@@ -26,19 +26,19 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
   const [isEditing, setIsEditing] = useState(false);
 
   return (
-    <Card variant="outline" padding="lg" className="w-full flex flex-col">
+    <Card variant="none" padding="lg" className="w-full flex flex-col rounded-3xl border border-white/10 bg-white/5 backdrop-blur">
       {/* Header */}
       <div className="items-center gap-2 flex flex-col sm:flex-row">
         {/* Number & Question */}
         <div className="flex items-center w-full order-last mt-4 sm:order-first sm:mt-0">
-          <span className="font-mono font-bold text-zinc-600 text-lg">
+          <span className="font-mono font-bold text-white/60 text-lg">
             {(index + 1).toString().padStart(2, "0")}
           </span>
           <input
             className={
-              "ml-2 w-full bg-transparent border-b " +
+              "ml-2 w-full bg-transparent border-b text-white placeholder:text-white/40 " +
               (isEditing
-                ? "border-zinc-300 transition-all focus:outline-none focus:border-zinc-600"
+                ? "border-white/30 transition-all focus:outline-none focus:border-purple-200"
                 : "border-transparent")
             }
             placeholder="Enter your question here"
@@ -50,8 +50,8 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
           />
         </div>
 
-        <div className="flex items-center gap-2 bg-zinc-100 rounded-lg mx-1 px-3 py-2 transition-all hover:bg-zinc-200">
-          <ClockIcon className="text-zinc-400 shrink-0" />
+        <div className="flex items-center gap-2 bg-white/10 rounded-lg mx-1 px-3 py-2 transition-all hover:bg-white/15">
+          <ClockIcon className="text-white/50 shrink-0" />
           <input
             type="number"
             value={question.time}
@@ -63,11 +63,11 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
               if (isEditing) onUpdate(index, { time: Number(e.target.value) });
             }}
             className={
-              `bg-transparent w-12 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ` +
-              (isEditing ? `text-zinc-700` : `text-zinc-500`)
+              `bg-transparent w-12 focus:outline-none text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ` +
+              (isEditing ? `text-white` : `text-white/60`)
             }
           />
-          <span className="text-zinc-400 text-sm">sec</span>
+          <span className="text-white/50 text-sm">sec</span>
         </div>
 
         {/* Buttons */}
@@ -75,7 +75,7 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
           <div className="flex gap-2 h-full">
             {isEditing ? (
               <button
-                className="p-2 rounded-full text-zinc-600 border border-zinc-400 transition-all hover:cursor-pointer hover:text-zinc-50 hover:bg-green-300 hover:border-transparent"
+                className="p-2 rounded-full text-white/70 border border-white/20 transition-all hover:cursor-pointer hover:text-white hover:bg-emerald-500/30 hover:border-emerald-400/60"
                 onClick={() => {
                   setIsEditing(false);
                 }}
@@ -84,7 +84,7 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
               </button>
             ) : (
               <button
-                className="p-2 rounded-full text-zinc-600 border border-zinc-400 transition-all hover:cursor-pointer hover:text-zinc-50 hover:bg-zinc-600 hover:border-transparent"
+                className="p-2 rounded-full text-white/70 border border-white/20 transition-all hover:cursor-pointer hover:text-white hover:bg-white/10 hover:border-white/40"
                 onClick={() => {
                   setIsEditing(true);
                 }}
@@ -93,17 +93,17 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
               </button>
             )}
             <button
-              className="p-2 rounded-full text-zinc-600 border border-zinc-400 transition-all hover:cursor-pointer hover:text-red-400 hover:bg-red-100 hover:border-red-300"
+              className="p-2 rounded-full text-white/70 border border-white/20 transition-all hover:cursor-pointer hover:text-red-300 hover:bg-red-500/20 hover:border-red-400/40"
               onClick={() => onDelete(index)}
             >
               <XIcon />
             </button>
           </div>
 
-          <div className="w-px rounded-full self-center h-8 bg-zinc-400 mx-2" />
+          <div className="w-px rounded-full self-center h-8 bg-white/20 mx-2" />
 
           <button
-            className="p-2 rounded-full text-zinc-600 border border-zinc-400 transition-all hover:cursor-pointer hover:text-zinc-50 hover:bg-zinc-600 hover:border-transparent"
+            className="p-2 rounded-full text-white/70 border border-white/20 transition-all hover:cursor-pointer hover:text-white hover:bg-white/10 hover:border-white/40"
             onClick={() => setIsExpanded((prev) => !prev)}
           >
             <CaretDownIcon
@@ -123,7 +123,7 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden mt-2"
           >
-            <hr className="my-2 border-zinc-200" />
+            <hr className="my-2 border-white/10" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
               {question.choices.map((choice, cIndex) => {
                 const isCorrectChoice = question.correctChoice === cIndex + 1;
@@ -133,10 +133,10 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
                     variant="none"
                     rounded={isCorrectChoice ? "2xl" : "lg"}
                     className={
-                      `transition-all duration-200 text-center select-none flex ` +
+                      `transition-all duration-200 text-center select-none flex border border-white/10 ` +
                       (isCorrectChoice
-                        ? "bg-zinc-800 text-white shadow-lg hover:bg-zinc-600 "
-                        : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 ") +
+                        ? "bg-purple-300/15 text-white border-purple-300/60 shadow-[0_18px_40px_-24px_rgba(147,102,255,0.6)] "
+                        : "bg-white/5 text-white/70 hover:bg-white/10 ") +
                       (isEditing ? "cursor-pointer " : " ")
                     }
                     padding="md"
@@ -147,11 +147,11 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
                     <input
                       placeholder={`Choice #${cIndex + 1}`}
                       className={
-                        "w-full bg-transparent border-b transition-all focus:outline-none " +
+                        "w-full bg-transparent border-b transition-all focus:outline-none placeholder:text-white/40 " +
                         (isEditing
                           ? isCorrectChoice
-                            ? "border-zinc-500 hover:border-zinc-200 focus:border-zinc-200"
-                            : "border-zinc-300 hover:border-zinc-400 focus:border-zinc-400"
+                            ? "border-purple-200 hover:border-purple-200 focus:border-purple-200"
+                            : "border-white/20 hover:border-white/40 focus:border-purple-200"
                           : "border-transparent")
                       }
                       onClick={(e) => {
@@ -169,7 +169,9 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
                     ></input>
 
                     <CheckCircleIcon
-                      className={`min-w-6 h-6 + ${isCorrectChoice ? "text-zinc-50 " : "text-transparent "} + ${isEditing ? "ml-2" : "ml-auto"}`}
+                      className={`min-w-6 h-6 + ${
+                        isCorrectChoice ? "text-purple-200 " : "text-transparent "
+                      } + ${isEditing ? "ml-2" : "ml-auto"}`}
                     ></CheckCircleIcon>
                   </Card>
                 );

@@ -86,92 +86,174 @@ const podium: StudentType[] = [
 ];
 const otherRanking : StudentType[] = sortedData.filter(s => s.rank > 3);
 
+const averageAccuracy = Math.round(
+  students_data.reduce((sum, student) => sum + student.accuracy, 0) / students_data.length
+);
+
+const getInitials = (name: string) =>
+  name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
 
 export default function Podium() {
   return (
-    <div className="min-h-screen bg-background text-on-surface">
+    <div
+      className="min-h-screen text-white"
+      style={{
+        background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
+      }}
+    >
+      <main className="mx-auto max-w-6xl px-6 pt-10 pb-24">
+        {/* Header */}
+        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/50">
+              Session Results
+            </p>
+            <h1 className="mt-2 text-3xl font-semibold text-white">Advanced Macroeconomics Quiz</h1>
+          </div>
 
-      <main className="max-w-6xl mx-auto px-6 pt-12 pb-24">
-        {/* Title */}
-        <div className="animate_fadeInDown text-center mb-16">
-          <span className="px-4 py-2 bg-black text-white rounded-full text-sm font-bold">
-            SESSION COMPLETE
-          </span>
-          <h1 className="text-4xl font-bold mt-4">The Results are In!</h1>
-          <p className="text-gray-500 mt-2">
-            Great job class! Average accuracy was 84%.
-          </p>
+          <div className="flex gap-3">
+            <Button
+              variant="white"
+              className="flex items-center gap-2 border-white/10 bg-white/5 text-white/80 hover:border-white/20 hover:bg-white/10"
+            >
+              + Start New Quiz
+            </Button>
+            <Button
+              variant="lavender"
+              className="flex items-center gap-2"
+            >
+              <CsvDownloader
+                className="cursor-pointer"
+                filename="quiz_result"
+                extension=".csv"
+                separator=","
+                datas={sortedData}
+                text="Download CSV"
+              />
+            </Button>
+          </div>
         </div>
 
-        {/* Actions */}
-        <div className="flex gap-4 justify-center mt-12 mb-16">
-          <Button variant="black" className=" animate_fadeInDown text-white px-8 py-3 rounded-full">
-            <CsvDownloader
-              className="cursor-pointer"
-              filename="quiz_result"
-              extension=".csv"
-              separator=","
-              datas={sortedData}
-              text="Download CSV"
-            />
-          </Button>
-          <Button variant="white" className="animate_fadeInDown px-8 py-3 rounded-full">
-            Play Again
-          </Button>
+        {/* Stats */}
+        <div className="mt-8 grid gap-6 md:grid-cols-2">
+          <div className="rounded-2xl border border-white/10 bg-white/5 px-6 py-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/50">
+              Average Accuracy
+            </p>
+            <div className="mt-2 text-3xl font-semibold text-white">{averageAccuracy}%</div>
+            <div className="mt-4 h-2 w-full rounded-full bg-white/10">
+              <div
+                className="h-full rounded-full bg-purple-300/80"
+                style={{ width: `${averageAccuracy}%` }}
+              />
+            </div>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 px-6 py-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/50">
+              Participants
+            </p>
+            <div className="mt-2 text-3xl font-semibold text-white">{students_data.length}</div>
+            <div className="mt-4 flex items-center gap-2">
+              {students_data.slice(0, 5).map((student) => (
+                <div
+                  key={student.id}
+                  className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/10 text-[10px] font-semibold text-white/70"
+                >
+                  {getInitials(student.name)}
+                </div>
+              ))}
+              {students_data.length > 5 ? (
+                <div className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/10 text-[10px] font-semibold text-white/70">
+                  +{students_data.length - 5}
+                </div>
+              ) : null}
+            </div>
+          </div>
         </div>
 
         {/* Podium */}
-        <div className="grid md:grid-cols-3 gap-6 items-end mb-24">
-          {podium.map((p) => (
-            <div
-              key={p.id}
-              className={`flex flex-col items-center`}
-            >
-              <div className="animate_fadeInUp mt-3 font-bold">{p.name}</div>
-              <div className="animate_fadeInUp text-sm text-gray-500">
-                {p.points.toLocaleString()} PTS
-              </div>
+        <div className="mt-10 flex items-end justify-center gap-6">
+          {podium.map((p, index) => {
+            const isWinner = p.rank === 1;
+            return (
               <div
-                style={{ '--target-height': p.rank === 1 ? '16rem' : p.rank === 2 ? '12rem' : '8rem' } as React.CSSProperties}
-                className={`animate-grow flex items-center justify-center text-[60px] mt-4 w-full text-center text-white py-6 rounded-t-3xl ${
-                  p.rank === 1
-                    ? "bg-yellow-500 h-64"
-                    : p.rank === 2
-                    ? "bg-gray-600 h-48"
-                    : "bg-orange-600 h-32"
-                }`}
+                key={p.id}
+                className="animate_fadeInUp flex flex-col items-center"
+                style={{ animationDelay: `${index * 1}s` }}
               >
-                {p.rank}
+                <div
+                  className={`flex items-center justify-center rounded-full border border-purple-300/40 bg-purple-400/10 text-white/80 ${
+                    isWinner ? "h-14 w-14 text-lg" : "h-12 w-12 text-base"
+                  }`}
+                  style={{
+                    animationDelay: `${0.05 + index * 0.12}s`,
+                    animationTimingFunction: "cubic-bezier(0.2, 0.8, 0.2, 1)",
+                  }}
+                >
+                  {getInitials(p.name)}
+                </div>
+                <div className="mt-3 text-sm font-semibold text-white/90">{p.name}</div>
+                <div className="text-xs text-white/50">{p.points.toLocaleString()} pts</div>
+                <div
+                  className={`animate-grow origin-bottom mt-4 w-40 rounded-t-3xl border border-white/10 bg-gradient-to-b from-purple-400/20 to-slate-900/90 text-center text-2xl font-semibold text-white/70 shadow-[0_30px_60px_-40px_rgba(0,0,0,0.8)] ${
+                    p.rank === 1 ? "h-64" : p.rank === 2 ? "h-48" : "h-40"
+                  }`}
+                  style={{
+                    '--target-height': p.rank === 1 ? '16rem' : p.rank === 2 ? '12rem' : '10rem',
+                    animationDelay: `${0.15 + index * 0.12}s`,
+                    animationTimingFunction: "cubic-bezier(0.2, 0.8, 0.2, 1)",
+                    ...(p.rank === 1 ? { animationDuration: "0.9s" } : { animationDuration: "0.75s" }),
+                  } as React.CSSProperties}
+                >
+                  <div className="pt-6">{p.rank}</div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Leaderboard */}
-        <div className="animate_fadeInDown bg-white/70 backdrop-blur-xl rounded-xl overflow-hidden">
-          {otherRanking.map((s, index) => (
-            <AnimatedItem key={s.rank} index={index} delay={0.05 * index}> 
-              <div
-                key={s.rank}
-                className="flex items-center justify-between px-6 py-4 border-b hover:bg-violet-50"
-              >
-                <div className="flex items-center gap-4">
-                  <span className="w-8 font-bold">{s.rank}</span>
-                  <span>{s.name}</span>
+        <div className="mt-12 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl">
+          <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
+            <h2 className="text-sm font-semibold text-white/80">Detailed Ranking</h2>
+          </div>
+          <div className="grid grid-cols-[0.6fr_2fr_1fr_1fr] gap-2 px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/40">
+            <span>Rank</span>
+            <span>Name</span>
+            <span>Score</span>
+            <span>Accuracy</span>
+          </div>
+          <div className="divide-y divide-white/10">
+            {otherRanking.map((s, index) => (
+              <AnimatedItem key={s.rank} index={index} delay={0.05 * index}>
+                <div className="grid grid-cols-[0.6fr_2fr_1fr_1fr] gap-2 px-6 py-4 text-sm text-white/80 hover:bg-white/5">
+                  <span className="font-semibold text-white/60">#{s.rank}</span>
+                  <span className="flex items-center gap-3">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/10 text-xs font-semibold text-white/70">
+                      {getInitials(s.name)}
+                    </span>
+                    {s.name}
+                  </span>
+                  <span>{s.points} pts</span>
+                  <span className="flex items-center gap-3">
+                    <span className="h-2 w-16 rounded-full bg-white/10">
+                      <span className="block h-full rounded-full bg-purple-300/80" style={{ width: `${s.accuracy}%` }} />
+                    </span>
+                    {s.accuracy}%
+                  </span>
                 </div>
-
-                <div className="text-right">
-                  <div className="text-violet-600 font-bold">{s.points}</div>
-                  <div className="text-xs text-gray-400">
-                    {s.accuracy}% accuracy
-                  </div>
-                </div>
-              </div>
-            </AnimatedItem>
-          ))}
+              </AnimatedItem>
+            ))}
+          </div>
         </div>
       </main>
-      
+
     </div>
   );
 }

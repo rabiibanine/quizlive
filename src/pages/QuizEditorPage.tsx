@@ -8,7 +8,14 @@ import type { Question, Quiz } from "@/types/index";
 
 import { getOrCreateId } from "@/utils/helpers";
 
-import { BookOpenIcon, ClockIcon, ChalkboardTeacherIcon, FlaskIcon } from "@phosphor-icons/react";
+import {
+  BookOpenIcon,
+  ClockIcon,
+  ChalkboardTeacherIcon,
+  FlaskIcon,
+  UploadSimpleIcon,
+  SparkleIcon,
+} from "@phosphor-icons/react";
 
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -50,7 +57,7 @@ const quiz: Quiz = {
 
 export default function QuizEditorPage() {
   const pillStyles =
-    "min-w-38 flex justify-center items-center gap-1.5 text-sm text-zinc-500 border border-zinc-200 rounded-full px-3 py-1 transition-all hover:border-zinc-400";
+    "min-w-38 flex justify-center items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.25em] text-white/70 border border-white/10 rounded-full px-3 py-1 bg-white/5";
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -166,49 +173,85 @@ export default function QuizEditorPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-100 flex justify-center py-12 px-12 md:px-36">
+    <div
+      className="min-h-screen w-full bg-slate-950 text-white flex justify-center py-12 px-6 md:px-36"
+      style={{
+        background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
+      }}
+    >
       <div className="w-full max-w-4xl">
-        <Card variant="outline" fullWidth padding="md" className="flex flex-col gap-4">
+        <Card
+          variant="none"
+          fullWidth
+          padding="md"
+          className="flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 backdrop-blur"
+        >
           {/* Title and description */}
           <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-bold text-zinc-900">{title}</h1>
-            <p className="text-zinc-400 text-sm">
+            <h1 className="text-3xl font-semibold text-white">{title}</h1>
+            <p className="text-sm text-white/60">
               Enter an optional description or instructions for the students...
             </p>
           </div>
 
-          <hr className="border-zinc-200" />
+          <hr className="border-white/10" />
 
           {/* Metadata row */}
           <div className="flex flex-wrap justify-between items-center gap-4">
             <div className={pillStyles}>
               <BookOpenIcon size={16} />
               <span>
-                Questions: <strong className="text-zinc-700">{questionCount}</strong>
+                Questions: <strong className="text-white">{questionCount}</strong>
               </span>
             </div>
 
             <div className={pillStyles}>
               <ClockIcon size={16} />
               <span>
-                Time: <strong className="text-zinc-700">{totalTime}</strong>
+                Time: <strong className="text-white">{totalTime}</strong>
               </span>
             </div>
 
             <div className={pillStyles}>
               <ChalkboardTeacherIcon size={16} />
               <span>
-                Class: <strong className="text-zinc-700">{course}</strong>
+                Class: <strong className="text-white">{course}</strong>
               </span>
             </div>
 
             <div className={pillStyles}>
               <FlaskIcon size={16} />
               <span>
-                Subject: <strong className="text-zinc-700">{subject}</strong>
+                Subject: <strong className="text-white">{subject}</strong>
               </span>
             </div>
           </div>
+        </Card>
+
+        <Card
+          variant="none"
+          fullWidth
+          padding="md"
+          className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-purple-400/30 bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-purple-500/10"
+        >
+          <div className="flex items-start gap-3">
+            <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-purple-500/20 text-purple-200">
+              <SparkleIcon size={18} />
+            </div>
+            <div className="flex flex-col gap-1">
+              <h2 className="text-lg font-semibold text-white">Generate with AI</h2>
+              <p className="text-sm text-white/60">
+                Import course material (PDF, PPT, or DOCX) to automatically generate quiz questions.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 rounded-full border border-purple-300/40 bg-purple-500/20 px-4 py-2 text-sm font-semibold text-purple-100 transition hover:bg-purple-500/30"
+          >
+            <UploadSimpleIcon size={18} />
+            Upload File
+          </button>
         </Card>
 
         {/* Question List */}

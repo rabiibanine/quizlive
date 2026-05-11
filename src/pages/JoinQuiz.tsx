@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import { findSessionByCode, joinSession } from "@/services/sessionServices";
@@ -126,28 +125,27 @@ const JoinQuiz = () => {
 
   return (
     <div
-      className="min-h-screen w-full text-gray-900 selection:bg-purple-200 selection:text-white"
+      className="min-h-screen w-full bg-slate-950 text-white"
       style={{
-        background: `
-          radial-gradient(circle at 10% 20%, rgba(132, 85, 239, 0.15) 0%, transparent 40%),
-          radial-gradient(circle at 90% 80%, rgba(0, 144, 169, 0.15) 0%, transparent 40%)
-        `,
+        background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
       }}
     >
-      <NavBar />
-
-      <main className="relative flex items-center justify-center py-16">
-        <div className="w-full max-w-2xl mx-auto px-6">
-          <div className="bg-white/80 backdrop-blur-xl rounded-[32px] border p-10 shadow-[0_0_40px_-10px_rgba(132,85,239,0.25)]">
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center px-6 py-16">
+        <div className="w-full max-w-2xl">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-10 shadow-[0_18px_40px_-24px_rgba(147,102,255,0.5)] backdrop-blur">
             <div className="text-center">
-              <p className="text-xs font-semibold tracking-[0.4em] text-purple-600">GET STARTED</p>
-              <h1 className="mt-3 text-3xl md:text-4xl font-bold text-black">Join a Session</h1>
-              <p className="text-gray-600 mt-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-purple-200">
+                Get Started
+              </p>
+              <h1 className="mt-3 text-3xl font-semibold text-white md:text-4xl">
+                Join a Session
+              </h1>
+              <p className="mt-2 text-sm text-white/60">
                 Enter your details to start the live quiz competition.
               </p>
             </div>
 
-            <div className="mt-8 space-y-6">
+            <div className="mt-10 space-y-6">
               {fields.map((field) => (
                 <Input
                   key={field.key}
@@ -160,12 +158,18 @@ const JoinQuiz = () => {
                   value={formValues[field.key]}
                   onChange={(event) => handleChange(field.key, event.target.value)}
                   error={errors[field.key]}
+                  labelClassName="text-white/80"
+                  className="rounded-2xl border-white/10 bg-white/5 text-white placeholder:text-white/40 focus:ring-purple-200"
                 />
               ))}
             </div>
 
-            <div className="mt-10 flex flex-col sm:flex-row gap-3">
-              <Button variant="black" className="w-full px-8 py-3" onClick={handleSubmit}>
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <Button
+                variant="lavender"
+                className="w-full rounded-2xl px-8 py-3 text-sm font-semibold"
+                onClick={handleSubmit}
+              >
                 Join Quiz
               </Button>
             </div>
@@ -174,52 +178,63 @@ const JoinQuiz = () => {
       </main>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="w-full max-w-lg rounded-3xl bg-white p-8 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-lg rounded-3xl border border-white/10 bg-slate-900/95 p-8 text-white shadow-2xl backdrop-blur">
             {isCodeValid ? (
               <div className="space-y-4">
                 <div>
-                  <p className="text-xs font-semibold tracking-[0.4em] text-purple-600">
-                    QUIZ INFO
+                  <p className="text-xs font-semibold uppercase tracking-[0.4em] text-purple-200">
+                    Quiz Info
                   </p>
-                  <h2 className="mt-2 text-2xl font-bold text-black">{modalInfo.title}</h2>
-                  <p className="text-gray-600 mt-1">Review the details before joining.</p>
+                  <h2 className="mt-2 text-2xl font-semibold text-white">
+                    {modalInfo.title}
+                  </h2>
+                  <p className="mt-1 text-sm text-white/60">
+                    Review the details before joining.
+                  </p>
                 </div>
-                <div className="grid gap-3 rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                <div className="grid gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-500">Class Name</span>
-                    <span className="font-semibold text-gray-900">{modalInfo.course}</span>
+                    <span className="text-white/60">Class Name</span>
+                    <span className="font-semibold text-white">{modalInfo.course}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-500">Subject</span>
-                    <span className="font-semibold text-gray-900">{modalInfo.subject}</span>
+                    <span className="text-white/60">Subject</span>
+                    <span className="font-semibold text-white">{modalInfo.subject}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-500">Students Joined</span>
+                    <span className="text-white/60">Students Joined</span>
                     {/* TODO Replace 18 with the session currentStudents property*/}
                     <span className="font-semibold text-gray-900">{modalInfo.currentStudents}</span>
+                    <span className="font-semibold text-white">{18}</span>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="space-y-4 text-center">
-                <p className="text-xs font-semibold tracking-[0.4em] text-red-500">INVALID CODE</p>
-                <h2 className="text-2xl font-bold text-black">Incorrect room code</h2>
-                <p className="text-gray-600">
+                <p className="text-xs font-semibold uppercase tracking-[0.4em] text-red-400">
+                  Invalid Code
+                </p>
+                <h2 className="text-2xl font-semibold text-white">Incorrect room code</h2>
+                <p className="text-sm text-white/60">
                   Double-check the code with your professor and try again.
                 </p>
               </div>
             )}
 
-            <div className="mt-8 flex flex-col sm:flex-row gap-3">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               {isCodeValid && (
-                <Button variant="black" className="w-full px-8 py-3" onClick={handleJoin}>
+                <Button
+                  variant="lavender"
+                  className="w-full rounded-2xl px-8 py-3 text-sm font-semibold"
+                  onClick={handleJoin}
+                >
                   Confirm & Join
                 </Button>
               )}
               <Button
                 variant="white"
-                className="w-full px-8 py-3"
+                className="w-full rounded-2xl border-white/10 bg-white/10 px-8 py-3 text-sm font-semibold text-white hover:border-white/20 hover:bg-white/20"
                 onClick={() => setIsModalOpen(false)}
               >
                 Close

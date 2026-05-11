@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 
-import NavBar from "@/components/NavBar";
 import  Card from "@/components/Card";
 import { AnswerStatCard, LeaderboardCard } from "@/components/quiz";
 import StepProgress from "@/components/StepProgress";
+import TimerCard from "@/components/quiz/TimerCard";
 import quizMock from "@/data/quizMock.json";
 
 type QuizChoice = {
@@ -87,101 +87,92 @@ const HostQuiz = () => {
 
   return (
     <div
-      className="min-h-screen w-full text-gray-900 selection:bg-purple-200 selection:text-white"
+      className="min-h-screen w-full bg-slate-950 text-white"
       style={{
-        background: `
-          radial-gradient(circle at 10% 20%, rgba(132, 85, 239, 0.15) 0%, transparent 40%),
-          radial-gradient(circle at 90% 80%, rgba(0, 144, 169, 0.15) 0%, transparent 40%)
-        `,
+        background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
       }}
     >
-      <NavBar />
 
-      <main className="relative py-16">
-        <div className="mx-auto w-full max-w-6xl px-6">
-          <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-purple-600">
-            <span className="rounded-full bg-purple-100 px-3 py-1 text-purple-700">
-              Live Now
-            </span>
-            <span className="rounded-full bg-white/80 px-3 py-1 text-gray-700">
-              {quiz.className}
-            </span>
-            <span className="rounded-full bg-white/80 px-3 py-1 text-gray-700">
-              {quiz.subject}
-            </span>
-          </div>
+      <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-10 px-6 py-16 lg:gap-12">
+        <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.25em] text-purple-200">
+          <span className="rounded-full bg-purple-200 px-3 py-1 text-purple-900">
+            Live Now
+          </span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80">
+            {quiz.className}
+          </span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80">
+            {quiz.subject}
+          </span>
+        </div>
 
-          <h1 className="mt-4 text-3xl font-bold text-black md:text-4xl">
+        <div>
+          <h1 className="text-3xl font-semibold text-white md:text-4xl">
             Active Quiz: {quiz.quizTitle}
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-sm text-white/60">
             Track incoming answers and monitor your class in real time.
           </p>
+        </div>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-[1.6fr_0.6fr]">
-            <Card
-              variant="outline"
-              padding="lg"
-              className="rounded-3xl border-white/70 bg-white/80 backdrop-blur-xl shadow-[0_25px_60px_-40px_rgba(15,23,42,0.45)]"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <StepProgress
-                  label="Question"
-                  currentStep={activeIndex}
-                  totalSteps={quiz.questions.length}
-                  className="flex-1"
-                  labelClassName="text-xs font-semibold uppercase tracking-[0.3em] text-purple-600"
-                  percentClassName="hidden"
-                />
-                <span className="text-xs font-semibold text-gray-500">
-                  {quiz.studentsJoined} students connected
-                </span>
-              </div>
-
-              <h2 className="mt-6 text-2xl font-semibold text-black md:text-3xl">
-                Question {activeIndex + 1} of {quiz.questions.length}: {activeQuestion.text}
-              </h2>
-
-              <div className="mt-8 grid gap-5 md:grid-cols-2">
-                {activeQuestion.choices.map((choice) => {
-                  const percent = totalResponses
-                    ? Math.round((choice.selectedCount / totalResponses) * 100)
-                    : 0;
-                  return (
-                    <AnswerStatCard
-                      key={choice.id}
-                      label={choice.text}
-                      count={choice.selectedCount}
-                      percent={percent}
-                      isLeading={choice.selectedCount === leadingCount}
-                    />
-                  );
-                })}
-              </div>
-            </Card>
-
-            <div className="rounded-3xl bg-black p-8 text-white shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]">
-              <div className="flex items-center gap-3 text-xs uppercase tracking-[0.25em] text-white/60">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20">
-                  <span className="h-3 w-3 rounded-full border border-white/40" />
-                </span>
-                Time Remaining
-              </div>
-              <div className="mt-10 text-5xl font-semibold tracking-tight">
-                {formatTime(secondsLeft)}
-              </div>
-            </div>
-
-            <div className="lg:col-span-2">
-              <LeaderboardCard
-                entries={leaderboardEntries}
-                showAll={showFullLeaderboard}
-                onToggleView={() => setShowFullLeaderboard((prev) => !prev)}
+        <div className="grid gap-6 lg:grid-cols-[1.6fr_0.6fr]">
+          <Card
+            variant="none"
+            padding="lg"
+            className="rounded-3xl border border-white/10 bg-white/5 shadow-[0_25px_60px_-40px_rgba(15,23,42,0.7)] backdrop-blur"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <StepProgress
+                label="Question"
+                currentStep={activeIndex}
+                totalSteps={quiz.questions.length}
+                className="flex-1"
+                labelClassName="text-xs font-semibold uppercase tracking-[0.3em] text-white/60"
+                percentClassName="hidden"
+                trackClassName="bg-white/10"
+                barClassName="bg-purple-300"
               />
+              <span className="text-xs font-semibold text-white/60">
+                {quiz.studentsJoined} students connected
+              </span>
             </div>
+
+            <h2 className="mt-6 text-2xl font-semibold text-white md:text-3xl">
+              Question {activeIndex + 1} of {quiz.questions.length}: {activeQuestion.text}
+            </h2>
+
+            <div className="mt-8 grid gap-5 md:grid-cols-2">
+              {activeQuestion.choices.map((choice) => {
+                const percent = totalResponses
+                  ? Math.round((choice.selectedCount / totalResponses) * 100)
+                  : 0;
+                return (
+                  <AnswerStatCard
+                    key={choice.id}
+                    label={choice.text}
+                    count={choice.selectedCount}
+                    percent={percent}
+                    isLeading={choice.selectedCount === leadingCount}
+                    tone="dark"
+                  />
+                );
+              })}
+            </div>
+          </Card>
+
+          <TimerCard time={formatTime(secondsLeft)} />
+
+          <div className="lg:col-span-2">
+            <LeaderboardCard
+              entries={leaderboardEntries}
+              showAll={showFullLeaderboard}
+              onToggleView={() => setShowFullLeaderboard((prev) => !prev)}
+              tone="dark"
+            />
           </div>
         </div>
       </main>
+
     </div>
   );
 };
