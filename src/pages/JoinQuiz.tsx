@@ -74,14 +74,6 @@ const JoinQuiz = () => {
   };
 
   const handleSubmit = async () => {
-    // OLD CODE
-    // if (!validateForm()) return;
-    // const normalizedCode = formValues.roomCode.trim();
-    //Arbitrary value for testing😊
-    // const valid = normalizedCode === "676767";
-    // setIsCodeValid(valid);
-    // setIsModalOpen(true);
-
     if (!validateForm()) return;
 
     const enteredCode = formValues.roomCode.trim();
@@ -141,9 +133,7 @@ const JoinQuiz = () => {
               <p className="text-xs font-semibold uppercase tracking-[0.4em] text-purple-200">
                 Get Started
               </p>
-              <h1 className="mt-3 text-3xl font-semibold text-white md:text-4xl">
-                Join a Session
-              </h1>
+              <h1 className="mt-3 text-3xl font-semibold text-white md:text-4xl">Join a Session</h1>
               <p className="mt-2 text-sm text-white/60">
                 Enter your details to start the live quiz competition.
               </p>
@@ -192,12 +182,8 @@ const JoinQuiz = () => {
                   <p className="text-xs font-semibold uppercase tracking-[0.4em] text-purple-200">
                     Quiz Info
                   </p>
-                  <h2 className="mt-2 text-2xl font-semibold text-white">
-                    {modalInfo.title}
-                  </h2>
-                  <p className="mt-1 text-sm text-white/60">
-                    Review the details before joining.
-                  </p>
+                  <h2 className="mt-2 text-2xl font-semibold text-white">{modalInfo.title}</h2>
+                  <p className="mt-1 text-sm text-white/60">Review the details before joining.</p>
                 </div>
                 <div className="grid gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
                   <div className="flex items-center justify-between text-sm">
