@@ -1,17 +1,17 @@
 import Card from "@/components/Card";
 
-type AnswerStatCardProps = {
+interface AnswerStatCardProps {
   label: string;
   count: number;
-  percent: number;
+  currentStudents: number;
   isLeading?: boolean;
   tone?: "light" | "dark";
-};
+}
 
 const AnswerStatCard = ({
   label,
-  count = 20,
-  percent = 20,
+  count = 0,
+  currentStudents,
   isLeading = false,
   tone = "light",
 }: AnswerStatCardProps) => {

@@ -114,9 +114,9 @@ const HostQuiz = () => {
                 <AnswerStatCard
                   key={index}
                   label={choice.text}
+                  currentStudents={session.currentStudents}
                   tone="dark"
-                  count={20}
-                  percent={20}
+                  count={choice.count}
                 />
               ))}
             </div>

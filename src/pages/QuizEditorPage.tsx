@@ -46,7 +46,12 @@ export default function QuizEditorPage() {
       {
         id: crypto.randomUUID(),
         text: "",
-        choices: ["", "", "", ""],
+        choices: [
+          { text: "", count: 0 },
+          { text: "", count: 0 },
+          { text: "", count: 0 },
+          { text: "", count: 0 },
+        ],
         time: 30,
         correctChoice: 1,
       },
