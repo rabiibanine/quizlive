@@ -20,6 +20,8 @@ const formatTime = (totalSeconds: number) => {
 const HostQuiz = () => {
   const { sessionId } = useLocation().state;
   const [session, setSession] = useState<Session | null>(null);
+  const [showFullLeaderboard, setShowFullLeaderboard] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(0);
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, "sessions", sessionId), (snap) => {
@@ -29,42 +31,20 @@ const HostQuiz = () => {
     return unsub;
   }, [sessionId]);
 
-  // TODO implement correct no session handling
-  if (!session) return <p>Loading...</p>;
-
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [showFullLeaderboard, setShowFullLeaderboard] = useState(false);
-  const activeQuestion = quiz.questions[activeIndex];
-
-  const [secondsLeft, setSecondsLeft] = useState(quiz.questions[0]?.timeSeconds ?? 0);
+  const activeQuestion = session?.questions[session.currentQuestion];
 
   useEffect(() => {
+    if (!activeQuestion) return;
+    setSecondsLeft(activeQuestion.time);
+
     const timer = setInterval(() => {
-      setSecondsLeft((prev) => {
-        if (prev > 1) {
-          return prev - 1;
-        }
-
-        setActiveIndex((index) => {
-          const nextIndex = Math.min(index + 1, quiz.questions.length - 1);
-          setSecondsLeft(quiz.questions[nextIndex]?.timeSeconds ?? 0);
-          return nextIndex;
-        });
-
-        return 0;
-      });
+      setSecondsLeft((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [quiz.questions]);
-
-  const totalResponses = useMemo(() => {
-    return activeQuestion.choices.reduce((total, choice) => total + choice.selectedCount, 0);
   }, [activeQuestion]);
 
-  const leadingCount = useMemo(() => {
-    return Math.max(...activeQuestion.choices.map((choice) => choice.selectedCount));
-  }, [activeQuestion]);
+  if (!session || !activeQuestion) return <p>Loading...</p>;
 
   return (
     <div
@@ -77,16 +57,16 @@ const HostQuiz = () => {
         <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.25em] text-purple-200">
           <span className="rounded-full bg-purple-200 px-3 py-1 text-purple-900">Live Now</span>
           <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80">
-            {quiz.className}
+            {session.quiz.className}
           </span>
           <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80">
-            {quiz.subject}
+            {session.quiz.subject}
           </span>
         </div>
 
         <div>
           <h1 className="text-3xl font-semibold text-white md:text-4xl">
-            Active Quiz: {quiz.quizTitle}
+            Active Quiz: {session.quiz.title}
           </h1>
           <p className="mt-2 text-sm text-white/60">
             Track incoming answers and monitor your class in real time.
@@ -102,8 +82,8 @@ const HostQuiz = () => {
             <div className="flex flex-wrap items-center justify-between gap-4">
               <StepProgress
                 label="Question"
-                currentStep={activeIndex}
-                totalSteps={quiz.questions.length}
+                currentStep={session.currentQuestion}
+                totalSteps={session.questions.length}
                 className="flex-1"
                 labelClassName="text-xs font-semibold uppercase tracking-[0.3em] text-white/60"
                 percentClassName="hidden"
@@ -111,30 +91,19 @@ const HostQuiz = () => {
                 barClassName="bg-purple-300"
               />
               <span className="text-xs font-semibold text-white/60">
-                {quiz.studentsJoined} students connected
+                {session.students.length} students connected
               </span>
             </div>
 
             <h2 className="mt-6 text-2xl font-semibold text-white md:text-3xl">
-              Question {activeIndex + 1} of {quiz.questions.length}: {activeQuestion.text}
+              Question {session.currentQuestion + 1} of {session.questions.length}:{" "}
+              {activeQuestion.text}
             </h2>
 
             <div className="mt-8 grid gap-5 md:grid-cols-2">
-              {activeQuestion.choices.map((choice) => {
-                const percent = totalResponses
-                  ? Math.round((choice.selectedCount / totalResponses) * 100)
-                  : 0;
-                return (
-                  <AnswerStatCard
-                    key={choice.id}
-                    label={choice.text}
-                    count={choice.selectedCount}
-                    percent={percent}
-                    isLeading={choice.selectedCount === leadingCount}
-                    tone="dark"
-                  />
-                );
-              })}
+              {activeQuestion.choices.map((choice, index) => (
+                <AnswerStatCard key={index} label={choice} tone="dark" />
+              ))}
             </div>
           </Card>
 
@@ -153,5 +122,3 @@ const HostQuiz = () => {
     </div>
   );
 };
-
-export default HostQuiz;
