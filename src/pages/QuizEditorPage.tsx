@@ -8,7 +8,14 @@ import type { Question, Quiz } from "@/types/index";
 
 import { getOrCreateId } from "@/utils/helpers";
 
-import { BookOpenIcon, ClockIcon, ChalkboardTeacherIcon, FlaskIcon } from "@phosphor-icons/react";
+import {
+  BookOpenIcon,
+  ClockIcon,
+  ChalkboardTeacherIcon,
+  FlaskIcon,
+  UploadSimpleIcon,
+  SparkleIcon,
+} from "@phosphor-icons/react";
 
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -219,6 +226,32 @@ export default function QuizEditorPage() {
               </span>
             </div>
           </div>
+        </Card>
+
+        <Card
+          variant="none"
+          fullWidth
+          padding="md"
+          className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-purple-400/30 bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-purple-500/10"
+        >
+          <div className="flex items-start gap-3">
+            <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-purple-500/20 text-purple-200">
+              <SparkleIcon size={18} />
+            </div>
+            <div className="flex flex-col gap-1">
+              <h2 className="text-lg font-semibold text-white">Generate with AI</h2>
+              <p className="text-sm text-white/60">
+                Import course material (PDF, PPT, or DOCX) to automatically generate quiz questions.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 rounded-full border border-purple-300/40 bg-purple-500/20 px-4 py-2 text-sm font-semibold text-purple-100 transition hover:bg-purple-500/30"
+          >
+            <UploadSimpleIcon size={18} />
+            Upload File
+          </button>
         </Card>
 
         {/* Question List */}
