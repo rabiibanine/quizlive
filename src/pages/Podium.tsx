@@ -178,21 +178,35 @@ export default function Podium() {
         </div>
 
         {/* Podium */}
-        <div className="mt-10 flex items-end justify-center gap-6">
-          {podium.map((p, index) => {
+        <div
+          className="mt-10 flex items-end justify-center gap-6"
+          style={{ minHeight: "24rem" }}
+        >
+          {podium.map((p) => {
             const isWinner = p.rank === 1;
+            const revealDelay = p.rank === 3 ? 0 : p.rank === 2 ? 0.8 : 1.6;
+            const barStyle: React.CSSProperties & { ['--target-height']: string } = {
+              '--target-height': p.rank === 1 ? '16rem' : p.rank === 2 ? '12rem' : '10rem',
+              animationDelay: `${revealDelay + 0.35}s`,
+              animationTimingFunction: "cubic-bezier(0.2, 0.8, 0.2, 1)",
+              ...(p.rank === 1
+                ? { animationDuration: "1.4s" }
+                : p.rank === 2
+                  ? { animationDuration: "1.1s" }
+                  : { animationDuration: "0.95s" }),
+            };
             return (
               <div
                 key={p.id}
                 className="animate_fadeInUp flex flex-col items-center"
-                style={{ animationDelay: `${index * 1}s` }}
+                style={{ animationDelay: `${revealDelay}s` }}
               >
                 <div
                   className={`flex items-center justify-center rounded-full border border-purple-300/40 bg-purple-400/10 text-white/80 ${
                     isWinner ? "h-14 w-14 text-lg" : "h-12 w-12 text-base"
                   }`}
                   style={{
-                    animationDelay: `${0.05 + index * 0.12}s`,
+                    animationDelay: `${0.05 + revealDelay}s`,
                     animationTimingFunction: "cubic-bezier(0.2, 0.8, 0.2, 1)",
                   }}
                 >
@@ -204,12 +218,7 @@ export default function Podium() {
                   className={`animate-grow origin-bottom mt-4 w-40 rounded-t-3xl border border-white/10 bg-gradient-to-b from-purple-400/20 to-slate-900/90 text-center text-2xl font-semibold text-white/70 shadow-[0_30px_60px_-40px_rgba(0,0,0,0.8)] ${
                     p.rank === 1 ? "h-64" : p.rank === 2 ? "h-48" : "h-40"
                   }`}
-                  style={{
-                    '--target-height': p.rank === 1 ? '16rem' : p.rank === 2 ? '12rem' : '10rem',
-                    animationDelay: `${0.15 + index * 0.12}s`,
-                    animationTimingFunction: "cubic-bezier(0.2, 0.8, 0.2, 1)",
-                    ...(p.rank === 1 ? { animationDuration: "0.9s" } : { animationDuration: "0.75s" }),
-                  } as React.CSSProperties}
+                  style={barStyle}
                 >
                   <div className="pt-6">{p.rank}</div>
                 </div>

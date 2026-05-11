@@ -100,7 +100,7 @@ body {
 }
 
 .animate-grow {
-  animation: growHeight 0.7s ease-out forwards;
+  animation: growHeight 0.7s ease-out both;
 }
 
 @keyframes FadeIn {
