@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { FiCheck, FiCopy } from "react-icons/fi";
 import { IoPersonOutline } from "react-icons/io5";
@@ -21,6 +21,7 @@ const SharingPage = () => {
   const [copied, setcopied] = useState<boolean>(false);
   const { code } = useParams<{ code: string }>();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const sessionId = location.state as string;
   const baseUrl: string = window.location.origin;
@@ -63,6 +64,7 @@ const SharingPage = () => {
   async function handleStart(): Promise<void> {
     try {
       await startSession(sessionId);
+      navigate(`/quiz/${roomCode}/host`, { state: sessionId });
     } catch (error) {
       console.error(error);
     }
@@ -140,7 +142,7 @@ const SharingPage = () => {
               className="w-full sm:w-64 rounded-2xl px-8 py-3 text-sm font-semibold"
               onClick={handleStart}
             >
-              Start Game
+              Start Quiz
             </Button>
           </div>
 
