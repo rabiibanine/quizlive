@@ -1,6 +1,6 @@
-import React, { useRef} from 'react';
-import type { ReactNode, MouseEventHandler } from 'react';
-import { motion, useInView } from 'motion/react';
+import React, { useRef } from "react";
+import type { ReactNode, MouseEventHandler } from "react";
+import { motion, useInView } from "motion/react";
 
 interface AnimatedItemProps {
   children: ReactNode;
@@ -10,7 +10,13 @@ interface AnimatedItemProps {
   onClick?: MouseEventHandler<HTMLDivElement>;
 }
 
-const AnimatedItem: React.FC<AnimatedItemProps> = ({ children, delay = 0, index, onMouseEnter, onClick }) => {
+const AnimatedItem: React.FC<AnimatedItemProps> = ({
+  children,
+  delay = 0,
+  index,
+  onMouseEnter,
+  onClick,
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { amount: 0.5, once: true });
 
@@ -23,7 +29,7 @@ const AnimatedItem: React.FC<AnimatedItemProps> = ({ children, delay = 0, index,
       initial={{ scale: 0.7, opacity: 0 }}
       animate={inView ? { scale: 1, opacity: 1 } : { scale: 0.7, opacity: 0 }}
       transition={{ duration: 0.2, delay }}
-      className="mb-4 cursor-pointer w-full"
+      className="cursor-pointer w-full"
     >
       {children}
     </motion.div>
@@ -31,3 +37,4 @@ const AnimatedItem: React.FC<AnimatedItemProps> = ({ children, delay = 0, index,
 };
 
 export default AnimatedItem;
+
