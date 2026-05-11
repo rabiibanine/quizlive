@@ -84,8 +84,12 @@ body,
   min-height: 100%;
 }
 
+html,
 body {
-  background-color: var(--color-surface-raised);
+  background-color: #0b1222;
+}
+
+body {
   color: var(--color-content-primary);
   font-family: var(--font-family-sans);
 }
