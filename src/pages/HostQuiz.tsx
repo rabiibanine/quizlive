@@ -1,32 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 
-import  Card from "@/components/Card";
+import { doc, onSnapshot } from "firebase/firestore";
+
+import Card from "@/components/Card";
 import { AnswerStatCard, LeaderboardCard } from "@/components/quiz";
 import StepProgress from "@/components/StepProgress";
 import TimerCard from "@/components/quiz/TimerCard";
-import quizMock from "@/data/quizMock.json";
 
-type QuizChoice = {
-  id: number;
-  text: string;
-  isCorrect: boolean;
-  selectedCount: number;
-};
-
-type QuizQuestion = {
-  id: number;
-  text: string;
-  timeSeconds: number;
-  choices: QuizChoice[];
-};
-
-type QuizSession = {
-  quizTitle: string;
-  className: string;
-  subject: string;
-  studentsJoined: number;
-  questions: QuizQuestion[];
-};
+import type { Session } from "@/types/index";
+import { db } from "@/firebase/firebase";
 
 const formatTime = (totalSeconds: number) => {
   const minutes = Math.floor(totalSeconds / 60);
@@ -35,24 +18,25 @@ const formatTime = (totalSeconds: number) => {
 };
 
 const HostQuiz = () => {
-  const quiz = quizMock as QuizSession;
+  const { sessionId } = useLocation().state;
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, "sessions", sessionId), (snap) => {
+      if (!snap.exists()) return;
+      setSession(snap.data() as Session);
+    });
+    return unsub;
+  }, [sessionId]);
+
+  // TODO implement correct no session handling
+  if (!session) return <p>Loading...</p>;
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [showFullLeaderboard, setShowFullLeaderboard] = useState(false);
   const activeQuestion = quiz.questions[activeIndex];
-  const leaderboardEntries = [
-    { id: 1, rank: 1, name: "James D.", points: 1150 },
-    { id: 2, rank: 2, name: "Sarah R.", points: 1080 },
-    { id: 3, rank: 3, name: "Mark T.", points: 1020 },
-    { id: 4, rank: 4, name: "Anna L.", points: 985 },
-    { id: 5, rank: 5, name: "Kevin C.", points: 950 },
-    { id: 6, rank: 6, name: "Julia W.", points: 920 },
-    { id: 7, rank: 7, name: "Paul H.", points: 890 },
-    { id: 8, rank: 8, name: "Nora B.", points: 860 },
-  ];
 
-  const [secondsLeft, setSecondsLeft] = useState(
-    quiz.questions[0]?.timeSeconds ?? 0
-  );
+  const [secondsLeft, setSecondsLeft] = useState(quiz.questions[0]?.timeSeconds ?? 0);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -75,10 +59,7 @@ const HostQuiz = () => {
   }, [quiz.questions]);
 
   const totalResponses = useMemo(() => {
-    return activeQuestion.choices.reduce(
-      (total, choice) => total + choice.selectedCount,
-      0
-    );
+    return activeQuestion.choices.reduce((total, choice) => total + choice.selectedCount, 0);
   }, [activeQuestion]);
 
   const leadingCount = useMemo(() => {
@@ -92,12 +73,9 @@ const HostQuiz = () => {
         background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
       }}
     >
-
       <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-10 px-6 py-16 lg:gap-12">
         <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.25em] text-purple-200">
-          <span className="rounded-full bg-purple-200 px-3 py-1 text-purple-900">
-            Live Now
-          </span>
+          <span className="rounded-full bg-purple-200 px-3 py-1 text-purple-900">Live Now</span>
           <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/80">
             {quiz.className}
           </span>
@@ -164,7 +142,7 @@ const HostQuiz = () => {
 
           <div className="lg:col-span-2">
             <LeaderboardCard
-              entries={leaderboardEntries}
+              students={session.students}
               showAll={showFullLeaderboard}
               onToggleView={() => setShowFullLeaderboard((prev) => !prev)}
               tone="dark"
@@ -172,7 +150,6 @@ const HostQuiz = () => {
           </div>
         </div>
       </main>
-
     </div>
   );
 };
