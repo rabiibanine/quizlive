@@ -1,9 +1,14 @@
 type UUID = ReturnType<typeof crypto.randomUUID>;
 
+export interface Choice {
+  text: string;
+  count: number;
+}
+
 export interface Question {
   id: UUID;
   text: string;
-  choices: string[];
+  choices: Choice[];
   time: number;
   correctChoice: number;
 }

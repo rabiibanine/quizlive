@@ -111,7 +111,13 @@ const HostQuiz = () => {
             <div className="mt-8 grid gap-5 md:grid-cols-2">
               {activeQuestion.choices.map((choice, index) => (
                 // TODO Fix this
-                <AnswerStatCard key={index} label={choice} tone="dark" count={20} percent={20} />
+                <AnswerStatCard
+                  key={index}
+                  label={choice.text}
+                  tone="dark"
+                  count={20}
+                  percent={20}
+                />
               ))}
             </div>
           </Card>

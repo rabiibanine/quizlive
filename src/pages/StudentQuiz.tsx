@@ -154,7 +154,7 @@ const StudentQuiz = () => {
                       >
                         {index + 1}
                       </span>
-                      <span className="text-base font-medium text-white">{choice}</span>
+                      <span className="text-base font-medium text-white">{choice.text}</span>
                     </button>
                   );
                 })}
