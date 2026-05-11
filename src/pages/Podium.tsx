@@ -179,27 +179,37 @@ export default function Podium() {
 
         {/* Podium */}
         <div className="mt-10 flex items-end justify-center gap-6">
-          {podium.map((p) => {
+          {podium.map((p, index) => {
             const isWinner = p.rank === 1;
             return (
               <div
                 key={p.id}
-                className="flex flex-col items-center"
+                className="animate_fadeInUp flex flex-col items-center"
+                style={{ animationDelay: `${index * 1}s` }}
               >
                 <div
                   className={`flex items-center justify-center rounded-full border border-purple-300/40 bg-purple-400/10 text-white/80 ${
                     isWinner ? "h-14 w-14 text-lg" : "h-12 w-12 text-base"
                   }`}
+                  style={{
+                    animationDelay: `${0.05 + index * 0.12}s`,
+                    animationTimingFunction: "cubic-bezier(0.2, 0.8, 0.2, 1)",
+                  }}
                 >
                   {getInitials(p.name)}
                 </div>
                 <div className="mt-3 text-sm font-semibold text-white/90">{p.name}</div>
                 <div className="text-xs text-white/50">{p.points.toLocaleString()} pts</div>
                 <div
-                  style={{ '--target-height': p.rank === 1 ? '16rem' : p.rank === 2 ? '12rem' : '10rem' } as React.CSSProperties}
-                  className={`animate-grow mt-4 w-40 rounded-t-3xl border border-white/10 bg-gradient-to-b from-purple-400/20 to-slate-900/90 text-center text-2xl font-semibold text-white/70 shadow-[0_30px_60px_-40px_rgba(0,0,0,0.8)] ${
+                  className={`animate-grow origin-bottom mt-4 w-40 rounded-t-3xl border border-white/10 bg-gradient-to-b from-purple-400/20 to-slate-900/90 text-center text-2xl font-semibold text-white/70 shadow-[0_30px_60px_-40px_rgba(0,0,0,0.8)] ${
                     p.rank === 1 ? "h-64" : p.rank === 2 ? "h-48" : "h-40"
                   }`}
+                  style={{
+                    '--target-height': p.rank === 1 ? '16rem' : p.rank === 2 ? '12rem' : '10rem',
+                    animationDelay: `${0.15 + index * 0.12}s`,
+                    animationTimingFunction: "cubic-bezier(0.2, 0.8, 0.2, 1)",
+                    ...(p.rank === 1 ? { animationDuration: "0.9s" } : { animationDuration: "0.75s" }),
+                  } as React.CSSProperties}
                 >
                   <div className="pt-6">{p.rank}</div>
                 </div>
