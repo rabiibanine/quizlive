@@ -9,6 +9,7 @@ import {
   doc,
   updateDoc,
   arrayUnion,
+  increment,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import type { Quiz, Student } from "@/types/index";
@@ -57,6 +58,7 @@ export async function joinSession(sessionId: string, student: Student): Promise<
   const sessionRef = doc(db, "sessions", sessionId);
   await updateDoc(sessionRef, {
     students: arrayUnion(student),
+    currentStudents: increment(1),
   });
 }
 
