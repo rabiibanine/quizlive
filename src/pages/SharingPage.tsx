@@ -16,31 +16,8 @@ import { doc, onSnapshot } from "firebase/firestore";
 import type { Student } from "@/types/index";
 import { startSession } from "@/services/sessionServices";
 
-const studentsData: Student[] = [
-  {
-    id: crypto.randomUUID(),
-    name: "Marouane Talbi",
-    points: 14250,
-    answers: [],
-  },
-
-  {
-    id: crypto.randomUUID(),
-    name: "Rayan Morabit",
-    points: 15800,
-    answers: [],
-  },
-
-  {
-    id: crypto.randomUUID(),
-    name: "Imane Amrani",
-    points: 12900,
-    answers: [],
-  },
-];
-
 const SharingPage = () => {
-  const [students, setStudents] = useState<Student[]>(studentsData);
+  const [students, setStudents] = useState<Student[]>([]);
   const [copied, setcopied] = useState<boolean>(false);
   const { code } = useParams<{ code: string }>();
   const location = useLocation();
