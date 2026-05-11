@@ -28,7 +28,7 @@ function HowItWorksSection() {
           <div className="pointer-events-none absolute left-6 right-6 top-6 hidden h-px bg-white/10 md:block" />
           {steps.map((step, index) => (
             <div key={step.title} className="relative z-10 flex flex-col items-center text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/50 text-purple-200 font-semibold">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-950 text-purple-200 font-semibold">
                 {index + 1}
               </div>
               <h3 className="mt-4 text-lg font-semibold text-white">{step.title}</h3>

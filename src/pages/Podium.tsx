@@ -1,6 +1,8 @@
 import AnimatedItem from "../components/AnimatedList"
 import Button from "../components/Button"
 import CsvDownloader from 'react-csv-downloader';
+import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 
 type StudentType = {
   id:number,
@@ -102,12 +104,14 @@ const getInitials = (name: string) =>
 export default function Podium() {
   return (
     <div
-      className="min-h-screen text-white"
+      className="min-h-screen text-white flex flex-col"
       style={{
         background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
       }}
     >
-      <main className="mx-auto max-w-6xl px-6 pt-10 pb-24">
+      <NavBar />
+
+      <main className="mx-auto w-full max-w-5xl px-6 pt-10 pb-24 mt-10 flex-1">
         {/* Header */}
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div>
@@ -263,6 +267,7 @@ export default function Podium() {
         </div>
       </main>
 
+      <Footer />
     </div>
   );
 }

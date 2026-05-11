@@ -89,7 +89,7 @@ const SharingPage = () => {
         background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
       }}
     >
-
+      <NavBar />
 
       {/* Main content */}
       <main className="relative flex flex-1 items-center justify-center py-10 overflow-hidden">
@@ -190,6 +190,7 @@ const SharingPage = () => {
         </div>
       </main>
 
+      <Footer />
     </div>
   );
 };

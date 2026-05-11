@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Button from "@/components/Button";
 import Card from "@/components/Card";
+import Footer from "@/components/Footer";
 import Input from "@/components/Input";
+import NavBar from "@/components/NavBar";
 import StepProgress from "@/components/StepProgress";
-import { useNavigate } from "react-router-dom";
 
 type StepKey = "quizTitle" | "className" | "subject" | "maxStudents";
 
@@ -162,13 +164,14 @@ const HostQuizForm = () => {
 
   return (
     <div
-      className="min-h-screen w-full bg-slate-950 text-white"
+      className="min-h-screen w-full bg-slate-950 text-white flex flex-col"
       style={{
         background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
       }}
     >
+      <NavBar />
 
-      <main className="relative flex-1 overflow-hidden py-16">
+      <main className="relative flex-1 overflow-hidden py-16 mt-10">
         <div className="mx-auto w-full max-w-6xl px-6">
           <div className="grid items-start gap-10 lg:grid-cols-[1fr_1.1fr]">
             <div className="hidden flex-col gap-4 lg:flex">
@@ -260,6 +263,7 @@ const HostQuizForm = () => {
         </div>
       </main>
 
+      <Footer />
     </div>
   );
 };
