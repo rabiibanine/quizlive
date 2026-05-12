@@ -108,7 +108,7 @@ export async function evaluateAndAdvance(sessionId: string, questionIndex: numbe
 
   const updatedStudents = session.students.map((student) => {
     const answer = student.answers[questionIndex];
-    const isCorrect = answer === correctChoice;
+    const isCorrect = answer + 1 === correctChoice;
     return isCorrect ? { ...student, score: student.score + 100 } : student;
   });
 
