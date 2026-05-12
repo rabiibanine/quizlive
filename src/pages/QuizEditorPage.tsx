@@ -152,12 +152,16 @@ export default function QuizEditorPage() {
   const handleUploadChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+    if (requestedQuestionCount === null) {
+      event.target.value = "";
+      return;
+    }
     setIsGenerating(true);
 
     try {
       const text = await extractTextFromFile(file);
       console.log("Extracted text:", text);
-      const generatedQuiz = await generateQuizJsonFromText(text);
+      const generatedQuiz = await generateQuizJsonFromText(text, requestedQuestionCount);
       const normalizedQuiz = normalizeGeneratedQuiz(generatedQuiz);
       setQuizState(normalizedQuiz);
       console.log("Generated quiz JSON:", generatedQuiz);
@@ -173,6 +177,19 @@ export default function QuizEditorPage() {
   };
 
   const [isGenerating, setIsGenerating] = useState(false);
+  const [questionCountInput, setQuestionCountInput] = useState("10");
+
+  const requestedQuestionCount = useMemo(() => {
+    const trimmed = questionCountInput.trim();
+    if (!trimmed) return null;
+    const value = Number(trimmed);
+    if (!Number.isFinite(value)) return null;
+    const intValue = Math.floor(value);
+    if (intValue < 1 || intValue > 50) return null;
+    return intValue;
+  }, [questionCountInput]);
+
+  const isQuestionCountValid = requestedQuestionCount !== null;
 
   return (
     <div
@@ -234,33 +251,54 @@ export default function QuizEditorPage() {
           variant="none"
           fullWidth
           padding="md"
-          className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-purple-400/30 bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-purple-500/10"
+          className="mt-6 flex flex-wrap items-center gap-4 rounded-3xl border border-purple-400/30 bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-purple-500/10"
         >
-          <div className="flex items-start gap-3">
+          <div className="flex min-w-0 flex-1 items-start gap-3">
             <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-purple-500/20 text-purple-200">
               <SparkleIcon size={18} />
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex min-w-0 flex-col gap-1">
               <h2 className="text-lg font-semibold text-white">Generate with AI</h2>
               <p className="text-sm text-white/60">
                 Import course material (PDF, PPT, or DOCX) to automatically generate quiz questions.
               </p>
             </div>
           </div>
-          <button
-            type="button"
-            className="cursor-pointer inline-flex items-center gap-2 rounded-full border border-purple-300/40 bg-purple-500/20 px-4 py-2 text-sm font-semibold text-purple-100 transition hover:bg-purple-500/30"
-            onClick={handleUploadClick}
-          >
-            <UploadSimpleIcon size={18} />
-            Upload File
-          </button>
+          <div className="ml-auto flex items-end gap-3">
+            <div className="flex flex-col gap-1">
+              <label
+                htmlFor="question-count"
+                className="text-[10px] font-semibold uppercase tracking-[0.25em] text-white/60"
+              >
+                QUESTIONS
+              </label>
+              <input
+                id="question-count"
+                type="number"
+                min={5}
+                max={50}
+                value={questionCountInput}
+                onChange={(event) => setQuestionCountInput(event.target.value)}
+                className="w-24 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-purple-400/40"
+              />
+            </div>
+            <button
+              type="button"
+              className="cursor-pointer inline-flex items-center gap-2 rounded-full border border-purple-300/40 bg-purple-500/20 px-4 py-2 text-sm font-semibold text-purple-100 transition hover:bg-purple-500/30 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-purple-500/20"
+              onClick={handleUploadClick}
+              disabled={!isQuestionCountValid}
+            >
+              <UploadSimpleIcon size={18} />
+              Upload File
+            </button>
+          </div>
           <input
             ref={fileInputRef}
             type="file"
             accept=".pdf,.doc,.docx,.pptx"
             className="hidden"
             onChange={handleUploadChange}
+            disabled={!isQuestionCountValid}
           />
         </Card>
 
