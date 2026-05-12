@@ -62,14 +62,14 @@ export async function joinSession(sessionId: string, student: Student): Promise<
   });
 }
 
-export async function startSession(sessionId: string) {
+export async function startSession(sessionId: string): Promise<void> {
   const sessionRef = doc(db, "sessions", sessionId);
   await updateDoc(sessionRef, {
     status: "active",
   });
 }
 
-export async function endSession(sessionId: string) {
+export async function endSession(sessionId: string): Promise<void> {
   await updateDoc(doc(db, "sessions", sessionId), {
     status: "ended",
   });
@@ -80,7 +80,7 @@ export async function submitAnswer(
   questionIndex: number,
   choiceIndex: number,
   questions: Question[]
-) {
+): Promise<void> {
   const updated = [...questions];
   updated[questionIndex].choices[choiceIndex].count += 1;
 
@@ -89,7 +89,7 @@ export async function submitAnswer(
   });
 }
 
-export async function advanceQuestion(sessionId: string) {
+export async function advanceQuestion(sessionId: string): Promise<void> {
   await updateDoc(doc(db, "sessions", sessionId), {
     currentQuestion: increment(1),
   });
