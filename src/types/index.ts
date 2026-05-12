@@ -36,6 +36,7 @@ export interface Session {
   status: "waiting" | "active" | "ended";
   currentQuestion: number;
   currentStudents: number;
+  currentAnswers: number;
   maxStudents: number;
   quiz: Quiz;
   students: Student[];
