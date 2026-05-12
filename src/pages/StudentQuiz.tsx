@@ -100,7 +100,12 @@ const StudentQuiz = () => {
         <aside className="w-full lg:max-w-[280px]">
           {session.status === "active" && (
             <>
-              <TimerCard time={formatTime(secondsLeft)} />
+              <div className="hidden lg:block">
+                <TimerCard time={formatTime(secondsLeft)} />
+              </div>
+              <p className="mt-2 text-sm font-semibold text-white/70 lg:hidden">
+                Time left: {formatTime(secondsLeft)}
+              </p>
               <div className="mt-12">
                 <StepProgress
                   label="Question"
@@ -139,18 +144,21 @@ const StudentQuiz = () => {
           ) : (
             <>
               <h2 className="mt-10 text-lg font-semibold text-white/80">
-                Question {session.currentQuestion + 1} of {session.quiz.questions.length}:{" "}
+                <span className="hidden sm:inline">
+                  Question {session.currentQuestion + 1} of {session.quiz.questions.length}:{" "}
+                </span>
+                <span className="sm:hidden">Question: </span>
                 {activeQuestion.text}
               </h2>
 
-              <div className="mt-6 grid gap-6 md:grid-cols-2">
+              <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-6">
                 {activeQuestion.choices.map((choice, index) => {
                   const isSelected = selectedChoiceIndex === index;
                   return (
                     <button
                       key={index}
                       type="button"
-                      className={`group relative flex min-h-[140px] w-full items-center gap-4 rounded-3xl border bg-white/5 px-6 py-6 text-left transition-all duration-200 ${
+                      className={`group relative flex min-h-[110px] w-full items-start gap-2 rounded-2xl border bg-white/5 px-4 py-4 text-left transition-all duration-200 sm:min-h-[140px] sm:items-center sm:gap-4 sm:rounded-3xl sm:px-6 sm:py-6 ${
                         isSelected
                           ? "border-purple-300/80 bg-purple-300/10 shadow-[0_18px_40px_-24px_rgba(147,102,255,0.6)]"
                           : "border-white/10 hover:border-purple-200/70 hover:bg-white/10"
@@ -160,7 +168,7 @@ const StudentQuiz = () => {
                       aria-pressed={isSelected}
                     >
                       <span
-                        className={`flex h-12 w-12 items-center justify-center rounded-full text-sm font-semibold transition-colors ${
+                        className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold transition-colors sm:h-12 sm:w-12 sm:text-sm ${
                           isSelected
                             ? "bg-purple-200 text-purple-900"
                             : "border border-white/20 text-white/70"
@@ -168,7 +176,9 @@ const StudentQuiz = () => {
                       >
                         {index + 1}
                       </span>
-                      <span className="text-base font-medium text-white">{choice.text}</span>
+                      <span className="min-w-0 flex-1 break-words whitespace-normal text-[13px] font-medium leading-snug text-white sm:text-base">
+                        {choice.text}
+                      </span>
                     </button>
                   );
                 })}
