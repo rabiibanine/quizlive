@@ -86,7 +86,12 @@ export default function QuizEditorPage() {
 
   const normalizeGeneratedQuiz = (generated: Quiz): Quiz => {
     const questions = (generated.questions ?? []).map((question) => {
-      const choices = Array.isArray(question.choices) ? [...question.choices] : [];
+      const choices = Array.isArray(question.choices)
+        ? question.choices.map((choice) => ({
+            text: choice?.text ?? "",
+            count: typeof choice?.count === "number" ? choice.count : 0,
+          }))
+        : [];
       while (choices.length < 4) choices.push({ text: "", count: 0 } as Choice);
 
       return {

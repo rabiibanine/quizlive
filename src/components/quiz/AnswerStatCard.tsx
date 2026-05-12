@@ -15,7 +15,9 @@ const AnswerStatCard = ({
   isLeading = false,
   tone = "light",
 }: AnswerStatCardProps) => {
-  const percent = count === 0 ? 0 : Math.round((count / currentStudents) * 100);
+  const safeCount = Number.isFinite(count) ? count : 0;
+  const safeTotal = Number.isFinite(currentStudents) ? currentStudents : 0;
+  const percent = safeCount === 0 || safeTotal <= 0 ? 0 : Math.round((safeCount / safeTotal) * 100);
 
   const isDark = tone === "dark";
   const cardVariant = isDark ? "none" : "outline";
@@ -42,7 +44,7 @@ const AnswerStatCard = ({
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className={`text-sm font-semibold ${labelClass}`}>{label}</p>
-          <p className={`mt-1 text-xs ${countClass}`}>{count} students</p>
+          <p className={`mt-1 text-xs ${countClass}`}>{safeCount} students</p>
         </div>
         <div className="text-right">
           {isLeading && (
