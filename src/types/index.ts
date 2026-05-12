@@ -17,7 +17,7 @@ export interface Student {
   id: UUID;
   name: string;
   score: number;
-  answers: [];
+  answers: number[];
   joinedAt: string;
 }
 
