@@ -11,7 +11,7 @@ import {
   increment,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
-import type { Quiz, Session, Student } from "@/types/index";
+import type { Quiz, Question, Session, Student } from "@/types/index";
 
 type UUID = ReturnType<typeof crypto.randomUUID>;
 
@@ -66,5 +66,19 @@ export async function startSession(sessionId: string) {
   const sessionRef = doc(db, "sessions", sessionId);
   await updateDoc(sessionRef, {
     status: "active",
+  });
+}
+
+export async function submitAnswer(
+  sessionId: string,
+  questionIndex: number,
+  choiceIndex: number,
+  questions: Question[]
+) {
+  const updated = [...questions];
+  updated[questionIndex].choices[choiceIndex].count += 1;
+
+  await updateDoc(doc(db, "sessions", sessionId), {
+    "quiz.questions": updated,
   });
 }

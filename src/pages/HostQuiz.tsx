@@ -45,6 +45,7 @@ const HostQuiz = () => {
   useEffect(() => {
     if (!activeQuestion) return;
     setSecondsLeft(activeQuestion.time);
+    console.log("deadass");
 
     const timer = setInterval(() => {
       setSecondsLeft((prev) => (prev > 0 ? prev - 1 : 0));
@@ -106,8 +107,7 @@ const HostQuiz = () => {
             <h2 className="mt-6 text-2xl font-semibold text-white md:text-3xl">
               Question {session.currentQuestion + 1} of {session.quiz.questions.length}:{" "}
               {activeQuestion.text}
-            </h2>{" "}
-            percent={20}
+            </h2>
             <div className="mt-8 grid gap-5 md:grid-cols-2">
               {activeQuestion.choices.map((choice, index) => (
                 // TODO Fix this

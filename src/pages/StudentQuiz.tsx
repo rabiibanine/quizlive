@@ -9,6 +9,8 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "@/firebase/firebase";
 
+import { submitAnswer } from "@/services/sessionServices";
+
 const formatTime = (totalSeconds: number) => {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
@@ -65,10 +67,21 @@ const StudentQuiz = () => {
     setSelectedChoiceIndex(index);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (selectedChoiceIndex === null) return;
-    setIsSubmitted(true);
-    // TODO: write answer to Firestore
+    console.log("yo");
+
+    try {
+      setIsSubmitted(true);
+      await submitAnswer(
+        state.sessionId,
+        session.currentQuestion,
+        selectedChoiceIndex,
+        session.quiz.questions
+      );
+    } catch (e) {
+      console.error("Failed to submit answer: " + e);
+    }
   };
 
   const canSubmit = selectedChoiceIndex !== null && !isSubmitted;
@@ -184,4 +197,3 @@ const StudentQuiz = () => {
 };
 
 export default StudentQuiz;
-
