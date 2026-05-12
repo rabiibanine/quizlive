@@ -10,7 +10,7 @@ import TimerCard from "@/components/quiz/TimerCard";
 
 import type { Session } from "@/types/index";
 import { db } from "@/firebase/firebase";
-import { advanceQuestion } from "@/services/sessionServices";
+import { advanceQuestion, endSession } from "@/services/sessionServices";
 
 const formatTime = (totalSeconds: number) => {
   const minutes = Math.floor(totalSeconds / 60);
@@ -53,7 +53,13 @@ const HostQuiz = () => {
       setSecondsLeft((prev) => {
         if (prev === 1 && !hasAdvanced.current) {
           hasAdvanced.current = true;
-          advanceQuestion(sessionId);
+          const isLastQuestion = session.currentQuestion >= session.quiz.questions.length - 1;
+          if (isLastQuestion) {
+            endSession(sessionId);
+            navigate("/podium", { state: { sessionId } });
+          } else {
+            advanceQuestion(sessionId);
+          }
           return 0;
         }
         return prev - 1;

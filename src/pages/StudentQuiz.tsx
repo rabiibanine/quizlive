@@ -40,6 +40,11 @@ const StudentQuiz = () => {
     return unsub;
   }, [state?.sessionId]);
 
+  useEffect(() => {
+    if (!session) return;
+    if (session.status === "ended") navigate("/");
+  }, [session?.status]);
+
   // reset answer state when question changes
   useEffect(() => {
     if (!session) return;
