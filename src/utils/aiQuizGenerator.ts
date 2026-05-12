@@ -58,7 +58,7 @@ export async function generateQuizJsonFromText(text: string): Promise<Quiz> {
           "Rules:",
           `- Produce exactly ${questionCount} questions (between 10 and 25).`,
           "- Each question has 4 multiple-choice options.",
-          "- correctChoice is 1-based (0-3).",
+          "- correctChoice is 0-based (0-3).",
           "- time is seconds per question (30-90).",
           "- If title/course/subject are unclear, infer simple ones.",
           "- Output JSON only with this shape:",
