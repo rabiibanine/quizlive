@@ -32,7 +32,7 @@ const LeaderboardCard = ({
     ? "rounded-2xl border border-white/10 bg-white/5"
     : "rounded-2xl border border-gray-100 bg-white";
   const entryNameClass = isDark ? "text-white" : "text-gray-900";
-  const entryPointsClass = isDark ? "text-white" : "text-gray-900";
+  const entryScoreClass = isDark ? "text-white" : "text-gray-900";
   const rankClass = isDark ? "bg-purple-200/20 text-purple-200" : "bg-purple-50 text-purple-700";
   const toggleClass = isDark
     ? "text-xs font-semibold uppercase tracking-[0.25em] text-white/50 transition-colors hover:text-white/80"
@@ -56,8 +56,8 @@ const LeaderboardCard = ({
                 </span>
                 <span className={`font-medium ${entryNameClass}`}>{entry.name}</span>
               </div>
-              <span className={`text-sm font-semibold ${entryPointsClass}`}>
-                {entry.points.toLocaleString()} pts
+              <span className={`text-sm font-semibold ${entryScoreClass}`}>
+                {entry.score.toLocaleString()} pts
               </span>
             </div>
           </AnimatedItem>

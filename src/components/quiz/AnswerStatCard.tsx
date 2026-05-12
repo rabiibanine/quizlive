@@ -1,5 +1,4 @@
 import Card from "@/components/Card";
-import { useMemo } from "react";
 
 interface AnswerStatCardProps {
   label: string;

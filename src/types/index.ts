@@ -16,7 +16,7 @@ export interface Question {
 export interface Student {
   id: UUID;
   name: string;
-  points: number;
+  score: number;
   answers: [];
   joinedAt: string;
 }

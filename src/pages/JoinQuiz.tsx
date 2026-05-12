@@ -104,7 +104,7 @@ const JoinQuiz = () => {
       const student: Student = {
         id: getOrCreateId("studentId"),
         name: enteredName,
-        points: 0,
+        score: 0,
         answers: [],
         joinedAt: new Date().toISOString(),
       };
