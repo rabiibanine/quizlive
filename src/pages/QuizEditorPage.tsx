@@ -7,6 +7,7 @@ import { launchSession } from "@/services/sessionServices";
 import type { Question, Quiz } from "@/types/index";
 
 import { getOrCreateId } from "@/utils/helpers";
+import { extractTextFromFile } from "@/utils/fileTextExtractors";
 
 import {
   BookOpenIcon,
@@ -17,7 +18,8 @@ import {
   SparkleIcon,
 } from "@phosphor-icons/react";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import type { ChangeEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const quiz: Quiz = {
@@ -61,6 +63,7 @@ export default function QuizEditorPage() {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const stateQuizInfo = location.state as
     | { id: string; title: string; className: string; subject: string; numberOfStudents: number }
     | undefined;
@@ -172,6 +175,25 @@ export default function QuizEditorPage() {
     }
   }
 
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleUploadChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await extractTextFromFile(file);
+      console.log("Extracted text:", text);
+    } catch (error) {
+      console.error("Failed to extract text:", error);
+      alert("Failed to extract text. Please upload a PDF, DOCX, or PPTX file.");
+    } finally {
+      event.target.value = "";
+    }
+  };
+
   return (
     <div
       className="min-h-screen w-full bg-slate-950 text-white flex justify-center py-12 px-6 md:px-36"
@@ -248,10 +270,18 @@ export default function QuizEditorPage() {
           <button
             type="button"
             className="inline-flex items-center gap-2 rounded-full border border-purple-300/40 bg-purple-500/20 px-4 py-2 text-sm font-semibold text-purple-100 transition hover:bg-purple-500/30"
+            onClick={handleUploadClick}
           >
             <UploadSimpleIcon size={18} />
             Upload File
           </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,.doc,.docx,.pptx"
+            className="hidden"
+            onChange={handleUploadChange}
+          />
         </Card>
 
         {/* Question List */}
