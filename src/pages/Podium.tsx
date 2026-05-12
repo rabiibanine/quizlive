@@ -67,7 +67,19 @@ export default function Podium() {
       sortedStudents.length
   );
 
-  const podium = [sortedStudents[1], sortedStudents[0], sortedStudents[2]].filter(Boolean);
+  const podiumOrderByRank =
+    sortedStudents.length >= 3
+      ? [2, 1, 3]
+      : sortedStudents.length === 2
+      ? [2, 1]
+      : [1];
+
+  const podiumEntries = podiumOrderByRank
+    .map((rank) => ({
+      rank,
+      student: sortedStudents[rank - 1],
+    }))
+    .filter((entry) => Boolean(entry.student)) as Array<{ rank: number; student: Student }>;
 
   const otherRankings = sortedStudents.splice(3);
 
@@ -151,8 +163,7 @@ export default function Podium() {
         </div>
 
         <div className="mt-10 flex items-end justify-center gap-6">
-          {podium.map((student, index) => {
-            const rank = index === 1 ? 1 : index === 0 ? 2 : 3;
+          {podiumEntries.map(({ student, rank }, index) => {
             const isWinner = rank === 1;
             return (
               <div
