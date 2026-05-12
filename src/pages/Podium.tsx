@@ -75,6 +75,10 @@ export default function Podium() {
     navigate("/quiz-form");
   }
 
+  function handleNewQuiz(): void {
+    navigate("/quiz-form");
+  }
+
   return (
     <div
       className="min-h-screen text-white"
