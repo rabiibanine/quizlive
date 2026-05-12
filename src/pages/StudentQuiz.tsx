@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import QuizWaitingLoader from "../components/QuizWaitingLoader"
+import QuizWaitingLoader from "../components/QuizWaitingLoader";
 
 import Button from "@/components/Button";
 import StepProgress from "@/components/StepProgress";
