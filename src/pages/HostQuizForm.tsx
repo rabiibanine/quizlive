@@ -3,9 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import Button from "@/components/Button";
 import Card from "@/components/Card";
-import Footer from "@/components/Footer";
 import Input from "@/components/Input";
-import NavBar from "@/components/NavBar";
 import StepProgress from "@/components/StepProgress";
 
 type StepKey = "quizTitle" | "className" | "subject" | "maxStudents";
@@ -18,14 +16,6 @@ type Step = {
   type: "text" | "number";
   min?: number;
   max?: number;
-};
-
-type QuizInfo = {
-  id: string;
-  title: string;
-  className: string;
-  subject: string;
-  numberOfStudents: number;
 };
 
 const steps: Step[] = [
@@ -147,12 +137,11 @@ const HostQuizForm = () => {
       return;
     }
 
-    const quizInfo: QuizInfo = {
+    const quizInfo = {
       id: crypto.randomUUID(),
       title: formValues.quizTitle.trim(),
-      className: formValues.className.trim(),
+      course: formValues.className.trim(),
       subject: formValues.subject.trim(),
-      numberOfStudents: Number(formValues.maxStudents),
     };
 
     navigate("/quiz-editor", { state: quizInfo });
@@ -169,9 +158,7 @@ const HostQuizForm = () => {
         background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
       }}
     >
-      <NavBar />
-
-      <main className="relative flex-1 overflow-hidden py-16 mt-10">
+      <main className="relative flex-1 overflow-hidden py-16">
         <div className="mx-auto w-full max-w-6xl px-6">
           <div className="grid items-start gap-10 lg:grid-cols-[1fr_1.1fr]">
             <div className="hidden flex-col gap-4 lg:flex">
@@ -205,12 +192,8 @@ const HostQuizForm = () => {
                 <p className="mb-2 text-xs font-semibold uppercase tracking-[0.35em] text-purple-200">
                   Start Session
                 </p>
-                <h1 className="text-2xl font-semibold text-white">
-                  Configure your quiz details
-                </h1>
-                <p className="mt-2 text-sm text-white/60">
-                  Set up the quiz before students join.
-                </p>
+                <h1 className="text-2xl font-semibold text-white">Configure your quiz details</h1>
+                <p className="mt-2 text-sm text-white/60">Set up the quiz before students join.</p>
               </div>
 
               <StepProgress
@@ -262,8 +245,6 @@ const HostQuizForm = () => {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 };

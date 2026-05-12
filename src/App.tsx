@@ -19,7 +19,7 @@ function App() {
       <Route path="/start" element={<HostQuizForm />} />
       <Route path="/join" element={<JoinQuiz />} />
       <Route path="/sharing/:code" element={<SharingPage />} />
-      <Route path="/quiz/:code/podium" element={<Podium />} />
+      <Route path="/podium" element={<Podium />} />
       <Route path="/quiz/:code/host" element={<HostQuiz />} />
       <Route path="/quiz/:code" element={<StudentQuiz />} />
       <Route path="*" element={<NotFound />} />

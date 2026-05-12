@@ -4,7 +4,7 @@ import QuizEditorToolBar from "@/components/QuizEditorToolBar";
 
 import { launchSession } from "@/services/sessionServices";
 
-import type { Question, Quiz } from "@/types/index";
+import type { Choice, Question, Quiz } from "@/types/index";
 
 import { getOrCreateId } from "@/utils/helpers";
 import { extractTextFromFile } from "@/utils/fileTextExtractors";
@@ -19,44 +19,9 @@ import {
   SparkleIcon,
 } from "@phosphor-icons/react";
 
-import { useMemo, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
-const quiz: Quiz = {
-  id: crypto.randomUUID(),
-  title: "Biology Quiz",
-  course: "Biology",
-  subject: "Immunology",
-  questions: [
-    {
-      id: crypto.randomUUID(),
-      text: "What is the main function of antibodies?",
-      choices: [
-        "To attack viruses directly",
-        "To signal immune cells",
-        "To neutralize foreign pathogens",
-        "To create red blood cells",
-      ],
-      time: 60,
-      correctChoice: 3, // (1-based, 1-4)
-    },
-    {
-      id: crypto.randomUUID(),
-      text: "Which cell type produces antibodies?",
-      choices: ["B cells", "T cells", "Macrophages", "Dendritic cells"],
-      time: 60,
-      correctChoice: 1,
-    },
-    {
-      id: crypto.randomUUID(),
-      text: "Where does hematopoiesis primarily take place in adults?",
-      choices: ["Spleen", "Liver", "Bone marrow", "Thymus"],
-      time: 45,
-      correctChoice: 3,
-    },
-  ],
-};
 
 export default function QuizEditorPage() {
   const pillStyles =
@@ -65,35 +30,32 @@ export default function QuizEditorPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const stateQuizInfo = location.state as
-    | { id: string; title: string; className: string; subject: string; numberOfStudents: number }
-    | undefined;
-  const resolvedQuizInfo = {
-    id: stateQuizInfo?.id ?? quiz.id,
-    title: stateQuizInfo?.title ?? quiz.title,
-    course: stateQuizInfo?.className ?? quiz.course,
-    subject: stateQuizInfo?.subject ?? quiz.subject,
-  };
-  const hasRouterState = Boolean(stateQuizInfo);
 
-  const [quizState, setQuizState] = useState({
-    ...(hasRouterState
-      ? {
-          ...resolvedQuizInfo,
-          questions: [
-            {
-              id: crypto.randomUUID(),
-              text: "",
-              choices: ["", "", "", ""],
-              time: 30,
-              correctChoice: 1,
-            },
-          ],
-        }
-      : {
-          ...quiz,
-          ...resolvedQuizInfo,
-        }),
+  const state = location.state;
+
+  // Return to home if entering quiz-editor directly (guarantees quiz data from previous page)
+  useEffect(() => {
+    if (!state) navigate("/");
+  }, [state]);
+
+  if (!state) return null;
+
+  const [quizState, setQuizState] = useState<Quiz>({
+    ...state,
+    questions: [
+      {
+        id: crypto.randomUUID(),
+        text: "",
+        choices: [
+          { text: "", count: 0 },
+          { text: "", count: 0 },
+          { text: "", count: 0 },
+          { text: "", count: 0 },
+        ],
+        time: 30,
+        correctChoice: 0,
+      },
+    ],
   });
 
   const { id, title, subject, course, questions } = quizState;
@@ -121,23 +83,22 @@ export default function QuizEditorPage() {
     });
   };
 
-  const normalizeGeneratedQuiz = (generated: Quiz, fallbackId: string): Quiz => {
+  const normalizeGeneratedQuiz = (generated: Quiz): Quiz => {
     const questions = (generated.questions ?? []).map((question) => {
       const choices = Array.isArray(question.choices) ? [...question.choices] : [];
-      while (choices.length < 4) choices.push("");
+      while (choices.length < 4) choices.push({ text: "", count: 0 } as Choice);
 
       return {
         id: crypto.randomUUID(),
         text: question.text ?? "",
         choices: choices.slice(0, 4),
         time: typeof question.time === "number" ? question.time : 30,
-        correctChoice:
-          typeof question.correctChoice === "number" ? question.correctChoice : 1,
+        correctChoice: typeof question.correctChoice === "number" ? question.correctChoice : 1,
       };
     });
 
     return {
-      id: fallbackId,
+      id: crypto.randomUUID(),
       title: generated.title ?? "Generated Quiz",
       course: generated.course ?? "General",
       subject: generated.subject ?? "General",
@@ -176,7 +137,7 @@ export default function QuizEditorPage() {
   async function handleLaunch(): Promise<void> {
     try {
       const professorId = getOrCreateId("professorId");
-      const { sessionId, quizCode } = await launchSession(id, professorId, quiz);
+      const { sessionId, quizCode } = await launchSession(id, professorId, quizState);
       navigate(`/sharing/${quizCode}`, { state: sessionId });
     } catch (error) {
       console.error("Failed to launch session: " + error);
@@ -195,13 +156,13 @@ export default function QuizEditorPage() {
       const text = await extractTextFromFile(file);
       console.log("Extracted text:", text);
       const generatedQuiz = await generateQuizJsonFromText(text);
-      const normalizedQuiz = normalizeGeneratedQuiz(generatedQuiz, id);
+      const normalizedQuiz = normalizeGeneratedQuiz(generatedQuiz);
       setQuizState(normalizedQuiz);
       console.log("Generated quiz JSON:", generatedQuiz);
     } catch (error) {
       console.error("Failed to process uploaded file:", error);
       alert(
-        "Failed to process the file. Please upload a PDF, DOCX, or PPTX file and check your Groq API key.",
+        "Failed to process the file. Please upload a PDF, DOCX, or PPTX file and check your Groq API key."
       );
     } finally {
       event.target.value = "";

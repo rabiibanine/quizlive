@@ -1,9 +1,14 @@
 type UUID = ReturnType<typeof crypto.randomUUID>;
 
+export interface Choice {
+  text: string;
+  count: number;
+}
+
 export interface Question {
   id: UUID;
   text: string;
-  choices: string[];
+  choices: Choice[];
   time: number;
   correctChoice: number;
 }
@@ -11,21 +16,9 @@ export interface Question {
 export interface Student {
   id: UUID;
   name: string;
-  points: number;
-  answers: [];
-}
-
-export interface Session {
-  code: string;
-  quizId: UUID;
-  professorId: UUID;
-  status: "waiting" | "active" | "ended";
-  currentQuestion: number;
-  currentStudents: number;
-  maxStudents: number;
-  questions: Question[];
-  students: Student[];
-  createdAt: string;
+  score: number;
+  answers: number[];
+  joinedAt: string;
 }
 
 export interface Quiz {
@@ -34,4 +27,17 @@ export interface Quiz {
   course: string;
   subject: string;
   questions: Question[];
+}
+
+export interface Session {
+  quizCode: string;
+  quizId: UUID;
+  professorId: UUID;
+  status: "waiting" | "active" | "ended";
+  currentQuestion: number;
+  currentStudents: number;
+  maxStudents: number;
+  quiz: Quiz;
+  students: Student[];
+  createdAt: string;
 }

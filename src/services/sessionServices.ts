@@ -1,7 +1,6 @@
 import {
   collection,
   addDoc,
-  serverTimestamp,
   getDocs,
   query,
   where,
@@ -9,9 +8,11 @@ import {
   doc,
   updateDoc,
   arrayUnion,
+  increment,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
-import type { Quiz, Student } from "@/types/index";
+import type { Quiz, Session, Student } from "@/types/index";
 
 type UUID = ReturnType<typeof crypto.randomUUID>;
 
@@ -37,8 +38,9 @@ export async function launchSession(quizId: string, professorId: string, quiz: Q
     currentStudents: 0,
     currentQuestion: 0,
     students: [],
-    createdAt: serverTimestamp(),
-  });
+    maxStudents: 20,
+    createdAt: new Date().toISOString(),
+  } as Session);
   return { sessionId: ref.id, quizCode };
 }
 
@@ -57,12 +59,68 @@ export async function joinSession(sessionId: string, student: Student): Promise<
   const sessionRef = doc(db, "sessions", sessionId);
   await updateDoc(sessionRef, {
     students: arrayUnion(student),
+    currentStudents: increment(1),
   });
 }
 
-export async function startSession(sessionId: string) {
+export async function startSession(sessionId: string): Promise<void> {
   const sessionRef = doc(db, "sessions", sessionId);
   await updateDoc(sessionRef, {
     status: "active",
+  });
+}
+
+export async function endSession(sessionId: string): Promise<void> {
+  await updateDoc(doc(db, "sessions", sessionId), {
+    status: "ended",
+  });
+}
+
+export async function submitAnswer(
+  sessionId: string,
+  questionIndex: number,
+  choiceIndex: number,
+  studentId: UUID
+) {
+  const snap = await getDoc(doc(db, "sessions", sessionId));
+  if (!snap.exists()) return;
+
+  const session = snap.data() as Session;
+  const updatedStudents = session.students.map((s) =>
+    s.id === studentId ? { ...s, answers: [...s.answers, choiceIndex] } : s
+  );
+
+  const updatedQuestions = [...session.quiz.questions];
+  updatedQuestions[questionIndex].choices[choiceIndex].count += 1;
+
+  await updateDoc(doc(db, "sessions", sessionId), {
+    students: updatedStudents,
+    "quiz.questions": updatedQuestions,
+  });
+}
+
+// evaluateAndAdvance only scores, never increments
+export async function evaluateAndAdvance(sessionId: string, questionIndex: number) {
+  const snap = await getDoc(doc(db, "sessions", sessionId));
+  if (!snap.exists()) return;
+  const session = snap.data() as Session;
+
+  const correctChoice = session.quiz.questions[questionIndex].correctChoice;
+
+  const updatedStudents = session.students.map((student) => {
+    const answer = student.answers[questionIndex];
+    const isCorrect = answer === correctChoice;
+    return isCorrect ? { ...student, score: student.score + 100 } : student;
+  });
+
+  await updateDoc(doc(db, "sessions", sessionId), {
+    students: updatedStudents,
+  });
+}
+
+// separate function just for advancing
+export async function advanceQuestion(sessionId: string) {
+  await updateDoc(doc(db, "sessions", sessionId), {
+    currentQuestion: increment(1),
   });
 }

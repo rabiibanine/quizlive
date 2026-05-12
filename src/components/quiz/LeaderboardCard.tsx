@@ -1,17 +1,11 @@
 import AnimatedItem from "@/components/AnimatedList.tsx";
-import  Card  from "@/components/Card.tsx";
-
-type LeaderboardEntry = {
-  id: number;
-  rank: number;
-  name: string;
-  points: number;
-};
+import Card from "@/components/Card.tsx";
+import type { Student } from "@/types";
 
 type LeaderboardCardProps = {
   title?: string;
   badgeText?: string;
-  entries: LeaderboardEntry[];
+  students: Student[];
   showAll?: boolean;
   onToggleView?: () => void;
   tone?: "light" | "dark";
@@ -19,7 +13,7 @@ type LeaderboardCardProps = {
 
 const LeaderboardCard = ({
   title = "Live Leaderboard",
-  entries,
+  students: entries,
   showAll = false,
   onToggleView,
   tone = "light",
@@ -38,10 +32,8 @@ const LeaderboardCard = ({
     ? "rounded-2xl border border-white/10 bg-white/5"
     : "rounded-2xl border border-gray-100 bg-white";
   const entryNameClass = isDark ? "text-white" : "text-gray-900";
-  const entryPointsClass = isDark ? "text-white" : "text-gray-900";
-  const rankClass = isDark
-    ? "bg-purple-200/20 text-purple-200"
-    : "bg-purple-50 text-purple-700";
+  const entryScoreClass = isDark ? "text-white" : "text-gray-900";
+  const rankClass = isDark ? "bg-purple-200/20 text-purple-200" : "bg-purple-50 text-purple-700";
   const toggleClass = isDark
     ? "text-xs font-semibold uppercase tracking-[0.25em] text-white/50 transition-colors hover:text-white/80"
     : "text-xs font-semibold uppercase tracking-[0.25em] text-gray-400 transition-colors hover:text-gray-600";
@@ -60,12 +52,12 @@ const LeaderboardCard = ({
                 <span
                   className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${rankClass}`}
                 >
-                  {entry.rank}
+                  {1}
                 </span>
                 <span className={`font-medium ${entryNameClass}`}>{entry.name}</span>
               </div>
-              <span className={`text-sm font-semibold ${entryPointsClass}`}>
-                {entry.points.toLocaleString()} pts
+              <span className={`text-sm font-semibold ${entryScoreClass}`}>
+                {entry.score.toLocaleString()} pts
               </span>
             </div>
           </AnimatedItem>

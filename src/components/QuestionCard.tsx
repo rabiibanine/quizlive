@@ -26,7 +26,11 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
   const [isEditing, setIsEditing] = useState(false);
 
   return (
-    <Card variant="none" padding="lg" className="w-full flex flex-col rounded-3xl border border-white/10 bg-white/5 backdrop-blur">
+    <Card
+      variant="none"
+      padding="lg"
+      className="w-full flex flex-col rounded-3xl border border-white/10 bg-white/5 backdrop-blur"
+    >
       {/* Header */}
       <div className="items-center gap-2 flex flex-col sm:flex-row">
         {/* Number & Question */}
@@ -126,7 +130,7 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
             <hr className="my-2 border-white/10" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
               {question.choices.map((choice, cIndex) => {
-                const isCorrectChoice = question.correctChoice === cIndex + 1;
+                const isCorrectChoice = question.correctChoice === cIndex;
                 return (
                   <Card
                     key={cIndex}
@@ -141,7 +145,7 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
                     }
                     padding="md"
                     onClick={() => {
-                      if (isEditing) onUpdate(index, { correctChoice: cIndex + 1 });
+                      if (isEditing) onUpdate(index, { correctChoice: cIndex });
                     }}
                   >
                     <input
@@ -157,12 +161,12 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
                       onClick={(e) => {
                         if (isEditing) e.stopPropagation();
                       }}
-                      value={choice}
+                      value={choice.text}
                       disabled={!isEditing}
                       onChange={(e) => {
                         onUpdate(index, {
                           choices: question.choices.map((choice, index) =>
-                            index === cIndex ? e.target.value : choice
+                            index === cIndex ? { ...choice, text: e.target.value } : choice
                           ),
                         });
                       }}

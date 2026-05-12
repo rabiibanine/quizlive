@@ -1,20 +1,22 @@
-import  Card  from "@/components/Card";
+import Card from "@/components/Card";
 
-type AnswerStatCardProps = {
+interface AnswerStatCardProps {
   label: string;
   count: number;
-  percent: number;
+  currentStudents: number;
   isLeading?: boolean;
   tone?: "light" | "dark";
-};
+}
 
 const AnswerStatCard = ({
   label,
-  count,
-  percent,
+  count = 0,
+  currentStudents,
   isLeading = false,
   tone = "light",
 }: AnswerStatCardProps) => {
+  const percent = count === 0 ? 0 : Math.round((count / currentStudents) * 100);
+
   const isDark = tone === "dark";
   const cardVariant = isDark ? "none" : "outline";
   const borderClass = isDark
@@ -52,10 +54,7 @@ const AnswerStatCard = ({
         </div>
       </div>
       <div className={`mt-4 h-1.5 w-full rounded-full ${trackClass}`}>
-        <div
-          className={`h-full rounded-full ${barClass}`}
-          style={{ width: `${percent}%` }}
-        />
+        <div className={`h-full rounded-full ${barClass}`} style={{ width: `${percent}%` }} />
       </div>
     </Card>
   );

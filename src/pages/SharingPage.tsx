@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { FiCheck, FiCopy } from "react-icons/fi";
 import { IoPersonOutline } from "react-icons/io5";
 
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
 import Button from "../components/Button";
 import { BsQrCode } from "react-icons/bs";
 
@@ -18,34 +16,12 @@ import { doc, onSnapshot } from "firebase/firestore";
 import type { Student } from "@/types/index";
 import { startSession } from "@/services/sessionServices";
 
-const studentsData: Student[] = [
-  {
-    id: crypto.randomUUID(),
-    name: "Marouane Talbi",
-    points: 14250,
-    answers: [],
-  },
-
-  {
-    id: crypto.randomUUID(),
-    name: "Rayan Morabit",
-    points: 15800,
-    answers: [],
-  },
-
-  {
-    id: crypto.randomUUID(),
-    name: "Imane Amrani",
-    points: 12900,
-    answers: [],
-  },
-];
-
 const SharingPage = () => {
-  const [students, setStudents] = useState<Student[]>(studentsData);
+  const [students, setStudents] = useState<Student[]>([]);
   const [copied, setcopied] = useState<boolean>(false);
   const { code } = useParams<{ code: string }>();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const sessionId = location.state as string;
   const baseUrl: string = window.location.origin;
@@ -88,6 +64,7 @@ const SharingPage = () => {
   async function handleStart(): Promise<void> {
     try {
       await startSession(sessionId);
+      navigate(`/quiz/${roomCode}/host`, { state: { sessionId: sessionId } });
     } catch (error) {
       console.error(error);
     }
@@ -100,16 +77,12 @@ const SharingPage = () => {
         background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
       }}
     >
-      <NavBar />
-
       {/* Main content */}
       <main className="relative flex flex-1 items-center justify-center py-10 overflow-hidden">
         <div className="w-full max-w-4xl mx-auto px-8">
           {/* Header */}
           <div className="animate_fadeInUp text-center mt-6">
-            <p className="text-lg font-semibold tracking-widest text-purple-200 mb-1">
-              QUIZ READY
-            </p>
+            <p className="text-lg font-semibold tracking-widest text-purple-200 mb-1">QUIZ READY</p>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
               You have created your quiz
             </h1>
@@ -169,7 +142,7 @@ const SharingPage = () => {
               className="w-full sm:w-64 rounded-2xl px-8 py-3 text-sm font-semibold"
               onClick={handleStart}
             >
-              Start Game
+              Start Quiz
             </Button>
           </div>
 
@@ -215,8 +188,6 @@ const SharingPage = () => {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 };

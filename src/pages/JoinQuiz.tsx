@@ -74,14 +74,6 @@ const JoinQuiz = () => {
   };
 
   const handleSubmit = async () => {
-    // OLD CODE
-    // if (!validateForm()) return;
-    // const normalizedCode = formValues.roomCode.trim();
-    //Arbitrary value for testing😊
-    // const valid = normalizedCode === "676767";
-    // setIsCodeValid(valid);
-    // setIsModalOpen(true);
-
     if (!validateForm()) return;
 
     const enteredCode = formValues.roomCode.trim();
@@ -112,12 +104,12 @@ const JoinQuiz = () => {
       const student: Student = {
         id: getOrCreateId("studentId"),
         name: enteredName,
-        points: 0,
+        score: 0,
         answers: [],
+        joinedAt: new Date().toISOString(),
       };
 
       await joinSession(session.id, student);
-      // TODO Make sure the student page changes
       navigate(`/quiz/${enteredCode}`, { state: { sessionId: session.id, student } });
     } catch (error) {
       console.error("Failed to join session:", error);
@@ -141,9 +133,7 @@ const JoinQuiz = () => {
               <p className="text-xs font-semibold uppercase tracking-[0.4em] text-purple-200">
                 Get Started
               </p>
-              <h1 className="mt-3 text-3xl font-semibold text-white md:text-4xl">
-                Join a Session
-              </h1>
+              <h1 className="mt-3 text-3xl font-semibold text-white md:text-4xl">Join a Session</h1>
               <p className="mt-2 text-sm text-white/60">
                 Enter your details to start the live quiz competition.
               </p>
@@ -192,12 +182,8 @@ const JoinQuiz = () => {
                   <p className="text-xs font-semibold uppercase tracking-[0.4em] text-purple-200">
                     Quiz Info
                   </p>
-                  <h2 className="mt-2 text-2xl font-semibold text-white">
-                    {modalInfo.title}
-                  </h2>
-                  <p className="mt-1 text-sm text-white/60">
-                    Review the details before joining.
-                  </p>
+                  <h2 className="mt-2 text-2xl font-semibold text-white">{modalInfo.title}</h2>
+                  <p className="mt-1 text-sm text-white/60">Review the details before joining.</p>
                 </div>
                 <div className="grid gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
                   <div className="flex items-center justify-between text-sm">
@@ -210,9 +196,7 @@ const JoinQuiz = () => {
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-white/60">Students Joined</span>
-                    {/* TODO Replace 18 with the session currentStudents property*/}
-                    <span className="font-semibold text-gray-900">{modalInfo.currentStudents}</span>
-                    <span className="font-semibold text-white">{18}</span>
+                    <span className="font-semibold text-white">{modalInfo.currentStudents}</span>
                   </div>
                 </div>
               </div>
