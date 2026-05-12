@@ -10,7 +10,7 @@ import TimerCard from "@/components/quiz/TimerCard";
 
 import type { Session } from "@/types/index";
 import { db } from "@/firebase/firebase";
-import { evaluateAndAdvance, endSession, advanceQuestion } from "@/services/sessionServices";
+import { handleAdvance } from "@/services/sessionServices";
 
 const formatTime = (totalSeconds: number) => {
   const minutes = Math.floor(totalSeconds / 60);
@@ -33,38 +33,37 @@ const HostQuiz = () => {
 
   const { sessionId } = state;
 
+  const hasAdvanced = useRef(false);
+
   useEffect(() => {
     const unsub = onSnapshot(doc(db, "sessions", sessionId), (snap) => {
       if (!snap.exists()) return;
-      setSession(snap.data() as Session);
+      const session = snap.data() as Session;
+      setSession(session);
+      if (session.currentAnswers >= session.currentStudents && !hasAdvanced.current) {
+        handleAdvance(sessionId, session.currentQuestion, session.quiz.questions.length, navigate);
+        hasAdvanced.current = true;
+      }
     });
     return unsub;
   }, [sessionId]);
 
   const activeQuestion = session?.quiz.questions[session.currentQuestion];
 
-  const hasAdvanced = useRef(false);
-
   useEffect(() => {
     hasAdvanced.current = false;
     if (!activeQuestion) return;
     setSecondsLeft(activeQuestion.time);
-    const timer = setInterval(async () => {
+    const timer = setInterval(() => {
       setSecondsLeft((prev) => {
         if (prev === 1 && !hasAdvanced.current) {
           hasAdvanced.current = true;
-          const isLastQuestion = session.currentQuestion >= session.quiz.questions.length - 1;
-          if (isLastQuestion) {
-            evaluateAndAdvance(sessionId, session.currentQuestion).then(() => {
-              endSession(sessionId).then(() => {
-                navigate("/podium", { state: { sessionId } });
-              });
-            });
-          } else {
-            evaluateAndAdvance(sessionId, session.currentQuestion).then(() => {
-              advanceQuestion(sessionId);
-            });
-          }
+          handleAdvance(
+            sessionId,
+            session.currentQuestion,
+            session.quiz.questions.length,
+            navigate
+          );
           return 0;
         }
         return prev - 1;

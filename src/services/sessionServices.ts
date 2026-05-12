@@ -37,6 +37,7 @@ export async function launchSession(quizId: string, professorId: string, quiz: Q
     quiz: quiz,
     currentStudents: 0,
     currentQuestion: 0,
+    currentAnswers: 0,
     students: [],
     maxStudents: 20,
     createdAt: new Date().toISOString(),
@@ -106,6 +107,7 @@ export async function submitAnswer(
   await updateDoc(doc(db, "sessions", sessionId), {
     students: updatedStudents,
     "quiz.questions": updatedQuestions,
+    currentAnswers: increment(1),
   });
 }
 
@@ -132,5 +134,24 @@ export async function evaluateAndAdvance(sessionId: string, questionIndex: numbe
 export async function advanceQuestion(sessionId: string) {
   await updateDoc(doc(db, "sessions", sessionId), {
     currentQuestion: increment(1),
+    currentAnswers: 0,
   });
 }
+
+// sessionService.ts
+export const handleAdvance = async (
+  sessionId: string,
+  currentQuestion: number,
+  totalQuestions: number,
+  navigate: (path: string, options?: object) => void
+) => {
+  const isLastQuestion = currentQuestion >= totalQuestions - 1;
+  if (isLastQuestion) {
+    await evaluateAndAdvance(sessionId, currentQuestion);
+    await endSession(sessionId);
+    navigate("/podium", { state: { sessionId } });
+  } else {
+    await evaluateAndAdvance(sessionId, currentQuestion);
+    await advanceQuestion(sessionId);
+  }
+};
