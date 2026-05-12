@@ -27,6 +27,7 @@ function Input({
   className = "",
   id,
   labelClassName = "",
+  type,
   ...rest
 }: InputProps) {
   // falls back to label text if no id provided, for accessibility
@@ -35,10 +36,7 @@ function Input({
   return (
     <div className={`flex flex-col gap-1 ${fullWidth ? "w-full" : ""}`}>
       {label && (
-        <label
-          htmlFor={inputId}
-          className={`text-sm font-medium text-gray-900 ${labelClassName}`}
-        >
+        <label htmlFor={inputId} className={`text-sm font-medium text-gray-900 ${labelClassName}`}>
           {label}
         </label>
       )}
@@ -46,24 +44,24 @@ function Input({
       <input
         id={inputId}
         disabled={disabled}
+        type={type}
         className={`
           rounded-md border bg-white text-gray-900
           placeholder:text-gray-400
-          transition-colors duration-150 outline-none
-          focus:ring-2 focus:ring-purple-600 focus:border-transparent
-          disabled:opacity-50 disabled:cursor-not-allowed
-          ${error ? "border-red-500 focus:ring-red-500" : "border-gray-200"}
+          transition-all duration-150 outline-none
+          focus:ring-2 focus:ring-purple-300 focus:border-transparent
+          disabled:opacity-50 disabled:cursor-not-allowed 
+          ${error ? "border-red-500 focus:ring-red-500 " : "border-gray-200 "}
           ${sizeClasses[inputSize]}
-          ${fullWidth ? "w-full" : ""}
+          ${fullWidth ? "w-full " : " "}
           ${className}
+          ${type === "number" ? `[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ` : " "}
         `}
         {...rest}
       />
 
       {(error || helperText) && (
-        <span
-          className={`text-xs ${error ? "text-red-500" : "text-gray-500"}`}
-        >
+        <span className={`text-xs ${error ? "text-red-500" : "text-gray-500"}`}>
           {error ?? helperText}
         </span>
       )}

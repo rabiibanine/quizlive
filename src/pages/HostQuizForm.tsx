@@ -220,7 +220,7 @@ const HostQuizForm = () => {
                   onChange={(event) => handleChange(activeStep.key, event.target.value)}
                   error={errors[activeStep.key]}
                   labelClassName="text-white/80"
-                  className="rounded-2xl border-white/10 bg-white/5 text-white placeholder:text-white/40 focus:ring-purple-200"
+                  className="rounded-2xl border-white/10 bg-white/5 text-white transition-all placeholder:text-white/40"
                 />
               </div>
 
