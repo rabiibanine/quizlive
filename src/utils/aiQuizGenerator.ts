@@ -49,8 +49,7 @@ export async function generateQuizJsonFromText(text: string): Promise<Quiz> {
     messages: [
       {
         role: "system",
-        content:
-          "You output only valid JSON with no markdown, no prose, and no code fences.",
+        content: "You output only valid JSON with no markdown, no prose, and no code fences.",
       },
       {
         role: "user",
@@ -59,11 +58,11 @@ export async function generateQuizJsonFromText(text: string): Promise<Quiz> {
           "Rules:",
           `- Produce exactly ${questionCount} questions (between 10 and 25).`,
           "- Each question has 4 multiple-choice options.",
-          "- correctChoice is 1-based (1-4).",
+          "- correctChoice is 0-based (0-3).",
           "- time is seconds per question (30-90).",
           "- If title/course/subject are unclear, infer simple ones.",
           "- Output JSON only with this shape:",
-          "{\n  \"title\": string,\n  \"course\": string,\n  \"subject\": string,\n  \"questions\": [\n    {\n      \"text\": string,\n      \"choices\": [string, string, string, string],\n      \"time\": number,\n      \"correctChoice\": number\n    }\n  ]\n}",
+          '{\n  "title": string,\n  "course": string,\n  "subject": string,\n  "questions": [\n    {\n      "text": string,\n      "choices": [ { text: string }, { text: string }, { text: string }, { text: string} ],\n      "time": number,\n      "correctChoice": number\n    }\n  ]\n}',
           "Text:",
           snippet,
         ].join("\n"),
