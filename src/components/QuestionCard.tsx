@@ -54,54 +54,56 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
           />
         </div>
 
-        <div className="flex items-center gap-2 bg-white/10 rounded-lg mx-1 px-3 py-2 transition-all hover:bg-white/15">
-          <ClockIcon className="text-white/50 shrink-0" />
-          <input
-            type="number"
-            value={question.time}
-            disabled={!isEditing}
-            min={1}
-            max={999}
-            onChange={(e) => {
-              if (e.target.value.length > 3) return;
-              if (isEditing) onUpdate(index, { time: Number(e.target.value) });
-            }}
-            className={
-              `bg-transparent w-12 focus:outline-none text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ` +
-              (isEditing ? `text-white` : `text-white/60`)
-            }
-          />
-          <span className="text-white/50 text-sm">sec</span>
-        </div>
+        <div className="flex justify-between gap-2 w-full sm:w-auto">
+          <div className="flex items-center gap-2 bg-white/10 rounded-lg mx-1 px-3 py-2 transition-all hover:bg-white/15">
+            <ClockIcon className="text-white/50 shrink-0" />
+            <input
+              type="number"
+              value={question.time}
+              disabled={!isEditing}
+              min={1}
+              max={999}
+              onChange={(e) => {
+                if (e.target.value.length > 3) return;
+                if (isEditing) onUpdate(index, { time: Number(e.target.value) });
+              }}
+              className={
+                `bg-transparent w-12 focus:outline-none text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ` +
+                (isEditing ? `text-white` : `text-white/60`)
+              }
+            />
+            <span className="text-white/50 text-sm">sec</span>
+          </div>
 
-        {/* Buttons */}
-        <div className="ml-auto flex gap-2">
-          <div className="flex gap-2 h-full">
-            {isEditing ? (
+          {/* Buttons */}
+          <div className="ml-auto flex gap-2">
+            <div className="flex gap-2 h-full">
+              {isEditing ? (
+                <button
+                  className="p-2 rounded-full text-white/70 border border-white/20 transition-all hover:cursor-pointer hover:text-white hover:bg-emerald-500/30 hover:border-emerald-400/60"
+                  onClick={() => {
+                    setIsEditing(false);
+                  }}
+                >
+                  <CheckIcon />
+                </button>
+              ) : (
+                <button
+                  className="p-2 rounded-full text-white/70 border border-white/20 transition-all hover:cursor-pointer hover:text-white hover:bg-white/10 hover:border-white/40"
+                  onClick={() => {
+                    setIsEditing(true);
+                  }}
+                >
+                  <PencilSimpleIcon />
+                </button>
+              )}
               <button
-                className="p-2 rounded-full text-white/70 border border-white/20 transition-all hover:cursor-pointer hover:text-white hover:bg-emerald-500/30 hover:border-emerald-400/60"
-                onClick={() => {
-                  setIsEditing(false);
-                }}
+                className="p-2 rounded-full text-white/70 border border-white/20 transition-all hover:cursor-pointer hover:text-red-300 hover:bg-red-500/20 hover:border-red-400/40"
+                onClick={() => onDelete(index)}
               >
-                <CheckIcon />
+                <XIcon />
               </button>
-            ) : (
-              <button
-                className="p-2 rounded-full text-white/70 border border-white/20 transition-all hover:cursor-pointer hover:text-white hover:bg-white/10 hover:border-white/40"
-                onClick={() => {
-                  setIsEditing(true);
-                }}
-              >
-                <PencilSimpleIcon />
-              </button>
-            )}
-            <button
-              className="p-2 rounded-full text-white/70 border border-white/20 transition-all hover:cursor-pointer hover:text-red-300 hover:bg-red-500/20 hover:border-red-400/40"
-              onClick={() => onDelete(index)}
-            >
-              <XIcon />
-            </button>
+            </div>
           </div>
 
           <div className="w-px rounded-full self-center h-8 bg-white/20 mx-2" />
