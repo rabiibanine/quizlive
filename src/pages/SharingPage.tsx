@@ -26,7 +26,7 @@ const SharingPage = () => {
   const sessionId = location.state as string;
   const baseUrl: string = window.location.origin;
   const roomCode: string = code ?? "";
-  const quizLink: string = roomCode ? `${baseUrl}/quiz/${roomCode}` : "";
+  const quizLink: string = roomCode ? `${baseUrl}/join` : "";
 
   const waitingSlots = students.length >= 3 ? 1 : Math.max(0, 4 - students.length);
   const placeholderSlots = Array.from({ length: waitingSlots });
