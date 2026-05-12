@@ -39,6 +39,10 @@ const toCSV = (students: Student[], questions: Session["quiz"]["questions"]) =>
     joined_at: new Date(student.joinedAt).toLocaleTimeString(),
   }));
 
+type PodiumBarStyle = React.CSSProperties & {
+  "--target-height"?: string;
+};
+
 export default function Podium() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -72,7 +76,19 @@ export default function Podium() {
       sortedStudents.length
   );
 
-  const podium = [sortedStudents[1], sortedStudents[0], sortedStudents[2]].filter(Boolean);
+  const podiumOrderByRank =
+    sortedStudents.length >= 3
+      ? [2, 1, 3]
+      : sortedStudents.length === 2
+      ? [2, 1]
+      : [1];
+
+  const podiumEntries = podiumOrderByRank
+    .map((rank) => ({
+      rank,
+      student: sortedStudents[rank - 1],
+    }))
+    .filter((entry) => Boolean(entry.student)) as Array<{ rank: number; student: Student }>;
 
   const otherRankings = sortedStudents.splice(3);
 
@@ -119,7 +135,7 @@ export default function Podium() {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-2">
           <div className="rounded-2xl border border-white/10 bg-white/5 px-6 py-5">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/50">
               Average Accuracy
@@ -156,14 +172,25 @@ export default function Podium() {
         </div>
 
         <div className="mt-10 flex items-end justify-center gap-6">
-          {podium.map((student, index) => {
-            const rank = index === 1 ? 1 : index === 0 ? 2 : 3;
+          {podiumEntries.map(({ student, rank }, index) => {
             const isWinner = rank === 1;
+            const targetHeight = rank === 1 ? "18rem" : rank === 2 ? "15rem" : "10rem";
+            const animationOrderByRank: Record<number, number> = { 3: 0, 2: 1, 1: 2 };
+            const orderIndex = animationOrderByRank[rank] ?? index;
+            const podiumBarStyle: PodiumBarStyle = {
+              animationDelay: `${0.15 + orderIndex * 0.12}s`,
+              animationTimingFunction: "cubic-bezier(0.2, 0.8, 0.2, 1)",
+              ...(rank === 1
+                ? { animationDuration: "0.9s" }
+                : { animationDuration: "0.75s" }),
+              minHeight: targetHeight,
+              "--target-height": targetHeight,
+            };
             return (
               <div
                 key={student.id}
                 className="animate_fadeInUp flex flex-col items-center"
-                style={{ animationDelay: `${index * 1}s` }}
+                style={{ animationDelay: `${orderIndex * 1}s` }}
               >
                 <div
                   className={`flex items-center justify-center rounded-full border border-purple-300/40 bg-purple-400/10 text-white/80 ${
@@ -176,15 +203,9 @@ export default function Podium() {
                 <div className="text-xs text-white/50">{student.score.toLocaleString()} pts</div>
                 <div
                   className={`animate-grow origin-bottom mt-4 w-40 rounded-t-3xl border border-white/10 bg-gradient-to-b from-purple-400/20 to-slate-900/90 text-center text-2xl font-semibold text-white/70 shadow-[0_30px_60px_-40px_rgba(0,0,0,0.8)] ${
-                    rank === 1 ? "h-64" : rank === 2 ? "h-48" : "h-40"
+                    rank === 1 ? "h-72" : rank === 2 ? "h-60" : "h-40"
                   }`}
-                  style={{
-                    animationDelay: `${0.15 + index * 0.12}s`,
-                    animationTimingFunction: "cubic-bezier(0.2, 0.8, 0.2, 1)",
-                    ...(rank === 1
-                      ? { animationDuration: "0.9s" }
-                      : { animationDuration: "0.75s" }),
-                  }}
+                  style={podiumBarStyle}
                 >
                   <div className="pt-6">{rank}</div>
                 </div>
