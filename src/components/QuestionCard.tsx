@@ -38,17 +38,20 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
           <span className="font-mono font-bold text-white/60 text-lg">
             {(index + 1).toString().padStart(2, "0")}
           </span>
-          <input
+          <textarea
             className={
-              "ml-2 w-full bg-transparent border-b text-white placeholder:text-white/40 " +
+              "ml-2 w-full resize-none overflow-hidden bg-transparent border-b text-white placeholder:text-white/40 " +
               (isEditing
                 ? "border-white/30 transition-all focus:outline-none focus:border-purple-200"
                 : "border-transparent")
             }
+            rows={1}
             placeholder="Enter your question here"
             value={question.text}
             disabled={!isEditing}
             onChange={(e) => {
+              e.target.style.height = "auto";
+              e.target.style.height = `${e.target.scrollHeight}px`;
               if (isEditing) onUpdate(index, { text: e.target.value });
             }}
           />
