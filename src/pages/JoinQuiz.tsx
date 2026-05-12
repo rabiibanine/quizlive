@@ -1,11 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Button from "../components/Button";
 import Input from "../components/Input";
+import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 import { findSessionByCode, joinSession } from "@/services/sessionServices";
 import { getOrCreateId } from "@/utils/helpers";
 import type { Student } from "@/types";
-import { useNavigate } from "react-router-dom";
 
 type StepKey = "roomCode" | "studentName";
 
@@ -125,12 +127,14 @@ const JoinQuiz = () => {
 
   return (
     <div
-      className="min-h-screen w-full bg-slate-950 text-white"
+      className="min-h-screen w-full bg-slate-950 text-white flex flex-col"
       style={{
         background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
       }}
     >
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center px-6 py-16">
+      <NavBar />
+
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center px-6 py-16 mt-10">
         <div className="w-full max-w-2xl">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-10 shadow-[0_18px_40px_-24px_rgba(147,102,255,0.5)] backdrop-blur">
             <div className="text-center">
@@ -176,6 +180,8 @@ const JoinQuiz = () => {
           </div>
         </div>
       </main>
+
+      <Footer />
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">

@@ -52,6 +52,17 @@ const SharingPage = () => {
   const roomCode: string = code ?? "";
   const quizLink: string = roomCode ? `${baseUrl}/quiz/${roomCode}` : "";
 
+  const waitingSlots = students.length >= 3 ? 1 : Math.max(0, 4 - students.length);
+  const placeholderSlots = Array.from({ length: waitingSlots });
+  const totalStudentsLabel = `${students.length} ${students.length === 1 ? "student" : "students"} connected`;
+  const getInitials = (name: string) =>
+    name
+      .split(" ")
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase())
+      .join("");
+
   const handleCopy = async (type_copy: string) => {
     try {
       const shared = type_copy === "code" ? roomCode : quizLink;
@@ -89,7 +100,7 @@ const SharingPage = () => {
         background: "linear-gradient(180deg, #0b1222 0%, #0f172a 55%, #0b1222 100%)",
       }}
     >
-
+      <NavBar />
 
       {/* Main content */}
       <main className="relative flex flex-1 items-center justify-center py-10 overflow-hidden">
@@ -162,34 +173,50 @@ const SharingPage = () => {
             </Button>
           </div>
 
-          <div className="text-3xl animate_fadeInUp flex justify-center items-center gap-2 mt-6 mb-3 text-white/80">
-            <IoPersonOutline />
-            <h1>{students.length} students connected</h1>
-          </div>
+          <div className="mt-10 border-t border-white/10 pt-8">
+            <div className="font-ui text-base animate_fadeInUp flex justify-center items-center gap-2 text-white/80">
+              <IoPersonOutline className="text-lg" />
+              <h1 className="tracking-wide">{totalStudentsLabel}</h1>
+            </div>
 
-          <div className="animate_fadeInDown bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
-            {students.map((s, index) => (
-              <AnimatedItem key={s.id} index={index} delay={0.05 * index}>
-                <div
-                  key={s.id}
-                  className="flex items-center justify-between px-6 py-4 border-b border-white/10 hover:bg-white/5"
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {students.map((student, index) => (
+                <AnimatedItem key={student.id} index={index} delay={0.05 * index}>
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-5 shadow-[0_18px_40px_-28px_rgba(15,23,42,0.8)]">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full border border-white/10 bg-white/10 flex items-center justify-center text-sm font-semibold text-white/80">
+                        {getInitials(student.name)}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="truncate text-sm font-semibold text-white">
+                          {student.name}
+                        </div>
+                        <div className="mt-1 flex items-center gap-2 text-xs text-purple-200">
+                          <span className="h-2 w-2 rounded-full bg-purple-300" />
+                          Ready
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </AnimatedItem>
+              ))}
+              {placeholderSlots.map((_, index) => (
+                <AnimatedItem
+                  key={`placeholder-${index}`}
+                  index={students.length + index}
+                  delay={0.05 * (students.length + index)}
                 >
-                  <div className="flex items-center gap-4">
-                    <span className="w-8 font-bold text-white/80">{index + 1}</span>
-                    <span className="text-white">{s.name}</span>
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-7 text-center text-sm text-white/40">
+                    Waiting...
                   </div>
-
-                  <div className="text-right">
-                    <div className="text-purple-200 font-semibold">Joined at</div>
-                    <div className="text-xs text-white/40">18h 30min 56sec</div>
-                  </div>
-                </div>
-              </AnimatedItem>
-            ))}
+                </AnimatedItem>
+              ))}
+            </div>
           </div>
         </div>
       </main>
 
+      <Footer />
     </div>
   );
 };
