@@ -99,21 +99,28 @@ export async function submitAnswer(
   });
 }
 
+// evaluateAndAdvance only scores, never increments
 export async function evaluateAndAdvance(sessionId: string, questionIndex: number) {
   const snap = await getDoc(doc(db, "sessions", sessionId));
   if (!snap.exists()) return;
-
   const session = snap.data() as Session;
+
   const correctChoice = session.quiz.questions[questionIndex].correctChoice;
 
   const updatedStudents = session.students.map((student) => {
     const answer = student.answers[questionIndex];
-    const isCorrect = answer + 1 === correctChoice;
+    const isCorrect = answer === correctChoice;
     return isCorrect ? { ...student, score: student.score + 100 } : student;
   });
 
   await updateDoc(doc(db, "sessions", sessionId), {
     students: updatedStudents,
+  });
+}
+
+// separate function just for advancing
+export async function advanceQuestion(sessionId: string) {
+  await updateDoc(doc(db, "sessions", sessionId), {
     currentQuestion: increment(1),
   });
 }

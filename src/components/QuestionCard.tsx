@@ -130,7 +130,7 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
             <hr className="my-2 border-white/10" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
               {question.choices.map((choice, cIndex) => {
-                const isCorrectChoice = question.correctChoice === cIndex + 1;
+                const isCorrectChoice = question.correctChoice === cIndex;
                 return (
                   <Card
                     key={cIndex}
@@ -145,7 +145,7 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
                     }
                     padding="md"
                     onClick={() => {
-                      if (isEditing) onUpdate(index, { correctChoice: cIndex + 1 });
+                      if (isEditing) onUpdate(index, { correctChoice: cIndex });
                     }}
                   >
                     <input
@@ -187,4 +187,3 @@ export default function QuestionCard({ question, index, onDelete, onUpdate }: Qu
     </Card>
   );
 }
-

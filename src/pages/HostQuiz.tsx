@@ -10,7 +10,7 @@ import TimerCard from "@/components/quiz/TimerCard";
 
 import type { Session } from "@/types/index";
 import { db } from "@/firebase/firebase";
-import { evaluateAndAdvance, endSession } from "@/services/sessionServices";
+import { evaluateAndAdvance, endSession, advanceQuestion } from "@/services/sessionServices";
 
 const formatTime = (totalSeconds: number) => {
   const minutes = Math.floor(totalSeconds / 60);
@@ -49,16 +49,21 @@ const HostQuiz = () => {
     hasAdvanced.current = false;
     if (!activeQuestion) return;
     setSecondsLeft(activeQuestion.time);
-    const timer = setInterval(() => {
+    const timer = setInterval(async () => {
       setSecondsLeft((prev) => {
         if (prev === 1 && !hasAdvanced.current) {
           hasAdvanced.current = true;
           const isLastQuestion = session.currentQuestion >= session.quiz.questions.length - 1;
           if (isLastQuestion) {
-            endSession(sessionId);
-            navigate("/podium", { state: { sessionId } });
+            evaluateAndAdvance(sessionId, session.currentQuestion).then(() => {
+              endSession(sessionId).then(() => {
+                navigate("/podium", { state: { sessionId } });
+              });
+            });
           } else {
-            evaluateAndAdvance(sessionId, session.currentQuestion);
+            evaluateAndAdvance(sessionId, session.currentQuestion).then(() => {
+              advanceQuestion(sessionId);
+            });
           }
           return 0;
         }

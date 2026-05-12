@@ -26,7 +26,7 @@ export default function QuestionCardList({
         { text: "", count: 0 },
       ],
       time: 60,
-      correctChoice: 1,
+      correctChoice: 0,
     };
 
     setQuizQuestions([newQuestion, ...quizQuestions]);
@@ -72,4 +72,3 @@ export default function QuestionCardList({
     </>
   );
 }
-
