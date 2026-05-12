@@ -10,6 +10,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "@/firebase/firebase";
 
 import { submitAnswer } from "@/services/sessionServices";
+import { getOrCreateId } from "@/utils/helpers";
 
 const formatTime = (totalSeconds: number) => {
   const minutes = Math.floor(totalSeconds / 60);
@@ -74,16 +75,12 @@ const StudentQuiz = () => {
 
   const handleSubmit = async () => {
     if (selectedChoiceIndex === null) return;
-    console.log("yo");
+
+    const studentId = getOrCreateId("studentId");
 
     try {
       setIsSubmitted(true);
-      await submitAnswer(
-        state.sessionId,
-        session.currentQuestion,
-        selectedChoiceIndex,
-        session.quiz.questions
-      );
+      await submitAnswer(state.sessionId, session.currentQuestion, selectedChoiceIndex, studentId);
     } catch (e) {
       console.error("Failed to submit answer: " + e);
     }
