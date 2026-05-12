@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "../components/Button";
 import Input from "../components/Input";
@@ -37,8 +37,11 @@ const fields: Field[] = [
 ];
 
 const JoinQuiz = () => {
+  const navigate = useNavigate();
+  const { code } = useParams();
+
   const [formValues, setFormValues] = useState<Record<StepKey, string>>({
-    roomCode: "",
+    roomCode: code ?? "",
     studentName: "",
   });
   const [errors, setErrors] = useState<Partial<Record<StepKey, string>>>({});
@@ -51,8 +54,6 @@ const JoinQuiz = () => {
     subject: "",
     currentStudents: 0,
   });
-
-  const navigate = useNavigate();
 
   const validateForm = () => {
     const nextErrors: Partial<Record<StepKey, string>> = {};

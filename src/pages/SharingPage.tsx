@@ -117,7 +117,11 @@ const SharingPage = () => {
               <div className="relative w-48 h-48 mx-auto mb-6 flex items-center justify-center rounded-2xl bg-white/10 border border-white/10">
                 {quizLink.trim() ? (
                   <div className="rounded-lg bg-white p-2">
-                    <QRCodeCanvas value={quizLink} size={160} className="rounded" />
+                    <QRCodeCanvas
+                      value={quizLink + "/" + roomCode}
+                      size={160}
+                      className="rounded"
+                    />
                   </div>
                 ) : (
                   <BsQrCode className="w-48 h-48 text-white/20" />
