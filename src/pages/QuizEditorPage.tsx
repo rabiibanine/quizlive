@@ -8,6 +8,7 @@ import type { Question, Quiz } from "@/types/index";
 
 import { getOrCreateId } from "@/utils/helpers";
 import { extractTextFromFile } from "@/utils/fileTextExtractors";
+import { generateQuizJsonFromText } from "@/utils/aiQuizGenerator";
 
 import {
   BookOpenIcon,
@@ -186,9 +187,13 @@ export default function QuizEditorPage() {
     try {
       const text = await extractTextFromFile(file);
       console.log("Extracted text:", text);
+      const generatedQuiz = await generateQuizJsonFromText(text);
+      console.log("Generated quiz JSON:", generatedQuiz);
     } catch (error) {
-      console.error("Failed to extract text:", error);
-      alert("Failed to extract text. Please upload a PDF, DOCX, or PPTX file.");
+      console.error("Failed to process uploaded file:", error);
+      alert(
+        "Failed to process the file. Please upload a PDF, DOCX, or PPTX file and check your Groq API key.",
+      );
     } finally {
       event.target.value = "";
     }
