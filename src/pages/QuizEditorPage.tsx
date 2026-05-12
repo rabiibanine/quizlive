@@ -32,14 +32,14 @@ export default function QuizEditorPage() {
   const location = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [isGenerating, setIsGenerating] = useState(false);
+
   const state = location.state;
 
   // Return to home if entering quiz-editor directly (guarantees quiz data from previous page)
   useEffect(() => {
     if (!state) navigate("/");
-  }, [state]);
-
-  if (!state) return null;
+  }, [state, navigate]);
 
   const [quizState, setQuizState] = useState<Quiz>({
     ...state,
@@ -74,6 +74,8 @@ export default function QuizEditorPage() {
   const questionCount = useMemo(() => {
     return questions.length;
   }, [questions]);
+
+  if (!state) return null;
 
   const setQuizQuestions = (updatedQuestions: Question[]) => {
     setQuizState((prev) => {
@@ -176,7 +178,6 @@ export default function QuizEditorPage() {
     }
   };
 
-  const [isGenerating, setIsGenerating] = useState(false);
   const [questionCountInput, setQuestionCountInput] = useState("10");
 
   const requestedQuestionCount = useMemo(() => {
@@ -307,12 +308,8 @@ export default function QuizEditorPage() {
             <Loader />
           </div>
         ) : (
-          <QuestionCardList
-            quizQuestions={questions}
-            setQuizQuestions={setQuizQuestions}
-          />
+          <QuestionCardList quizQuestions={questions} setQuizQuestions={setQuizQuestions} />
         )}
-
 
         <QuizEditorToolBar
           onLaunch={handleLaunch}
