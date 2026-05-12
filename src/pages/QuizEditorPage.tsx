@@ -53,7 +53,7 @@ export default function QuizEditorPage() {
           { text: "", count: 0 },
         ],
         time: 30,
-        correctChoice: 1,
+        correctChoice: 0,
       },
     ],
   });
