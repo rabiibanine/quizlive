@@ -9,9 +9,10 @@ import {
   updateDoc,
   arrayUnion,
   increment,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
-import type { Quiz, Question, Session, Student } from "@/types/index";
+import type { Quiz, Session, Student } from "@/types/index";
 
 type UUID = ReturnType<typeof crypto.randomUUID>;
 
@@ -79,18 +80,40 @@ export async function submitAnswer(
   sessionId: string,
   questionIndex: number,
   choiceIndex: number,
-  questions: Question[]
-): Promise<void> {
-  const updated = [...questions];
-  updated[questionIndex].choices[choiceIndex].count += 1;
+  studentId: UUID
+) {
+  const snap = await getDoc(doc(db, "sessions", sessionId));
+  if (!snap.exists()) return;
+
+  const session = snap.data() as Session;
+  const updatedStudents = session.students.map((s) =>
+    s.id === studentId ? { ...s, answers: [...s.answers, choiceIndex] } : s
+  );
+
+  const updatedQuestions = [...session.quiz.questions];
+  updatedQuestions[questionIndex].choices[choiceIndex].count += 1;
 
   await updateDoc(doc(db, "sessions", sessionId), {
-    "quiz.questions": updated,
+    students: updatedStudents,
+    "quiz.questions": updatedQuestions,
   });
 }
 
-export async function advanceQuestion(sessionId: string): Promise<void> {
+export async function evaluateAndAdvance(sessionId: string, questionIndex: number) {
+  const snap = await getDoc(doc(db, "sessions", sessionId));
+  if (!snap.exists()) return;
+
+  const session = snap.data() as Session;
+  const correctChoice = session.quiz.questions[questionIndex].correctChoice;
+
+  const updatedStudents = session.students.map((student) => {
+    const answer = student.answers[questionIndex];
+    const isCorrect = answer === correctChoice;
+    return isCorrect ? { ...student, score: student.score + 100 } : student;
+  });
+
   await updateDoc(doc(db, "sessions", sessionId), {
+    students: updatedStudents,
     currentQuestion: increment(1),
   });
 }
