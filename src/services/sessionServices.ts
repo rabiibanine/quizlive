@@ -82,3 +82,9 @@ export async function submitAnswer(
     "quiz.questions": updated,
   });
 }
+
+export async function advanceQuestion(sessionId: string) {
+  await updateDoc(doc(db, "sessions", sessionId), {
+    currentQuestion: increment(1),
+  });
+}
