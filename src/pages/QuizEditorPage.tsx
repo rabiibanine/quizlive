@@ -7,6 +7,8 @@ import { launchSession } from "@/services/sessionServices";
 import type { Question, Quiz } from "@/types/index";
 
 import { getOrCreateId } from "@/utils/helpers";
+import { extractTextFromFile } from "@/utils/fileTextExtractors";
+import { generateQuizJsonFromText } from "@/utils/aiQuizGenerator";
 
 import {
   BookOpenIcon,
@@ -17,7 +19,8 @@ import {
   SparkleIcon,
 } from "@phosphor-icons/react";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import type { ChangeEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const quiz: Quiz = {
@@ -61,6 +64,7 @@ export default function QuizEditorPage() {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const stateQuizInfo = location.state as
     | { id: string; title: string; className: string; subject: string; numberOfStudents: number }
     | undefined;
@@ -116,23 +120,30 @@ export default function QuizEditorPage() {
       };
     });
   };
-  // TODO Quiz editor head card editing option
-  // const setQuizClass = (newClass: string) => {
-  //   setQuizState((prev) => {
-  //     return {
-  //       ...prev,
-  //       class: newClass,
-  //     };
-  //   });
-  // };
-  // const setQuizSubject = (newSubject: string) => {
-  //   setQuizState((prev) => {
-  //     return {
-  //       ...prev,
-  //       subject: newSubject,
-  //     };
-  //   });
-  // };
+
+  const normalizeGeneratedQuiz = (generated: Quiz, fallbackId: string): Quiz => {
+    const questions = (generated.questions ?? []).map((question) => {
+      const choices = Array.isArray(question.choices) ? [...question.choices] : [];
+      while (choices.length < 4) choices.push("");
+
+      return {
+        id: crypto.randomUUID(),
+        text: question.text ?? "",
+        choices: choices.slice(0, 4),
+        time: typeof question.time === "number" ? question.time : 30,
+        correctChoice:
+          typeof question.correctChoice === "number" ? question.correctChoice : 1,
+      };
+    });
+
+    return {
+      id: fallbackId,
+      title: generated.title ?? "Generated Quiz",
+      course: generated.course ?? "General",
+      subject: generated.subject ?? "General",
+      questions,
+    };
+  };
 
   const handleExport = () => {
     const json = JSON.stringify(quizState, null, 2);
@@ -171,6 +182,31 @@ export default function QuizEditorPage() {
       console.error("Failed to launch session: " + error);
     }
   }
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleUploadChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await extractTextFromFile(file);
+      console.log("Extracted text:", text);
+      const generatedQuiz = await generateQuizJsonFromText(text);
+      const normalizedQuiz = normalizeGeneratedQuiz(generatedQuiz, id);
+      setQuizState(normalizedQuiz);
+      console.log("Generated quiz JSON:", generatedQuiz);
+    } catch (error) {
+      console.error("Failed to process uploaded file:", error);
+      alert(
+        "Failed to process the file. Please upload a PDF, DOCX, or PPTX file and check your Groq API key.",
+      );
+    } finally {
+      event.target.value = "";
+    }
+  };
 
   return (
     <div
@@ -248,10 +284,18 @@ export default function QuizEditorPage() {
           <button
             type="button"
             className="inline-flex items-center gap-2 rounded-full border border-purple-300/40 bg-purple-500/20 px-4 py-2 text-sm font-semibold text-purple-100 transition hover:bg-purple-500/30"
+            onClick={handleUploadClick}
           >
             <UploadSimpleIcon size={18} />
             Upload File
           </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,.doc,.docx,.pptx"
+            className="hidden"
+            onChange={handleUploadChange}
+          />
         </Card>
 
         {/* Question List */}
