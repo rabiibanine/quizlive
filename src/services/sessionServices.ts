@@ -69,6 +69,12 @@ export async function startSession(sessionId: string) {
   });
 }
 
+export async function endSession(sessionId: string) {
+  await updateDoc(doc(db, "sessions", sessionId), {
+    status: "ended",
+  });
+}
+
 export async function submitAnswer(
   sessionId: string,
   questionIndex: number,
