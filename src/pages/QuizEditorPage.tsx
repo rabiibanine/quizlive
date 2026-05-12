@@ -120,23 +120,30 @@ export default function QuizEditorPage() {
       };
     });
   };
-  // TODO Quiz editor head card editing option
-  // const setQuizClass = (newClass: string) => {
-  //   setQuizState((prev) => {
-  //     return {
-  //       ...prev,
-  //       class: newClass,
-  //     };
-  //   });
-  // };
-  // const setQuizSubject = (newSubject: string) => {
-  //   setQuizState((prev) => {
-  //     return {
-  //       ...prev,
-  //       subject: newSubject,
-  //     };
-  //   });
-  // };
+
+  const normalizeGeneratedQuiz = (generated: Quiz, fallbackId: string): Quiz => {
+    const questions = (generated.questions ?? []).map((question) => {
+      const choices = Array.isArray(question.choices) ? [...question.choices] : [];
+      while (choices.length < 4) choices.push("");
+
+      return {
+        id: crypto.randomUUID(),
+        text: question.text ?? "",
+        choices: choices.slice(0, 4),
+        time: typeof question.time === "number" ? question.time : 30,
+        correctChoice:
+          typeof question.correctChoice === "number" ? question.correctChoice : 1,
+      };
+    });
+
+    return {
+      id: fallbackId,
+      title: generated.title ?? "Generated Quiz",
+      course: generated.course ?? "General",
+      subject: generated.subject ?? "General",
+      questions,
+    };
+  };
 
   const handleExport = () => {
     const json = JSON.stringify(quizState, null, 2);
@@ -188,6 +195,8 @@ export default function QuizEditorPage() {
       const text = await extractTextFromFile(file);
       console.log("Extracted text:", text);
       const generatedQuiz = await generateQuizJsonFromText(text);
+      const normalizedQuiz = normalizeGeneratedQuiz(generatedQuiz, id);
+      setQuizState(normalizedQuiz);
       console.log("Generated quiz JSON:", generatedQuiz);
     } catch (error) {
       console.error("Failed to process uploaded file:", error);
