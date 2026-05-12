@@ -4,7 +4,7 @@ import QuizEditorToolBar from "@/components/QuizEditorToolBar";
 
 import { launchSession } from "@/services/sessionServices";
 
-import type { Question, Quiz } from "@/types/index";
+import type { Choice, Question, Quiz } from "@/types/index";
 
 import { getOrCreateId } from "@/utils/helpers";
 import { extractTextFromFile } from "@/utils/fileTextExtractors";
@@ -86,7 +86,7 @@ export default function QuizEditorPage() {
   const normalizeGeneratedQuiz = (generated: Quiz): Quiz => {
     const questions = (generated.questions ?? []).map((question) => {
       const choices = Array.isArray(question.choices) ? [...question.choices] : [];
-      while (choices.length < 4) choices.push("");
+      while (choices.length < 4) choices.push({ text: "", count: 0 } as Choice);
 
       return {
         id: crypto.randomUUID(),
