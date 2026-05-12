@@ -7,9 +7,9 @@ import {
   type DocumentData,
   doc,
   updateDoc,
-  arrayUnion,
   increment,
   getDoc,
+  runTransaction,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import type { Quiz, Session, Student } from "@/types/index";
@@ -57,9 +57,19 @@ export async function findSessionByCode(code: string): Promise<SessionDocument |
 
 export async function joinSession(sessionId: string, student: Student): Promise<void> {
   const sessionRef = doc(db, "sessions", sessionId);
-  await updateDoc(sessionRef, {
-    students: arrayUnion(student),
-    currentStudents: increment(1),
+  await runTransaction(db, async (transaction) => {
+    const snap = await transaction.get(sessionRef);
+    if (!snap.exists()) return;
+
+    const session = snap.data() as Session;
+    const students = session.students ?? [];
+    const alreadyJoined = students.some((existing) => existing.id === student.id);
+    if (alreadyJoined) return;
+
+    transaction.update(sessionRef, {
+      students: [...students, student],
+      currentStudents: students.length + 1,
+    });
   });
 }
 

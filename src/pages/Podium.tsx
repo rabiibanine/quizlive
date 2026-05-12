@@ -18,17 +18,24 @@ const getInitials = (name: string) =>
     .join("")
     .toUpperCase();
 
-const getAccuracy = (student: Student, totalQuestions: number) => {
+const getAccuracy = (student: Student, questions: Session["quiz"]["questions"]) => {
+  const totalQuestions = questions.length;
   if (totalQuestions === 0) return 0;
-  return Math.round((student.answers.length / totalQuestions) * 100);
+
+  const correctCount = questions.reduce((count, question, index) => {
+    const answer = student.answers[index];
+    return count + (answer === question.correctChoice ? 1 : 0);
+  }, 0);
+
+  return Math.round((correctCount / totalQuestions) * 100);
 };
 
-const toCSV = (students: Student[], totalQuestions: number) =>
+const toCSV = (students: Student[], questions: Session["quiz"]["questions"]) =>
   students.map((student, index) => ({
     rank: index + 1,
     name: student.name,
     score: student.score,
-    accuracy: `${getAccuracy(student, totalQuestions)}%`,
+    accuracy: `${getAccuracy(student, questions)}%`,
     joined_at: new Date(student.joinedAt).toLocaleTimeString(),
   }));
 
@@ -56,14 +63,12 @@ export default function Podium() {
   if (!state) return null;
   if (!session) return <p>Loading...</p>;
 
-  const totalQuestions = session.quiz.questions.length;
-
   const sortedStudents: Student[] = [...session.students].sort((a, b) => b.score - a.score);
 
-  const datas = toCSV(sortedStudents, totalQuestions);
+  const datas = toCSV(sortedStudents, session.quiz.questions);
 
   const averageAccuracy = Math.round(
-    sortedStudents.reduce((sum, s) => sum + getAccuracy(s, totalQuestions), 0) /
+    sortedStudents.reduce((sum, s) => sum + getAccuracy(s, session.quiz.questions), 0) /
       sortedStudents.length
   );
 
@@ -201,7 +206,7 @@ export default function Podium() {
           <div className="divide-y divide-white/10">
             {otherRankings.map((student, index) => {
               const rank = index + 4;
-              const accuracy = getAccuracy(student, totalQuestions);
+              const accuracy = getAccuracy(student, session.quiz.questions);
               return (
                 <AnimatedItem key={student.id} index={index} delay={0.05 * index}>
                   <div className="grid grid-cols-[0.6fr_2fr_1fr_1fr] gap-2 px-6 py-4 text-sm text-white/80 hover:bg-white/5 items-center">
