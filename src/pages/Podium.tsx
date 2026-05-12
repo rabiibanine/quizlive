@@ -126,7 +126,7 @@ export default function Podium() {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-2">
           <div className="rounded-2xl border border-white/10 bg-white/5 px-6 py-5">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/50">
               Average Accuracy
