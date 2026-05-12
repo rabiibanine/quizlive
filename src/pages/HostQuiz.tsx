@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { doc, onSnapshot } from "firebase/firestore";
@@ -10,6 +10,7 @@ import TimerCard from "@/components/quiz/TimerCard";
 
 import type { Session } from "@/types/index";
 import { db } from "@/firebase/firebase";
+import { advanceQuestion } from "@/services/sessionServices";
 
 const formatTime = (totalSeconds: number) => {
   const minutes = Math.floor(totalSeconds / 60);
@@ -42,17 +43,24 @@ const HostQuiz = () => {
 
   const activeQuestion = session?.quiz.questions[session.currentQuestion];
 
+  const hasAdvanced = useRef(false);
+
   useEffect(() => {
+    hasAdvanced.current = false;
     if (!activeQuestion) return;
     setSecondsLeft(activeQuestion.time);
-    console.log("deadass");
-
     const timer = setInterval(() => {
-      setSecondsLeft((prev) => (prev > 0 ? prev - 1 : 0));
+      setSecondsLeft((prev) => {
+        if (prev === 1 && !hasAdvanced.current) {
+          hasAdvanced.current = true;
+          advanceQuestion(sessionId);
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
-
     return () => clearInterval(timer);
-  }, [activeQuestion]);
+  }, [session?.currentQuestion]);
 
   if (!session || !activeQuestion) return <p>Loading...</p>;
 
