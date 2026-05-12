@@ -1,6 +1,7 @@
 import Card from "@/components/Card";
 import QuestionCardList from "@/components/QuestionCardList";
 import QuizEditorToolBar from "@/components/QuizEditorToolBar";
+import { Loader } from "@/components/Loader";
 
 import { launchSession } from "@/services/sessionServices";
 
@@ -190,6 +191,7 @@ export default function QuizEditorPage() {
   const handleUploadChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+    setIsGenerating(true);
 
     try {
       const text = await extractTextFromFile(file);
@@ -204,9 +206,12 @@ export default function QuizEditorPage() {
         "Failed to process the file. Please upload a PDF, DOCX, or PPTX file and check your Groq API key.",
       );
     } finally {
+      setIsGenerating(false);
       event.target.value = "";
     }
   };
+
+  const [isGenerating, setIsGenerating] = useState(false);
 
   return (
     <div
@@ -283,7 +288,7 @@ export default function QuizEditorPage() {
           </div>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-full border border-purple-300/40 bg-purple-500/20 px-4 py-2 text-sm font-semibold text-purple-100 transition hover:bg-purple-500/30"
+            className="cursor-pointer inline-flex items-center gap-2 rounded-full border border-purple-300/40 bg-purple-500/20 px-4 py-2 text-sm font-semibold text-purple-100 transition hover:bg-purple-500/30"
             onClick={handleUploadClick}
           >
             <UploadSimpleIcon size={18} />
@@ -298,11 +303,17 @@ export default function QuizEditorPage() {
           />
         </Card>
 
-        {/* Question List */}
-        <QuestionCardList
-          quizQuestions={questions}
-          setQuizQuestions={setQuizQuestions}
-        ></QuestionCardList>
+        {isGenerating ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader />
+          </div>
+        ) : (
+          <QuestionCardList
+            quizQuestions={questions}
+            setQuizQuestions={setQuizQuestions}
+          />
+        )}
+
 
         <QuizEditorToolBar
           onLaunch={handleLaunch}
