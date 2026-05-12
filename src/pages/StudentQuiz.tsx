@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import QuizWaitingLoader from "../components/QuizWaitingLoader"
 
 import Button from "@/components/Button";
 import StepProgress from "@/components/StepProgress";
@@ -134,9 +135,7 @@ const StudentQuiz = () => {
           </p>
 
           {session.status === "waiting" ? (
-            <div className="mt-10">
-              <p className="text-lg font-semibold text-white/80">Waiting for Quiz to start...</p>
-            </div>
+            <QuizWaitingLoader />
           ) : (
             <>
               <h2 className="mt-10 text-lg font-semibold text-white/80">
