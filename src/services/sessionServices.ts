@@ -126,7 +126,7 @@ export async function evaluateAndAdvance(sessionId: string, questionIndex: numbe
   });
 
     const updatedQuestions = [...session.quiz.questions];
-  updatedQuestions[questionIndex].choices.map((choice, index) => {
+  updatedQuestions[questionIndex].choices.map((choice) => {
     choice.count = 0;
   });
 
