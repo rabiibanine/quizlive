@@ -15,6 +15,7 @@ const AnswerStatCard = ({
   isLeading = false,
   tone = "light",
 }: AnswerStatCardProps) => {
+  if (isNaN(count)) count = 0;
   const percent = count === 0 ? 0 : Math.round((count / currentStudents) * 100);
 
   const isDark = tone === "dark";
