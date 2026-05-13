@@ -126,9 +126,10 @@ export async function evaluateAndAdvance(sessionId: string, questionIndex: numbe
   });
 
     const updatedQuestions = [...session.quiz.questions];
-  updatedQuestions[questionIndex].choices.map((choice) => {
+  updatedQuestions.map((question) => { 
+    question.choices.map((choice) => {
     choice.count = 0;
-  });
+  })});
 
   await updateDoc(doc(db, "sessions", sessionId), {
     students: updatedStudents,
