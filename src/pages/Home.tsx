@@ -52,8 +52,10 @@ function Home() {
             </div>
           </div>
         </div>
-        <FeaturesSection />
-        <HowItWorksSection />
+        <div className="hidden md:block">
+          <FeaturesSection />
+          <HowItWorksSection />
+        </div>
       </div>
       <Footer />
     </div>
