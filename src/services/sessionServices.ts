@@ -125,8 +125,15 @@ export async function evaluateAndAdvance(sessionId: string, questionIndex: numbe
     return isCorrect ? { ...student, score: student.score + 100 } : student;
   });
 
+    const updatedQuestions = [...session.quiz.questions];
+  updatedQuestions.map((question) => { 
+    question.choices.map((choice) => {
+    choice.count = 0;
+  })});
+
   await updateDoc(doc(db, "sessions", sessionId), {
     students: updatedStudents,
+    "quiz.questions": updatedQuestions,
   });
 }
 
